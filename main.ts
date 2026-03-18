@@ -56,7 +56,7 @@ async function main() {
   await Deno.mkdir(outputDir, { recursive: true });
   await Deno.writeTextFile(join(outputDir, "index.html"), buildHomePage(posts));
   await Deno.writeTextFile(join(outputDir, "style.css"), CSS);
-  await Deno.writeTextFile(join(outputDir, "CNAME"), "thoughts.a7ul.com");
+  await Deno.writeTextFile(join(outputDir, "CNAME"), "blog.a7ul.com");
 
   console.log(`\nBuilt ${posts.length} post(s) → ${outputDir}`);
 }
