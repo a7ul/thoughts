@@ -15,17 +15,17 @@ The future of software development is already here. Background agents are real -
 
 This is genuinely exciting. Traditionally, startups move much faster than larger companies because of lower communication overhead. With coding agents, that velocity has 100x'd. But behind this velocity we encounter new problems that we never had to deal with before.
 
-## Andrew and his 6 Claude Code terminals
+## Andrew and Stelios and their 6 Claude Code terminals
 
-Andrew is one of our founding engineers at Filed. It is tax season right now, which means the product is under real pressure. Bugs coming in, tax pros waiting, deadlines that are not flexible.
+Andrew is one of our founding engineers at Filed and Stelios is our head of AI. It is tax season right now, which means the product is under real pressure. Bugs coming in, tax pros waiting, deadlines that are not flexible.
 
-Recently, I walked over to Andrew's desk and he had 6 Claude Code terminals open at once. One firefighting a bug in our tax review flow, another working on a new feature he had been wanting to ship for days, a couple more handling smaller things in parallel. The velocity was genuinely impressive.
+Recently, I walked over to Andrew and Stelios's desks and they each had 6 Claude Code terminals open at once. One firefighting a bug in our tax review flow, another working on a new feature they had been wanting to ship for days, a couple more handling smaller things in parallel. The velocity was genuinely impressive.
 
-But I stood there thinking: if I asked Andrew right now to explain what each of those agents just wrote, he could explain the general idea and the architecture, but he probably would not know every line-by-line detail - and Andrew is a senior engineer who can quickly grasp things thrown at him. By definition, when you are orchestrating 6 parallel workstreams, you are operating at a higher level of abstraction. You are steering, not reading.
+But I stood there thinking: if I asked Andrew and Stelios right now to explain what each of those agents just wrote, they could explain the general idea and the architecture, but they probably would not know every line-by-line detail - and Andrew and Stelios are senior engineers who can quickly grasp things thrown at them. By definition, when you are orchestrating 6 parallel workstreams, you are operating at a higher level of abstraction. You are steering, not reading.
 
-That is fine, until something breaks. And then all the context for that feature lives in one place - Andrew's head and a pile of AI-generated code that nobody else has read closely. If Andrew is out, that feature is a black box. Every bug routes back to one person.
+That is fine, until something breaks. And then all the context for that feature lives in one place - their heads and a pile of AI-generated code that nobody else has read closely. If Andrew or Stelios is out, that feature is a black box. Every bug routes back to one person.
 
-This is not a problem Andrew created. It is what agentic coding does to a team by default.
+This is not a problem Andrew and Stelios created. It is what agentic coding does to a team by default.
 
 ## My Saturday
 
@@ -43,7 +43,7 @@ I do have to admit - after the agents finished, they did a better job at a faste
 
 When companies like Google scaled to hundreds of engineers, they ran into a specific set of coordination problems. Too many people merging changes at once, knowledge getting siloed, bugs slipping through because nobody had the full picture. Their answer was heavy gating: PR reviews, DevOps signoffs, release cycles, automated checks, test suites.
 
-Agentic coding brings the same coordination overhead to a 5-person startup. Andrew with 6 Claude Code terminals is producing the change volume of a small engineering team. The knowledge concentration, the single points of failure, the black-box features - these are big-tech problems, now landing on every small team that is moving fast with agents.
+Agentic coding brings the same coordination overhead to a 5-person startup. Andrew and Stelios with 6 Claude Code terminals each are producing the change volume of a small engineering team. The knowledge concentration, the single points of failure, the black-box features - these are big-tech problems, now landing on every small team that is moving fast with agents.
 
 But the flip side is also true. Agents bring big-tech-scale solutions without the headcount or the ceremony. Large-scale test generation is now cheap. Automatic code style and practice reviews are now cheap. Automatic documentation is now cheap. All the discipline, without burning your engineers on process overhead.
 
@@ -59,6 +59,6 @@ The answer is not more tooling. It is fundamentals.
 
 Together these do two things: they introduce historical context through test cases, and they put constraints in place that make fast work safe work - for humans and agents both.
 
-The teams that win will not be the ones deploying the most agents. They will be the ones using agents to enforce discipline too. Andrew can have his 6 terminals. The test suite is what makes that safe.
+The teams that win will not be the ones deploying the most agents. They will be the ones using agents to enforce discipline too. Andrew and Stelios can have their 6 terminals each. The test suite is what makes that safe.
 
 **The fundamentals did not change. They just got more important.**
