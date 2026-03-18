@@ -34,7 +34,7 @@ export function postPage(params: {
 ${description ? `<meta name="description" content="${escapeHtml(description)}">` : ""}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap">
 <link rel="stylesheet" href="${root}style.css">
 </head>
 <body>
@@ -79,8 +79,8 @@ export function homePage(params: {
     : `<ul class="post-list">${
       posts.map((p) => `
 <li>
-<h2><a href="${p.url}">${escapeHtml(p.title)}</a></h2>
 ${p.date ? `<time class="post-date" datetime="${escapeHtml(p.date)}">${formatDate(p.date)}</time>` : ""}
+<h2><a href="${p.url}">${escapeHtml(p.title)}</a></h2>
 ${p.description ? `<p class="post-desc">${escapeHtml(p.description)}</p>` : ""}
 </li>`).join("")
     }</ul>`;
@@ -93,7 +93,7 @@ ${p.description ? `<p class="post-desc">${escapeHtml(p.description)}</p>` : ""}
 <title>${escapeHtml(siteTitle)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -110,47 +110,193 @@ ${items}
 }
 
 export const CSS = `
+/* ── Reset ─────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Geist', system-ui, sans-serif; line-height: 1.7; color: #0f0f0f; background: #fff; letter-spacing: -0.011em; }
-.container { max-width: 680px; margin: 0 auto; padding: 3.5rem 1.5rem; }
-a { color: #0f0f0f; text-underline-offset: 3px; transition: color 0.15s; }
-a:hover { color: #444; }
-nav { margin-bottom: 3rem; }
-nav a { color: #999; text-decoration: none; font-size: 0.875rem; transition: color 0.15s; }
-nav a:hover { color: #0f0f0f; }
-article header { margin-bottom: 2.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid #ebebeb; }
-article header h1 { font-size: 1.875rem; font-weight: 700; line-height: 1.2; margin-bottom: 0.5rem; letter-spacing: -0.03em; }
-article header time { font-size: 0.875rem; color: #999; }
-article h2 { font-size: 1.25rem; font-weight: 600; margin: 2.25rem 0 0.75rem; letter-spacing: -0.02em; }
-article h3 { font-size: 1.05rem; font-weight: 600; margin: 1.75rem 0 0.5rem; }
-article p { margin-bottom: 1.1rem; color: #1a1a1a; }
-article ul, article ol { padding-left: 1.5rem; margin-bottom: 1rem; }
-article li { margin-bottom: 0.35rem; }
-article a { color: #0f0f0f; }
-article code { background: #f5f5f5; padding: 0.15em 0.4em; border-radius: 4px; font-size: 0.875em; font-family: 'Geist Mono', ui-monospace, monospace; border: 1px solid #ebebeb; }
-article pre { background: #f5f5f5; border: 1px solid #ebebeb; padding: 1.25rem; border-radius: 8px; overflow-x: auto; margin: 1.75rem 0; }
-article pre code { background: none; padding: 0; border: none; font-size: 0.875rem; }
-article blockquote { border-left: 2px solid #ddd; padding-left: 1.25rem; color: #666; margin: 1.75rem 0; font-style: italic; }
-article hr { border: none; border-top: 1px solid #ebebeb; margin: 2.5rem 0; }
-article img { max-width: 100%; height: auto; border-radius: 6px; margin: 1.5rem 0; }
-article table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
-article th { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 2px solid #ebebeb; font-weight: 600; }
-article td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #f0f0f0; }
-.site-header { margin-bottom: 3rem; padding-bottom: 1.5rem; border-bottom: 1px solid #ebebeb; }
-.site-header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
-.site-bio { font-size: 0.9375rem; color: #666; line-height: 1.6; }
-.site-bio a { color: #0f0f0f; }
+
+/* ── Base ───────────────────────────────────────────── */
+body {
+  font-family: 'Geist', system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: #111;
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+.container { max-width: 680px; margin: 0 auto; padding: 4rem 1.5rem; }
+a { color: inherit; text-underline-offset: 3px; }
+
+/* ── Nav ────────────────────────────────────────────── */
+nav { margin-bottom: 3.5rem; }
+nav a {
+  font-size: 0.875rem;
+  color: #555;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+nav a:hover { color: #111; }
+
+/* ── Site header (home) ─────────────────────────────── */
+.site-header {
+  margin-bottom: 3.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+.site-header h1 {
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.6rem;
+}
+.site-bio {
+  font-size: 0.9375rem;
+  color: #444;
+  line-height: 1.65;
+  max-width: 52ch;
+}
+.site-bio a { text-decoration: underline; text-underline-offset: 2px; }
+
+/* ── Post list (home) ───────────────────────────────── */
 .post-list { list-style: none; }
-.post-list li { padding: 1.75rem 0; border-bottom: 1px solid #ebebeb; }
+.post-list li {
+  padding: 1.75rem 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+.post-list li:first-child { padding-top: 0; }
 .post-list li:last-child { border-bottom: none; }
-.post-list h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; letter-spacing: -0.02em; }
-.post-list h2 a { text-decoration: none; }
-.post-list h2 a:hover { color: #444; }
-.post-date { font-size: 0.8125rem; color: #999; display: block; margin-bottom: 0.35rem; }
-.post-desc { color: #555; font-size: 0.9375rem; margin: 0; line-height: 1.6; }
-.giscus-wrap { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #ebebeb; }
-.site-footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid #ebebeb; font-size: 0.875rem; }
-.site-footer a { color: #999; text-decoration: none; }
-.site-footer a:hover { color: #0f0f0f; }
-@media (max-width: 640px) { .container { padding: 2rem 1.25rem; } article header h1 { font-size: 1.625rem; } }
+
+.post-date {
+  display: block;
+  font-size: 0.8rem;
+  color: #777;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.post-list h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.4rem;
+}
+.post-list h2 a {
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.post-list h2 a:hover { opacity: 0.6; }
+.post-desc {
+  font-size: 0.9375rem;
+  color: #444;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Article header ─────────────────────────────────── */
+article header {
+  margin-bottom: 2.75rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+article header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+  margin-bottom: 0.75rem;
+}
+article header time {
+  font-size: 0.8rem;
+  color: #777;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ── Article body ───────────────────────────────────── */
+article { font-size: 1.0625rem; line-height: 1.8; }
+
+article h2 {
+  font-size: 1.3rem;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  margin: 2.5rem 0 0.75rem;
+}
+article h3 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 2rem 0 0.5rem;
+}
+article p { margin-bottom: 1.25rem; }
+article ul, article ol { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+article li { margin-bottom: 0.4rem; }
+article strong { font-weight: 600; }
+
+article a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: #ccc;
+  transition: text-decoration-color 0.15s;
+}
+article a:hover { text-decoration-color: #111; }
+
+article code {
+  font-family: 'Geist Mono', ui-monospace, 'SF Mono', monospace;
+  font-size: 0.875em;
+  background: #f7f7f7;
+  border: 1px solid #e8e8e8;
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+}
+article pre {
+  background: #f7f7f7;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  margin: 1.75rem 0;
+  line-height: 1.6;
+}
+article pre code { background: none; border: none; padding: 0; font-size: 0.875rem; }
+
+article blockquote {
+  border-left: 2px solid #ccc;
+  padding: 0.1rem 0 0.1rem 1.25rem;
+  margin: 1.75rem 0;
+  color: #444;
+  font-style: italic;
+}
+article blockquote p { margin-bottom: 0; }
+article hr { border: none; border-top: 1px solid #eee; margin: 3rem 0; }
+article img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1.75rem 0;
+  display: block;
+}
+article table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; margin: 1.75rem 0; }
+article th { text-align: left; font-weight: 600; padding: 0.5rem 0.75rem; border-bottom: 2px solid #eee; }
+article td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #f3f3f3; }
+
+/* ── Comments ───────────────────────────────────────── */
+.giscus-wrap { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #eee; }
+
+/* ── Footer ─────────────────────────────────────────── */
+.site-footer {
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+  font-size: 0.875rem;
+  color: #666;
+}
+.site-footer a { color: #666; text-decoration: none; }
+.site-footer a:hover { color: #111; }
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 640px) {
+  .container { padding: 2.5rem 1.25rem; }
+  article header h1 { font-size: 1.625rem; }
+  article { font-size: 1rem; }
+}
 `.trim();
