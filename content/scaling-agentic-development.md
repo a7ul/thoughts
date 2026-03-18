@@ -17,15 +17,13 @@ This is genuinely exciting. Traditionally, startups move much faster than larger
 
 ## Andrew and Stelios and their 6 Claude Code terminals
 
-Andrew is one of our founding engineers at Filed and Stelios is our head of AI. It is tax season right now, which means the product is under real pressure. Bugs coming in, tax pros waiting, deadlines that are not flexible.
+But that's not the interesting part. The interesting part is what happened at work the week before.
 
-Recently, I walked over to Andrew and Stelios's desks and they each had 6 Claude Code terminals open at once. One firefighting a bug in our tax review flow, another working on a new feature they had been wanting to ship for days, a couple more handling smaller things in parallel. The velocity was genuinely impressive.
+I walked over to Andrew and Stelios's desks. Andrew is one of our founding engineers at Filed and Stelios is our Head of AI. It's tax season, which means bugs coming in, tax pros waiting, deadlines that don't move.
 
-But I stood there thinking: if I asked Andrew and Stelios right now to explain what each of those agents just wrote, they could explain the general idea and the architecture, but they probably would not know every line-by-line detail - and Andrew and Stelios are senior engineers who can quickly grasp things thrown at them. By definition, when you are orchestrating 6 parallel workstreams, you are operating at a higher level of abstraction. You are steering, not reading.
+They each had 6 Claude Code terminals open at once. One firefighting a bug. Another shipping a feature they'd been wanting to build for days. A couple more handling smaller things in parallel. These guys were each single-handedly operating like a small engineering team.
 
-That is fine, until something breaks. And then all the context for that feature lives in one place - their heads and a pile of AI-generated code that nobody else has read closely. If Andrew or Stelios is out, that feature is a black box. Every bug routes back to one person.
-
-This is not a problem Andrew and Stelios created. It is what agentic coding does to a team by default.
+Watching them work got me thinking. Not about Andrew or Stelios, but about the pattern itself. When you're orchestrating 6 parallel workstreams, you're naturally operating at a higher level of abstraction. You're steering, not reading every line. That's the right call for moving fast. But it made me wonder: as a team, how do we make sure this kind of velocity stays sustainable? What's the safety net?
 
 ## My Saturday
 
