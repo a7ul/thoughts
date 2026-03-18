@@ -37,7 +37,7 @@ To ensure that I could trust the code, I followed a simple process. I asked agen
 
 When I came back, I ran the test cases and they all passed - the agents had used the test cases as a way to validate the code they generated. Then all I had to do was skim the codebase to see if the structure felt readable. That was it. I did not read every line. I could not have in 5 hours. Eventually I added more test cases to check if it was handling edge cases correctly. In the end, I had 600+ test cases as my safety net, and that was enough to trust what was shipping.
 
-That experience is what made the solution click for me.
+I do have to admit - after the agents finished, they did a better job at a faster pace than what I would have done manually in a week. The result is a production-ready SDK that can be used for real world applications. That experience is what made the solution click for me.
 
 ## The old problem, amplified
 
