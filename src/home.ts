@@ -9,7 +9,7 @@ function byDateDesc(a: Post, b: Post): number {
   return new Date(db).getTime() - new Date(da).getTime();
 }
 
-export function buildHomePage(posts: Post[], siteTitle = "Blog"): string {
+export function buildHomePage(posts: Post[], siteTitle = "Atul's Blog"): string {
   return homePage({
     siteTitle,
     posts: [...posts].sort(byDateDesc).map((p) => ({

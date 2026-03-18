@@ -32,6 +32,9 @@ export function postPage(params: {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${escapeHtml(title)}</title>
 ${description ? `<meta name="description" content="${escapeHtml(description)}">` : ""}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&display=swap">
 <link rel="stylesheet" href="${root}style.css">
 </head>
 <body>
@@ -44,6 +47,23 @@ ${date ? `<time datetime="${escapeHtml(date)}">${formatDate(date)}</time>` : ""}
 </header>
 ${htmlContent}
 </article>
+<div class="giscus-wrap">
+<script src="https://giscus.app/client.js"
+  data-repo="a7ul/thoughts"
+  data-repo-id="R_kgDORp7Weg"
+  data-category="General"
+  data-category-id="DIC_kwDORp7Wes4C4pUS"
+  data-mapping="title"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="light"
+  data-lang="en"
+  crossorigin="anonymous"
+  async>
+</script>
+</div>
 </div>
 </body>
 </html>`;
@@ -71,14 +91,19 @@ ${p.description ? `<p class="post-desc">${escapeHtml(p.description)}</p>` : ""}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${escapeHtml(siteTitle)}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="container">
 <header class="site-header">
 <h1>${escapeHtml(siteTitle)}</h1>
+<p class="site-bio">Cofounder &amp; CTO at <a href="https://filed.com" target="_blank" rel="noopener">Filed</a>. He has been building software for about 11+ years. This is where he stores all of his secret thoughts.</p>
 </header>
 ${items}
+<footer class="site-footer">Link to the old blog site: <a href="https://blog.atulr.com" target="_blank" rel="noopener">https://blog.atulr.com</a></footer>
 </div>
 </body>
 </html>`;
@@ -86,35 +111,46 @@ ${items}
 
 export const CSS = `
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.7; color: #111; background: #fff; }
-.container { max-width: 65ch; margin: 0 auto; padding: 3rem 1.5rem; }
-a { color: #111; }
-nav { margin-bottom: 2.5rem; }
-nav a { color: #6b7280; text-decoration: none; font-size: 0.9rem; }
-nav a:hover { color: #111; }
-article header { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb; }
-article header h1 { font-size: 2rem; font-weight: 700; line-height: 1.25; margin-bottom: 0.4rem; letter-spacing: -0.02em; }
-article header time { font-size: 0.875rem; color: #6b7280; }
-article h2 { font-size: 1.35rem; font-weight: 600; margin: 2rem 0 0.75rem; }
-article h3 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
-article p { margin-bottom: 1rem; }
+body { font-family: 'Geist', system-ui, sans-serif; line-height: 1.7; color: #0f0f0f; background: #fff; letter-spacing: -0.011em; }
+.container { max-width: 680px; margin: 0 auto; padding: 3.5rem 1.5rem; }
+a { color: #0f0f0f; text-underline-offset: 3px; transition: color 0.15s; }
+a:hover { color: #444; }
+nav { margin-bottom: 3rem; }
+nav a { color: #999; text-decoration: none; font-size: 0.875rem; transition: color 0.15s; }
+nav a:hover { color: #0f0f0f; }
+article header { margin-bottom: 2.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid #ebebeb; }
+article header h1 { font-size: 1.875rem; font-weight: 700; line-height: 1.2; margin-bottom: 0.5rem; letter-spacing: -0.03em; }
+article header time { font-size: 0.875rem; color: #999; }
+article h2 { font-size: 1.25rem; font-weight: 600; margin: 2.25rem 0 0.75rem; letter-spacing: -0.02em; }
+article h3 { font-size: 1.05rem; font-weight: 600; margin: 1.75rem 0 0.5rem; }
+article p { margin-bottom: 1.1rem; color: #1a1a1a; }
 article ul, article ol { padding-left: 1.5rem; margin-bottom: 1rem; }
-article li { margin-bottom: 0.25rem; }
-article code { background: #f3f4f6; padding: 0.15em 0.4em; border-radius: 3px; font-size: 0.875em; font-family: ui-monospace, monospace; }
-article pre { background: #f3f4f6; padding: 1rem; border-radius: 6px; overflow-x: auto; margin: 1.5rem 0; }
-article pre code { background: none; padding: 0; }
-article blockquote { border-left: 3px solid #d1d5db; padding-left: 1rem; color: #6b7280; margin: 1.5rem 0; }
-article hr { border: none; border-top: 1px solid #e5e7eb; margin: 2rem 0; }
-article img { max-width: 100%; height: auto; border-radius: 4px; margin: 1rem 0; }
-.site-header { margin-bottom: 3rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb; }
-.site-header h1 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; }
+article li { margin-bottom: 0.35rem; }
+article a { color: #0f0f0f; }
+article code { background: #f5f5f5; padding: 0.15em 0.4em; border-radius: 4px; font-size: 0.875em; font-family: 'Geist Mono', ui-monospace, monospace; border: 1px solid #ebebeb; }
+article pre { background: #f5f5f5; border: 1px solid #ebebeb; padding: 1.25rem; border-radius: 8px; overflow-x: auto; margin: 1.75rem 0; }
+article pre code { background: none; padding: 0; border: none; font-size: 0.875rem; }
+article blockquote { border-left: 2px solid #ddd; padding-left: 1.25rem; color: #666; margin: 1.75rem 0; font-style: italic; }
+article hr { border: none; border-top: 1px solid #ebebeb; margin: 2.5rem 0; }
+article img { max-width: 100%; height: auto; border-radius: 6px; margin: 1.5rem 0; }
+article table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+article th { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 2px solid #ebebeb; font-weight: 600; }
+article td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #f0f0f0; }
+.site-header { margin-bottom: 3rem; padding-bottom: 1.5rem; border-bottom: 1px solid #ebebeb; }
+.site-header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+.site-bio { font-size: 0.9375rem; color: #666; line-height: 1.6; }
+.site-bio a { color: #0f0f0f; }
 .post-list { list-style: none; }
-.post-list li { padding: 1.5rem 0; border-bottom: 1px solid #e5e7eb; }
+.post-list li { padding: 1.75rem 0; border-bottom: 1px solid #ebebeb; }
 .post-list li:last-child { border-bottom: none; }
-.post-list h2 { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.3rem; }
+.post-list h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.3rem; letter-spacing: -0.02em; }
 .post-list h2 a { text-decoration: none; }
-.post-list h2 a:hover { text-decoration: underline; }
-.post-date { font-size: 0.875rem; color: #6b7280; display: block; margin-bottom: 0.4rem; }
-.post-desc { color: #4b5563; font-size: 0.95rem; margin: 0; }
-@media (max-width: 640px) { .container { padding: 1.5rem 1rem; } }
+.post-list h2 a:hover { color: #444; }
+.post-date { font-size: 0.8125rem; color: #999; display: block; margin-bottom: 0.35rem; }
+.post-desc { color: #555; font-size: 0.9375rem; margin: 0; line-height: 1.6; }
+.giscus-wrap { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #ebebeb; }
+.site-footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid #ebebeb; font-size: 0.875rem; }
+.site-footer a { color: #999; text-decoration: none; }
+.site-footer a:hover { color: #0f0f0f; }
+@media (max-width: 640px) { .container { padding: 2rem 1.25rem; } article header h1 { font-size: 1.625rem; } }
 `.trim();
