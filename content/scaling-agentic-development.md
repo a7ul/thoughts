@@ -57,6 +57,6 @@ The answer is not more tooling. It is fundamentals.
 
 Together these do two things: they introduce historical context through test cases, and they put constraints in place that make fast work safe work - for humans and agents both.
 
-The teams that win will not be the ones deploying the most agents. They will be the ones using agents to enforce discipline too. Andrew and Stelios can have their 6 terminals each. The test suite is what makes that safe.
+Watching Andrew and Stelios work genuinely inspired me. Not because of the speed - but because they showed what is possible when sharp engineers embrace these tools without losing their instincts. The teams that win will not be the ones deploying the most agents. They will be the ones who, like Andrew and Stelios, know when to steer and when to let the agents run. The test suite is what makes that safe.
 
 **The fundamentals did not change. They just got more important.**
