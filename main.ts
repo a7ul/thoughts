@@ -21,7 +21,7 @@ async function main() {
     string: ["input", "output"],
     boolean: ["help"],
     alias: { i: "input", o: "output", h: "help" },
-    default: { input: "./content", output: "./dist" },
+    default: { input: "./content", output: "./docs" },
   });
 
   if (args.help) { console.log(HELP); return; }
