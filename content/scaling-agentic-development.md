@@ -1,5 +1,5 @@
 ---
-title: At Filed, we ship features in days thanks to coding agents. Here is why we are doubling down on basics.
+title: How far can you push delegation to coding agents and still have control over the codebase?
 date: 2026-03-18T17:12:03.284Z
 keywords: agents, ai, coding, engineering, speed, vibe
 slug: scaling-agentic-development
@@ -48,7 +48,7 @@ Agentic coding brings the same coordination overhead to a 5-person startup. Andr
 
 But the flip side is also true. Agents bring big-tech-scale solutions without the headcount or the ceremony. Large-scale test generation is now cheap. Automatic code style and practice reviews are now cheap. Automatic documentation is now cheap. All the discipline, without burning your engineers on process overhead.
 
-## Back to basics
+## At Filed, we ship features in days thanks to coding agents. Here is why we are doubling down on basics
 
 The answer is not more tooling. It is fundamentals.
 
