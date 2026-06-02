@@ -21,3 +21,7 @@ For AI native product companies your value is on the abstraction above.
 Your job is to build agents that work one layer up and take on the job like another employee.
 
 So the UI (for humans) using your product basically should change accordingly.
+
+So adding a chatbot won't get you there, since it lacks a few key things:
+
+- It doesn't convey what all the possibilities are well, and it's a stream of text that takes time to read.
