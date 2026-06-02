@@ -81,3 +81,5 @@ At Filed we are working solely on level 3 - we leave level 2 tasks to the incumb
 This gives users the ability to hire an extra digital delegation platform to delegate tasks in their firm, rather than doing the tasks themselves.
 
 This means our platforms are built for teaching more than doing.
+
+All AI native products need to go from doing the task to being a delegation platform.

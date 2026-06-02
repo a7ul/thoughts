@@ -389,4 +389,4 @@ At Filed we work solely on level 3. We leave the level-2 work to the incumbents.
 
 And that flips the whole orientation of the product. For 15 years we built platforms for *doing*. The platforms that win in this era are built for *teaching* — surfaces where you hand off the work, watch it happen, and step in only when it matters.
 
-**The doer changed. Design for that.**
+If there's one line to take away, it's this: **every AI-native product needs to go from doing the task to being a delegation platform.** The doer changed. Design for that.
