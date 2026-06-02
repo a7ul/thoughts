@@ -65,3 +65,7 @@ Let's do another example - ecommerce:
 
 - You should be able to search yourself if needed, but instead you can go to a chat-like thing and ask for filtering out the items you are looking for.
 - You get the final say or approval to do destructive actions, but the rest of the filtering / searching should be done by an agent.
+
+Let's try airline booking - same thing:
+
+- You go in and tell what you need and it does it according to your needs. So as an aggregator platform you need to provide these tools.
