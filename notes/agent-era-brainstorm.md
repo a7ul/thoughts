@@ -79,3 +79,5 @@ Plus how you can still give manual controls so at times users can do level 2 tas
 At Filed we are working solely on level 3 - we leave level 2 tasks to the incumbents.
 
 This gives users the ability to hire an extra digital delegation platform to delegate tasks in their firm, rather than doing the tasks themselves.
+
+This means our platforms are built for teaching more than doing.
