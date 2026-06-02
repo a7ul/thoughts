@@ -30,3 +30,7 @@ What you need is two things:
 
 - Ability to delegate work, teach the work, and get stuff done to another agent.
 - If needed, the user needs to be able to work and do the task themselves and make modifications.
+
+The way I think of this is via this mental model:
+
+"If you were to delegate the task you are trying to do to another person via this interface, how would you do it and how would you correct them if they understood it wrong?"
