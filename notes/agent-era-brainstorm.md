@@ -25,3 +25,8 @@ So the UI (for humans) using your product basically should change accordingly.
 So adding a chatbot won't get you there, since it lacks a few key things:
 
 - It doesn't convey what all the possibilities are well, and it's a stream of text that takes time to read.
+
+What you need is two things:
+
+- Ability to delegate work, teach the work, and get stuff done to another agent.
+- If needed, the user needs to be able to work and do the task themselves and make modifications.
