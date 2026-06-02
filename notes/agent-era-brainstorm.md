@@ -73,3 +73,5 @@ Let's try airline booking - same thing:
 So the gist in the end is:
 
 When you are building in level 3, think how the UX should be for delegation and teaching.
+
+Plus how you can still give manual controls so at times users can do level 2 tasks.
