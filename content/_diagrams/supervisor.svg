@@ -1,0 +1,41 @@
+<svg class="exdraw" viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A supervisor watching agent workers on a conveyor belt">
+  <defs>
+    <filter id="rough-s" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="11" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2"/>
+    </filter>
+  </defs>
+  <g filter="url(#rough-s)" fill="none" stroke="#1e1e1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="90" cy="120" r="13" fill="#fff"/>
+    <path d="M90 133 L90 182 M70 152 L110 152 M90 182 L76 210 M90 182 L104 210"/>
+    <rect x="58" y="212" width="74" height="12" rx="3" fill="#ffec99"/>
+    <path d="M120 60 q0 -16 18 -16 l86 0 q18 0 18 16 l0 28 q0 16 -18 16 l-70 0 l-18 16 l2 -16 q-18 0 -18 -16 Z" fill="#fff"/>
+    <circle cx="250" cy="250" r="20" fill="#fff"/>
+    <circle cx="700" cy="250" r="20" fill="#fff"/>
+    <path d="M250 230 L700 230 M250 270 L700 270"/>
+    <rect x="300" y="206" width="24" height="24" rx="3" fill="#a5d8ff"/>
+    <rect x="430" y="206" width="24" height="24" rx="3" fill="#a5d8ff"/>
+    <rect x="560" y="206" width="24" height="24" rx="3" fill="#a5d8ff"/>
+    <rect x="298" y="150" width="38" height="32" rx="6" fill="#d0bfff"/>
+    <path d="M317 150 L317 142"/>
+    <circle cx="317" cy="139" r="2.6" fill="#1e1e1e"/>
+    <circle cx="309" cy="166" r="2.6" fill="#1e1e1e"/>
+    <circle cx="325" cy="166" r="2.6" fill="#1e1e1e"/>
+    <rect x="428" y="150" width="38" height="32" rx="6" fill="#d0bfff"/>
+    <path d="M447 150 L447 142"/>
+    <circle cx="447" cy="139" r="2.6" fill="#1e1e1e"/>
+    <circle cx="439" cy="166" r="2.6" fill="#1e1e1e"/>
+    <circle cx="455" cy="166" r="2.6" fill="#1e1e1e"/>
+    <rect x="558" y="150" width="38" height="32" rx="6" fill="#d0bfff"/>
+    <path d="M577 150 L577 142"/>
+    <circle cx="577" cy="139" r="2.6" fill="#1e1e1e"/>
+    <circle cx="569" cy="166" r="2.6" fill="#1e1e1e"/>
+    <circle cx="585" cy="166" r="2.6" fill="#1e1e1e"/>
+  </g>
+  <g class="hw" fill="#1e1e1e">
+    <text x="138" y="78" font-size="20">looks good —</text>
+    <text x="138" y="100" font-size="20">tweak number 2</text>
+    <text x="95" y="245" font-size="18" fill="#555" text-anchor="middle">you</text>
+    <text x="475" y="312" font-size="21" fill="#555" text-anchor="middle">the conveyor = repetitive workflows · the workers = agents</text>
+  </g>
+</svg>

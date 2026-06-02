@@ -34,7 +34,7 @@ export function postPage(params: {
 ${description ? `<meta name="description" content="${escapeHtml(description)}">` : ""}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&family=Caveat:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="${root}style.css">
 </head>
 <body>
@@ -278,6 +278,23 @@ article img {
 article table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; margin: 1.75rem 0; }
 article th { text-align: left; font-weight: 600; padding: 0.5rem 0.75rem; border-bottom: 2px solid #eee; }
 article td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #f3f3f3; }
+
+/* ── Hand-drawn figures (Excalidraw-style SVG embeds) ── */
+figure.dwg { margin: 2.25rem 0; }
+figure.dwg svg, figure.dwg .exdraw {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+figure.dwg figcaption {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #777;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+.hw { font-family: 'Caveat', 'Comic Sans MS', cursive; }
 
 /* ── Comments ───────────────────────────────────────── */
 .giscus-wrap { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #eee; }

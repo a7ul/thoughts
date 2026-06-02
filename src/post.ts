@@ -1,6 +1,7 @@
 import { basename, relative } from "@std/path";
 import { parseFrontmatter } from "./frontmatter.ts";
 import { renderMarkdown } from "./markdown.ts";
+import { inlineEmbeds } from "./embed.ts";
 import { postPage } from "./template.ts";
 import type { Post } from "./types.ts";
 
@@ -13,9 +14,11 @@ export async function buildPost(filePath: string, inputDir: string): Promise<Pos
   const outputPath = relative(inputDir, filePath).replace(/\.(md|mdx)$/, ".html");
   const slug = outputPath.replace(/\.html$/, "");
 
+  const withEmbeds = await inlineEmbeds(content, inputDir);
+
   return {
     frontmatter,
-    htmlContent: renderMarkdown(content),
+    htmlContent: renderMarkdown(withEmbeds),
     outputPath,
     slug,
   };

@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Designing products in the agent era</title>
+<title>Designing products in the age of agents</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&family=Caveat:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
@@ -15,206 +15,181 @@
 <nav><a href="./index.html">← Home</a></nav>
 <article>
 <header>
-<h1>Designing products in the agent era</h1>
+<h1>Designing products in the age of agents</h1>
 <time datetime="2026-06-02">June 2, 2026</time>
 </header>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap');
-.hw { font-family: 'Caveat', 'Comic Sans MS', cursive; }
-.exdraw { width: 100%; height: auto; display: block; margin: 0 auto; }
-figure.dwg { margin: 2.25rem 0; }
-figure.dwg figcaption { text-align: center; font-size: 0.85rem; color: #777; margin-top: 0.5rem; font-style: italic; }
-</style>
-
-<p>In my <a href="/scaling-agentic-development.html" target="_blank" rel="noopener noreferrer">last post</a> I wrote about <em>building</em> software in the agent era. This one is about the other half of the job: what we actually build, and who we build it for.</p>
-<p>For the last 10 to 15 years, every app we designed rested on one quiet assumption: a human being comes to your platform and does the task. The whole craft of product design grew on top of that single premise. You build a destination, you teach people your map, and they do the work by clicking through your screens. Onboarding, navigation, empty states, the perfectly placed button — all of it exists to walk a human through your layout to the thing they came for.</p>
-<p>That premise just broke. And I don&#39;t think most product teams have internalised how completely.</p>
+<p>In my <a href="/scaling-agentic-development.html" target="_blank" rel="noopener noreferrer">last post</a> I wrote about how we <em>build</em> software now that coding agents are real. This one is about the harder question that comes right after: once everyone has these agents, what do we actually build, and who do we build it for?</p>
+<p>I want to start with something that sounds obvious but I think we have all stopped noticing, because it has been true for our entire careers.</p>
+<p>For the last 10 to 15 years, every app any of us shipped was built on one assumption: <strong>a human being comes to your platform and does the task.</strong> They open the app, they log in, they land on a dashboard, and then <em>they</em> do the work — clicking, typing, dragging, reading. Our entire craft as product people is downstream of that one sentence. Onboarding exists to get the human in. Navigation exists to walk the human to the right screen. Empty states, tooltips, the perfectly placed primary button — all of it is scaffolding for a human who has shown up to do a job by hand.</p>
+<p>That assumption just stopped being true. And I don&#39;t think most teams have sat with how deep that goes, because the change doesn&#39;t look like the changes we are used to.</p>
 <h2>Three eras of getting something done</h2>
-<p>Take any real task — let&#39;s say doing your taxes. It has lived through three eras.</p>
+<p>The cleanest way I can explain it is to take one real task and watch it move through three eras. Let&#39;s use the one I stare at every day at <a href="https://filed.com" target="_blank" rel="noopener noreferrer">Filed</a>: doing your taxes.</p>
 <figure class="dwg">
 <svg class="exdraw" viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three eras: physical, digital, agentic">
   <defs>
     <filter id="rough-e" x="-5%" y="-5%" width="110%" height="110%">
       <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="7" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.5"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2"/>
     </filter>
   </defs>
-
-  <!-- shapes (wobbled) -->
-  <g filter="url(#rough-e)" fill="none" stroke="#1e1e1e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="20"  y="80" width="210" height="200" rx="12" fill="#ffec99"/>
+  <g filter="url(#rough-e)" fill="none" stroke="#1e1e1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="20" y="80" width="210" height="200" rx="12" fill="#ffec99"/>
     <rect x="275" y="80" width="210" height="200" rx="12" fill="#a5d8ff"/>
     <rect x="530" y="80" width="210" height="200" rx="12" fill="#d0bfff"/>
-
-<pre><code>&lt;!-- physical: person + paper --&gt;
-&lt;circle cx=&quot;100&quot; cy=&quot;140&quot; r=&quot;11&quot; fill=&quot;#fff&quot;/&gt;
-&lt;path d=&quot;M100 151 L100 196 M84 168 L116 168 M100 196 L88 219 M100 196 L112 219&quot;/&gt;
-&lt;rect x=&quot;142&quot; y=&quot;150&quot; width=&quot;46&quot; height=&quot;60&quot; rx=&quot;4&quot; fill=&quot;#fff&quot;/&gt;
-&lt;path d=&quot;M150 166 L180 166 M150 178 L180 178 M150 190 L172 190&quot;/&gt;
-
-&lt;!-- digital: person + monitor --&gt;
-&lt;circle cx=&quot;345&quot; cy=&quot;140&quot; r=&quot;11&quot; fill=&quot;#fff&quot;/&gt;
-&lt;path d=&quot;M345 151 L345 196 M329 168 L361 168 M345 196 L333 219 M345 196 L357 219&quot;/&gt;
-&lt;rect x=&quot;378&quot; y=&quot;150&quot; width=&quot;72&quot; height=&quot;52&quot; rx=&quot;4&quot; fill=&quot;#fff&quot;/&gt;
-&lt;path d=&quot;M388 164 L432 164 M388 176 L424 176 M414 202 L414 214 M398 214 L430 214&quot;/&gt;
-
-&lt;!-- agentic: small supervisor + robot worker --&gt;
-&lt;circle cx=&quot;572&quot; cy=&quot;132&quot; r=&quot;9&quot; fill=&quot;#fff&quot;/&gt;
-&lt;path d=&quot;M572 141 L572 176 M560 155 L584 155 M572 176 L563 196 M572 176 L581 196&quot;/&gt;
-&lt;rect x=&quot;625&quot; y=&quot;150&quot; width=&quot;46&quot; height=&quot;40&quot; rx=&quot;7&quot; fill=&quot;#fff&quot;/&gt;
-&lt;path d=&quot;M648 150 L648 140&quot;/&gt;
-&lt;circle cx=&quot;648&quot; cy=&quot;136&quot; r=&quot;3&quot; fill=&quot;#1e1e1e&quot;/&gt;
-&lt;circle cx=&quot;638&quot; cy=&quot;168&quot; r=&quot;3.2&quot; fill=&quot;#1e1e1e&quot;/&gt;
-&lt;circle cx=&quot;658&quot; cy=&quot;168&quot; r=&quot;3.2&quot; fill=&quot;#1e1e1e&quot;/&gt;
-&lt;path d=&quot;M633 190 L633 210 L663 210 L663 190 M625 196 L617 206 M671 196 L679 206&quot;/&gt;
-
-&lt;!-- arrows between panels --&gt;
-&lt;path d=&quot;M234 180 L271 180 M271 180 L263 175 M271 180 L263 185&quot;/&gt;
-&lt;path d=&quot;M489 180 L526 180 M526 180 L518 175 M526 180 L518 185&quot;/&gt;
-</code></pre>
+    <circle cx="100" cy="140" r="11" fill="#fff"/>
+    <path d="M100 151 L100 196 M84 168 L116 168 M100 196 L88 219 M100 196 L112 219"/>
+    <rect x="142" y="150" width="46" height="60" rx="4" fill="#fff"/>
+    <path d="M150 166 L180 166 M150 178 L180 178 M150 190 L172 190"/>
+    <circle cx="345" cy="140" r="11" fill="#fff"/>
+    <path d="M345 151 L345 196 M329 168 L361 168 M345 196 L333 219 M345 196 L357 219"/>
+    <rect x="378" y="150" width="72" height="52" rx="4" fill="#fff"/>
+    <path d="M388 164 L432 164 M388 176 L424 176 M414 202 L414 214 M398 214 L430 214"/>
+    <circle cx="572" cy="132" r="9" fill="#fff"/>
+    <path d="M572 141 L572 176 M560 155 L584 155 M572 176 L563 196 M572 176 L581 196"/>
+    <rect x="625" y="150" width="46" height="40" rx="7" fill="#fff"/>
+    <path d="M648 150 L648 140"/>
+    <circle cx="648" cy="136" r="3" fill="#1e1e1e"/>
+    <circle cx="638" cy="168" r="3.2" fill="#1e1e1e"/>
+    <circle cx="658" cy="168" r="3.2" fill="#1e1e1e"/>
+    <path d="M633 190 L633 210 L663 210 L663 190 M625 196 L617 206 M671 196 L679 206"/>
+    <path d="M234 180 L271 180 M271 180 L263 175 M271 180 L263 185"/>
+    <path d="M489 180 L526 180 M526 180 L518 175 M526 180 L518 185"/>
   </g>
-
-  <!-- crisp text -->
   <g class="hw" fill="#1e1e1e" text-anchor="middle">
     <text x="125" y="58" font-size="30" font-weight="700">Physical</text>
     <text x="380" y="58" font-size="30" font-weight="700">Digital</text>
     <text x="635" y="58" font-size="30" font-weight="700">Agentic</text>
-
-<pre><code>&lt;text x=&quot;125&quot; y=&quot;305&quot; font-size=&quot;21&quot; fill=&quot;#555&quot;&gt;go there, do it yourself&lt;/text&gt;
-&lt;text x=&quot;380&quot; y=&quot;305&quot; font-size=&quot;21&quot; fill=&quot;#555&quot;&gt;log in, do it yourself&lt;/text&gt;
-&lt;text x=&quot;635&quot; y=&quot;305&quot; font-size=&quot;21&quot; fill=&quot;#555&quot;&gt;delegate &amp;amp; verify&lt;/text&gt;
-
-&lt;text x=&quot;380&quot; y=&quot;352&quot; font-size=&quot;24&quot; font-weight=&quot;700&quot;&gt;Every leap changed the medium — this one changes the doer.&lt;/text&gt;
-</code></pre>
+    <text x="125" y="305" font-size="21" fill="#555">go there, do it yourself</text>
+    <text x="380" y="305" font-size="21" fill="#555">log in, do it yourself</text>
+    <text x="635" y="305" font-size="21" fill="#555">delegate &amp; verify</text>
+    <text x="380" y="352" font-size="24" font-weight="700">Every leap changed the medium — this one changes the doer.</text>
   </g>
 </svg>
-<figcaption>Physical → digital → agentic. The first jump moved atoms to bits. The second moves the work off your hands.</figcaption>
+<figcaption>Physical → digital → agentic. The first jump moved atoms to bits. The second one moves the work off your hands entirely.</figcaption>
 </figure>
+**Era one — physical.** You did your taxes in the real world. You collected paper, you drove to an office, you sat across a desk from a tax pro, you signed forms. The work was slow, it was made of atoms, and it was located somewhere. If you wanted it done you physically went and did it (or physically handed it to a person who did).
 
-<p><strong>Physical.</strong> You gathered paper, drove to an office, sat across from someone, signed forms. The work was slow and located somewhere.</p>
-<p><strong>Digital.</strong> Apps took that physical task and made a clean digital copy of it. No commute, no paper, instant manipulation, and you could do it from wherever you were. This is the era we spent the last decade and a half perfecting. But notice what actually changed and what didn&#39;t: we digitised the <em>task</em>, and the human was still the one doing it. TurboTax never did your taxes — it gave you a faster surface to do them yourself. The form moved from paper to screen. The doer never moved.</p>
-<p>So naturally, the interfaces we built were interfaces for <em>humans to talk to computers</em> and do the task. We even automated significant chunks along the way. But the shape was always the same: a person, sitting in front of your product, doing the work.</p>
+<p><strong>Era two — digital.</strong> This is the era we have spent our whole careers perfecting. We took that physical process and built a clean digital copy of it. TurboTax, online banking, Amazon, Expedia — same underlying task, now made of bits. No commute, no paper, instant, and you could do it from anywhere at 2am in your pajamas. We removed an enormous amount of friction.</p>
+<p>But here is the part worth staring at, because it is the whole point of this post. <strong>The digital era changed the <em>medium</em> of the task. It never changed the <em>doer</em>.</strong> TurboTax did not do your taxes. It gave you a faster, friendlier surface on which to do your taxes <em>yourself</em>. The form went from paper to a web form. The shoebox of receipts went from cardboard to a file upload. But you were still the engine. You still sat down and did every step. For 15 years, &quot;innovation&quot; mostly meant: take something physical, make it digital, shave off friction — and leave the human exactly where they always were, in the driver&#39;s seat, doing the work.</p>
+<p>So of course the interfaces we got good at building were interfaces for <em>a human to talk to a computer and do a task by hand</em>. Buttons, forms, tables, wizards. We even automated big chunks along the way — autofill, recommendations, fraud flags — but the spine never moved. A person sits in front of the product and performs the work.</p>
+<p><strong>Era three — agentic.</strong> This is the one that is genuinely different, and I think it is different in kind, not in degree.</p>
 <h2>The agent era changes the doer, not the medium</h2>
-<p>This is the part that is genuinely crazy, and it&#39;s why it isn&#39;t just the next incremental step. Every previous improvement made it <em>easier for the human to do the work</em>. This one removes the human from doing the work at all.</p>
-<p>The agent era is a layer of abstraction <em>over</em> the digital world. The processes are still mapped out underneath — the digital platforms still exist. But you are now one step ahead of the human doing the task. You describe what you want, an agent does it, and you step in only when you need to.</p>
-<p>Digital was a change of <em>medium</em> (atoms → bits). Agents are a change of <em>doer</em> (you → an agent acting for you). Those are not the same kind of shift. And here&#39;s the uncomfortable bit: our entire product playbook — destinations, navigation, onboarding, engagement metrics — was written for the change-of-medium era. It assumed the human stays the doer. So when the doer changes, the playbook isn&#39;t a little out of date. It&#39;s pointed at the wrong person.</p>
-<h2>So we built a UI for agents, right? No.</h2>
-<p>This is where I think a lot of teams take a wrong turn. You hear &quot;build a UI for agents.&quot; That&#39;s incorrect. <strong>UI is always built for humans.</strong> Agents don&#39;t need tooltips and layouts — they need a clean contract.</p>
-<p>The right way to see it is as a stack of levels.</p>
+<p>Every improvement in the digital era made it <em>easier for the human to do the work</em>. The agent era does something we have never done before at this scale: it <strong>takes the human out of doing the work.</strong></p>
+<p>The agent era is a layer of abstraction sitting <em>on top of</em> the digital world. The processes underneath are still there — the digital platforms still exist, the forms still exist, the database rows still exist. But you, the user, are now one step removed from performing the task. You describe your intent, an agent goes and does it across those digital surfaces, and you step back in only when you want to check something or make a call the agent shouldn&#39;t make on its own.</p>
+<p>Look at the gap between the two jumps:</p>
+<ul>
+<li>Physical → digital was a <strong>change of medium</strong>: atoms became bits.</li>
+<li>Digital → agentic is a <strong>change of doer</strong>: you became an agent acting on your behalf.</li>
+</ul>
+<p>These are not the same kind of shift, and that is exactly why our instincts mislead us here. Our entire product playbook — destinations, navigation funnels, onboarding flows, engagement metrics, time-in-app — was written for the change-of-medium era. Every line of it quietly assumes the human stays the doer. So when the doer changes, the playbook isn&#39;t slightly outdated. It is aimed at the wrong person entirely. We are still polishing the lobby while the actual work has quietly moved to a back room we never designed.</p>
+<h2>So you build a UI for agents, right? No.</h2>
+<p>Here is the first wrong turn I see teams take, and I have caught myself reaching for it too. You hear &quot;agents are the new users,&quot; and you conclude: <em>great, let&#39;s design a UI for agents.</em></p>
+<p>That is incorrect. <strong>A UI is always for humans.</strong> Agents do not want a layout. They do not need a tooltip or an onboarding tour or a reassuring micro-animation. An agent wants a clear, machine-readable contract: here is a thing you can do, here is what it expects, here is what it returns, here is what an error looks like.</p>
+<p>The way I find it useful to think about it is as a stack of three levels.</p>
 <figure class="dwg">
 <svg class="exdraw" viewBox="0 0 760 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three levels: core systems, the digital app, AI-native delegation">
   <defs>
     <filter id="rough-l" x="-5%" y="-5%" width="110%" height="110%">
       <feTurbulence type="fractalNoise" baseFrequency="0.013" numOctaves="2" seed="3" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2"/>
     </filter>
   </defs>
-
-  <g filter="url(#rough-l)" fill="none" stroke="#1e1e1e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="120" y="50"  width="520" height="95" rx="12" fill="#d0bfff"/>
+  <g filter="url(#rough-l)" fill="none" stroke="#1e1e1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="120" y="50" width="520" height="95" rx="12" fill="#d0bfff"/>
     <rect x="120" y="170" width="520" height="95" rx="12" fill="#a5d8ff"/>
     <rect x="120" y="290" width="520" height="95" rx="12" fill="#e9ecef"/>
-
-<pre><code>&lt;circle cx=&quot;80&quot; cy=&quot;97&quot;  r=&quot;26&quot; fill=&quot;#fff&quot; stroke=&quot;#6741d9&quot;/&gt;
-&lt;circle cx=&quot;80&quot; cy=&quot;217&quot; r=&quot;26&quot; fill=&quot;#fff&quot; stroke=&quot;#1971c2&quot;/&gt;
-&lt;circle cx=&quot;80&quot; cy=&quot;337&quot; r=&quot;26&quot; fill=&quot;#fff&quot; stroke=&quot;#495057&quot;/&gt;
-
-&lt;!-- supervisor on the right of level 3 --&gt;
-&lt;circle cx=&quot;700&quot; cy=&quot;74&quot; r=&quot;10&quot; fill=&quot;#fff&quot;/&gt;
-&lt;path d=&quot;M700 84 L700 112 M688 96 L712 96 M700 112 L692 130 M700 112 L708 130&quot;/&gt;
-&lt;path d=&quot;M686 97 L646 97 M646 97 L654 92 M646 97 L654 102&quot;/&gt;
-
-&lt;!-- manual fallback arrow, level 3 -&gt; level 2 --&gt;
-&lt;path d=&quot;M380 150 L380 166 M380 166 L375 158 M380 166 L385 158&quot; stroke-dasharray=&quot;5 5&quot;/&gt;
-</code></pre>
+    <circle cx="80" cy="97" r="26" fill="#fff" stroke="#6741d9"/>
+    <circle cx="80" cy="217" r="26" fill="#fff" stroke="#1971c2"/>
+    <circle cx="80" cy="337" r="26" fill="#fff" stroke="#495057"/>
+    <circle cx="700" cy="74" r="10" fill="#fff"/>
+    <path d="M700 84 L700 112 M688 96 L712 96 M700 112 L692 130 M700 112 L708 130"/>
+    <path d="M686 97 L646 97 M646 97 L654 92 M646 97 L654 102"/>
+    <path d="M380 150 L380 166 M380 166 L375 158 M380 166 L385 158" stroke-dasharray="5 5"/>
   </g>
-
   <g class="hw" fill="#1e1e1e">
-    <text x="80"  y="107" font-size="34" font-weight="700" text-anchor="middle">3</text>
-    <text x="80"  y="227" font-size="34" font-weight="700" text-anchor="middle">2</text>
-    <text x="80"  y="347" font-size="34" font-weight="700" text-anchor="middle">1</text>
-
-<pre><code>&lt;text x=&quot;140&quot; y=&quot;90&quot;  font-size=&quot;25&quot; font-weight=&quot;700&quot;&gt;Level 3 · AI-native delegation&lt;/text&gt;
-&lt;text x=&quot;140&quot; y=&quot;122&quot; font-size=&quot;20&quot; fill=&quot;#444&quot;&gt;chat · skills · workflows · integrations&lt;/text&gt;
-
-&lt;text x=&quot;140&quot; y=&quot;210&quot; font-size=&quot;25&quot; font-weight=&quot;700&quot;&gt;Level 2 · the digital app&lt;/text&gt;
-&lt;text x=&quot;140&quot; y=&quot;242&quot; font-size=&quot;20&quot; fill=&quot;#444&quot;&gt;human UI  +  MCP / tools for agents&lt;/text&gt;
-
-&lt;text x=&quot;140&quot; y=&quot;330&quot; font-size=&quot;25&quot; font-weight=&quot;700&quot;&gt;Level 1 · core systems, data &amp;amp; rails&lt;/text&gt;
-
-&lt;text x=&quot;650&quot; y=&quot;150&quot; font-size=&quot;19&quot; fill=&quot;#555&quot;&gt;you supervise&lt;/text&gt;
-&lt;text x=&quot;392&quot; y=&quot;163&quot; font-size=&quot;18&quot; fill=&quot;#555&quot;&gt;drop down to do it yourself&lt;/text&gt;
-</code></pre>
+    <text x="80" y="107" font-size="34" font-weight="700" text-anchor="middle">3</text>
+    <text x="80" y="227" font-size="34" font-weight="700" text-anchor="middle">2</text>
+    <text x="80" y="347" font-size="34" font-weight="700" text-anchor="middle">1</text>
+    <text x="140" y="90" font-size="25" font-weight="700">Level 3 · AI-native delegation</text>
+    <text x="140" y="122" font-size="20" fill="#444">chat · skills · workflows · integrations</text>
+    <text x="140" y="210" font-size="25" font-weight="700">Level 2 · the digital app</text>
+    <text x="140" y="242" font-size="20" fill="#444">human UI  +  MCP / tools for agents</text>
+    <text x="140" y="330" font-size="25" font-weight="700">Level 1 · core systems, data &amp; rails</text>
+    <text x="650" y="150" font-size="19" fill="#555">you supervise</text>
+    <text x="392" y="163" font-size="18" fill="#555">drop down to do it yourself</text>
   </g>
 </svg>
-<figcaption>Physical → digital built levels 1 and 2. The agent era adds level 3 on top.</figcaption>
+<figcaption>Physical → digital already built levels 1 and 2. The agent era adds level 3 on top — and that is where the new product lives.</figcaption>
 </figure>
+**Level 1 — core systems, data and rails.** The ledger, the inventory, the flight database, the actual tax records. The source of truth. This barely changes; it is the bedrock everything else sits on.
 
-<p><strong>Level 1</strong> is the core — the systems, data and rails underneath everything.</p>
-<p><strong>Level 2</strong> is the digital app: the platform humans have logged into for years. The new part is that level 2 now also needs to expose an interface for <em>agents</em> — something like MCP. The underlying digital platforms (neo-banks, ecommerce, banks, airlines) are the ones who need to build that. Their human UI is still for humans; the MCP surface is for agents.</p>
-<p><strong>Level 3</strong> is the new layer — the AI-native product. It&#39;s chat, skills, workflows and integrations. The latter two reach down into those base platforms, which are now open to both humans and AI. This is where the value is for an AI-native company: your job is to build agents that work one level up and take on the job like another employee.</p>
-<p>The implication is concrete. If you&#39;re building a bank today, you don&#39;t get to build just level 2 anymore — you build levels 1, 2 <em>and</em> 3, with your users primarily living on level 3 and dropping down to level 2 only when they need to. And if your product <em>only</em> lives on level 3, the level-2 UI that humans use should change accordingly. It stops being the main event and becomes the fallback.</p>
-<h2>A chatbot is not the answer</h2>
-<p>The lazy version of level 3 is to bolt a chat box onto your existing app and call it agent-ready. It doesn&#39;t get you there, because a chatbot alone is missing a couple of crucial things.</p>
-<p>It doesn&#39;t convey what&#39;s actually possible — a blank text box gives you no sense of the space of things you can ask for. And it answers in a stream of text that takes real time to read. That&#39;s the opposite of what delegation is supposed to buy you.</p>
-<p>What you actually need is two things:</p>
-<ul>
-<li>The ability to <strong>delegate</strong> work — to teach a task to an agent and have it get the thing done.</li>
-<li>The ability for the user to <strong>step in and do it themselves</strong>, and make modifications, when they want to.</li>
-</ul>
-<h2>The mental model: how would you hand this to a person?</h2>
-<p>Whenever I&#39;m designing one of these surfaces, this is the question I keep coming back to:</p>
+<p><strong>Level 2 — the digital app.</strong> This is the platform humans have been logging into for 15 years. The new requirement is that level 2 now also has to expose a second face: an interface <em>for agents</em>. Something like an MCP server — a set of typed tools agents can call. Crucially, this is not a UI. A level-2 product now has two front doors: a human UI for people, and a tool/MCP surface for agents. The underlying digital platforms — the neo-banks, the airlines, the ecommerce backends — are the ones who have to build this agent-facing door.</p>
+<p>The difference between a screen and a tool is the whole game, so let me make it concrete. The old way to ship a feature was to design a screen: <em>&quot;add a page where the user reviews flagged transactions.&quot;</em> The agent-era way is to expose a capability:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;list_flagged_transactions&quot;,
+  &quot;description&quot;: &quot;Return transactions that look unusual for this account&quot;,
+  &quot;input&quot;: { &quot;account_id&quot;: &quot;string&quot;, &quot;since&quot;: &quot;date&quot; },
+  &quot;returns&quot;: [{ &quot;id&quot;: &quot;string&quot;, &quot;amount&quot;: &quot;number&quot;,
+               &quot;merchant&quot;: &quot;string&quot;, &quot;reason&quot;: &quot;string&quot; }]
+}
+</code></pre>
+<p>Once that capability exists, the human review screen is just <em>one</em> consumer of it. An agent is another. A scheduled automation is a third. You were forced to name the actual thing the user is trying to do, instead of the screen they happened to be looking at — and that turns out to make the human product cleaner too.</p>
+<p><strong>Level 3 — AI-native delegation.</strong> This is the new layer, and it is where the new kind of product lives. It is made of four things: <strong>chat</strong> (how you talk to it), <strong>skills</strong> (how you teach it the way you do things), <strong>workflows</strong> (the repeatable jobs it runs), and <strong>integrations</strong> (how it reaches down into the level-2 platforms). The last two are what actually touch those base digital platforms — now opened up to both humans and agents.</p>
+<p>This is where the value sits for an AI-native company. Your job at level 3 is not to rebuild the bank. Your job is to build agents that work one level up and take on the job the way a good employee would.</p>
+<p>The practical consequence is bigger than it sounds. If you are building a bank today, you don&#39;t get to build only level 2 anymore — you build levels 1, 2, <em>and</em> 3, with your users living mostly at level 3 and dropping down to the level-2 UI only when they want to do something by hand. And if your product lives <em>only</em> at level 3, then the level-2 human UI stops being the main event. It becomes the fallback.</p>
+<h2>Why a chatbot is not the answer</h2>
+<p>The lazy version of level 3 is to bolt a chat box onto your existing app and call it agent-ready. I have built that version. It doesn&#39;t get you there, and it is worth being precise about why, because the reasons tell you what to build instead.</p>
+<p>A bare chat box fails on two specific things:</p>
+<p><strong>It doesn&#39;t convey what&#39;s possible.</strong> A blank text box with a blinking cursor gives the user zero sense of the space of things they are allowed to ask for. A traditional UI, for all its friction, is also a <em>menu</em> — it shows you what the product can do. Strip it down to a chat prompt and you have quietly offloaded the entire problem of &quot;what can I even do here&quot; onto the user. Most people freeze.</p>
+<p><strong>It answers in a slow stream of text.</strong> Delegation is supposed to <em>save</em> you time. But a wall of generated prose takes real effort to read, and reading paragraphs to find out whether your task got done is the opposite of the point. You wanted to hand off the work, not acquire a pen pal.</p>
+<p>So what you actually need is two capabilities living side by side:</p>
+<ol>
+<li>The ability to <strong>delegate</strong> — to describe a task, <em>teach</em> the agent how you want it done, and have it get done.</li>
+<li>The ability to <strong>step in and do it yourself</strong> — to take the wheel, do the task by hand, and make modifications, whenever you want to.</li>
+</ol>
+<h2>The mental model I keep coming back to</h2>
+<p>Whenever I am designing one of these surfaces, this is the test I run in my head:</p>
 <blockquote>
-<p>If you were to delegate the task you&#39;re trying to do to another person through this interface — how would you do it, and how would you correct them if they understood it wrong?</p>
+<p>If you had to delegate this exact task to another person — through this interface, and only this interface — how would you do it? And when they misunderstood you, how would you correct them?</p>
 </blockquote>
-<p>That single question does a lot of work. It forces you to think about how intent is communicated, how progress is made visible, and how a human takes back the wheel mid-task. It&#39;s a much better north star than &quot;where do the buttons go.&quot;</p>
+<p>I love this question because it quietly forces every hard part into the open. How does intent get communicated clearly? How does the person show you their progress so you can tell if they are on track? How do you interrupt and course-correct mid-task without starting over? How do they learn your preferences so you don&#39;t have to repeat yourself every time? &quot;Where do the buttons go&quot; never surfaces any of that. &quot;How would you hand this to a competent colleague&quot; surfaces all of it.</p>
 <h2>You are the supervisor now</h2>
-<p>The role the human plays changes. You&#39;re not the worker anymore — you&#39;re the supervisor.</p>
+<p>The role the human plays changes completely. You are not the worker anymore. You are the supervisor.</p>
 <figure class="dwg">
 <svg class="exdraw" viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A supervisor watching agent workers on a conveyor belt">
   <defs>
     <filter id="rough-s" x="-5%" y="-5%" width="110%" height="110%">
       <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="11" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2"/>
     </filter>
   </defs>
-
-  <g filter="url(#rough-s)" fill="none" stroke="#1e1e1e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-    <!-- supervisor on a small platform -->
+  <g filter="url(#rough-s)" fill="none" stroke="#1e1e1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
     <circle cx="90" cy="120" r="13" fill="#fff"/>
     <path d="M90 133 L90 182 M70 152 L110 152 M90 182 L76 210 M90 182 L104 210"/>
-    <rect x="60" y="212" width="70" height="12" rx="3" fill="#ffec99"/>
-    <!-- speech bubble -->
+    <rect x="58" y="212" width="74" height="12" rx="3" fill="#ffec99"/>
     <path d="M120 60 q0 -16 18 -16 l86 0 q18 0 18 16 l0 28 q0 16 -18 16 l-70 0 l-18 16 l2 -16 q-18 0 -18 -16 Z" fill="#fff"/>
-
-<pre><code>&lt;!-- conveyor belt --&gt;
-&lt;circle cx=&quot;250&quot; cy=&quot;250&quot; r=&quot;20&quot; fill=&quot;#fff&quot;/&gt;
-&lt;circle cx=&quot;700&quot; cy=&quot;250&quot; r=&quot;20&quot; fill=&quot;#fff&quot;/&gt;
-&lt;path d=&quot;M250 230 L700 230 M250 270 L700 270&quot;/&gt;
-&lt;!-- items on belt --&gt;
-&lt;rect x=&quot;300&quot; y=&quot;206&quot; width=&quot;24&quot; height=&quot;24&quot; rx=&quot;3&quot; fill=&quot;#a5d8ff&quot;/&gt;
-&lt;rect x=&quot;430&quot; y=&quot;206&quot; width=&quot;24&quot; height=&quot;24&quot; rx=&quot;3&quot; fill=&quot;#a5d8ff&quot;/&gt;
-&lt;rect x=&quot;560&quot; y=&quot;206&quot; width=&quot;24&quot; height=&quot;24&quot; rx=&quot;3&quot; fill=&quot;#a5d8ff&quot;/&gt;
-
-&lt;!-- three robot workers --&gt;
-&lt;g&gt;
-  &lt;rect x=&quot;298&quot; y=&quot;150&quot; width=&quot;38&quot; height=&quot;32&quot; rx=&quot;6&quot; fill=&quot;#d0bfff&quot;/&gt;
-  &lt;path d=&quot;M317 150 L317 142&quot;/&gt;&lt;circle cx=&quot;317&quot; cy=&quot;139&quot; r=&quot;2.6&quot; fill=&quot;#1e1e1e&quot;/&gt;
-  &lt;circle cx=&quot;309&quot; cy=&quot;166&quot; r=&quot;2.6&quot; fill=&quot;#1e1e1e&quot;/&gt;&lt;circle cx=&quot;325&quot; cy=&quot;166&quot; r=&quot;2.6&quot; fill=&quot;#1e1e1e&quot;/&gt;
-&lt;/g&gt;
-&lt;g&gt;
-  &lt;rect x=&quot;428&quot; y=&quot;150&quot; width=&quot;38&quot; height=&quot;32&quot; rx=&quot;6&quot; fill=&quot;#d0bfff&quot;/&gt;
-  &lt;path d=&quot;M447 150 L447 142&quot;/&gt;&lt;circle cx=&quot;447&quot; cy=&quot;139&quot; r=&quot;2.6&quot; fill=&quot;#1e1e1e&quot;/&gt;
-  &lt;circle cx=&quot;439&quot; cy=&quot;166&quot; r=&quot;2.6&quot; fill=&quot;#1e1e1e&quot;/&gt;&lt;circle cx=&quot;455&quot; cy=&quot;166&quot; r=&quot;2.6&quot; fill=&quot;#1e1e1e&quot;/&gt;
-&lt;/g&gt;
-&lt;g&gt;
-  &lt;rect x=&quot;558&quot; y=&quot;150&quot; width=&quot;38&quot; height=&quot;32&quot; rx=&quot;6&quot; fill=&quot;#d0bfff&quot;/&gt;
-  &lt;path d=&quot;M577 150 L577 142&quot;/&gt;&lt;circle cx=&quot;577&quot; cy=&quot;139&quot; r=&quot;2.6&quot; fill=&quot;#1e1e1e&quot;/&gt;
-  &lt;circle cx=&quot;569&quot; cy=&quot;166&quot; r=&quot;2.6&quot; fill=&quot;#1e1e1e&quot;/&gt;&lt;circle cx=&quot;585&quot; cy=&quot;166&quot; r=&quot;2.6&quot; fill=&quot;#1e1e1e&quot;/&gt;
-&lt;/g&gt;
-</code></pre>
+    <circle cx="250" cy="250" r="20" fill="#fff"/>
+    <circle cx="700" cy="250" r="20" fill="#fff"/>
+    <path d="M250 230 L700 230 M250 270 L700 270"/>
+    <rect x="300" y="206" width="24" height="24" rx="3" fill="#a5d8ff"/>
+    <rect x="430" y="206" width="24" height="24" rx="3" fill="#a5d8ff"/>
+    <rect x="560" y="206" width="24" height="24" rx="3" fill="#a5d8ff"/>
+    <rect x="298" y="150" width="38" height="32" rx="6" fill="#d0bfff"/>
+    <path d="M317 150 L317 142"/>
+    <circle cx="317" cy="139" r="2.6" fill="#1e1e1e"/>
+    <circle cx="309" cy="166" r="2.6" fill="#1e1e1e"/>
+    <circle cx="325" cy="166" r="2.6" fill="#1e1e1e"/>
+    <rect x="428" y="150" width="38" height="32" rx="6" fill="#d0bfff"/>
+    <path d="M447 150 L447 142"/>
+    <circle cx="447" cy="139" r="2.6" fill="#1e1e1e"/>
+    <circle cx="439" cy="166" r="2.6" fill="#1e1e1e"/>
+    <circle cx="455" cy="166" r="2.6" fill="#1e1e1e"/>
+    <rect x="558" y="150" width="38" height="32" rx="6" fill="#d0bfff"/>
+    <path d="M577 150 L577 142"/>
+    <circle cx="577" cy="139" r="2.6" fill="#1e1e1e"/>
+    <circle cx="569" cy="166" r="2.6" fill="#1e1e1e"/>
+    <circle cx="585" cy="166" r="2.6" fill="#1e1e1e"/>
   </g>
-
   <g class="hw" fill="#1e1e1e">
     <text x="138" y="78" font-size="20">looks good —</text>
     <text x="138" y="100" font-size="20">tweak number 2</text>
@@ -222,34 +197,36 @@ figure.dwg figcaption { text-align: center; font-size: 0.85rem; color: #777; mar
     <text x="475" y="312" font-size="21" fill="#555" text-anchor="middle">the conveyor = repetitive workflows · the workers = agents</text>
   </g>
 </svg>
-<figcaption>The supervisor takes a peek when needed and mostly just gives instructions. The workers are agents now.</figcaption>
+<figcaption>The supervisor mostly gives instructions and takes a peek when needed. The workers on the belt are agents now.</figcaption>
 </figure>
+I keep picturing a supervisor on a factory floor. Think of the conveyor belts as your workflows — the repetitive, well-understood tasks that just need to get reliably done. The workers along the belt do the actual work. The supervisor doesn't do the work; they walk the floor, give instructions, peek at a station when something looks off, and step in only when a judgment call is needed. In this era, the workers are agents, and you are the supervisor.
 
-<p>Think of an industrial belt. The workflows are the belt — the repetitive tasks that just need to get done. A supervisor can peek in when needed, but mostly they give instructions and talk to the workers. In this era, the workers are agents.</p>
-<p>And this is exactly why chat stays crucial. The supervisor role is <em>communication</em> at its core. It has to be text or voice. So the interface isn&#39;t a chatbot bolted on — it&#39;s a way to talk to an agent on one side, while seeing the work being done on the other. The UX still matters enormously; it&#39;s just no longer arranging a form for someone to fill in by hand.</p>
-<p>In general, we need interfaces geared toward running a task <em>for</em> you, while handing you control when you want it. These tasks should be able to run while you&#39;re asleep — and get done the way <em>you</em> would do them.</p>
-<h2>What this looks like</h2>
-<p>The abstract stuff gets concrete fast once you sketch the actual product. The pattern repeats across domains: a way to delegate, a live view of the work, and a manual fallback for when you want to drive.</p>
-<p><strong>Neo-bank.</strong> Instead of logging in to eyeball your transactions, you set an agent to do it every morning and flag anything off. You still keep the ability to go look yourself.</p>
+<p>And this is exactly why chat is still crucial — not as a gimmick, but because <strong>the supervisor&#39;s job is fundamentally communication.</strong> A supervisor leads by talking: giving direction, asking for status, correcting course. That has to happen in text or voice, because that is what instruction <em>is</em>. So the interface is not &quot;a chatbot bolted onto an app.&quot; It is a way to talk to the agent on one side, paired with a live view of the work being done on the other. The UX still matters enormously. It just isn&#39;t a form to fill in by hand anymore — it is a cockpit for steering work.</p>
+<p>And once you accept that, the most valuable property falls out naturally: these tasks should be able to run <strong>while you are asleep</strong>, and get done <strong>the way you would have done them</strong>. A supervisor who has trained their team well doesn&#39;t have to be present for every shift. That is the bar.</p>
+<h2>What this actually looks like</h2>
+<p>This all stays abstract until you sketch the real product, so let me walk through three. The pattern is the same every time: a way to delegate, a live view of the work, and a manual fallback for when you want to drive yourself — with the human holding the wheel on anything destructive.</p>
+<h3>Neo-bank</h3>
+<p>The level-2 task is &quot;log in and check my transactions.&quot; For 15 years the product&#39;s job was to render that screen beautifully. In the agent era, you shouldn&#39;t have to <em>do</em> that at all.</p>
+<p>Instead, you set an agent once: <em>watch my account every morning, and flag anything that looks off.</em> Now the work runs while you sleep. Each morning you get a short, scannable result — not a paragraph — and the only thing left for you is the judgment call: is this flagged charge actually fraud or not? You keep the ability to open the full transaction list and dig in yourself whenever you want. The agent does the watching; you keep the deciding.</p>
 <figure class="dwg">
 <svg class="exdraw" viewBox="0 0 760 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Neo-bank agent UI mockup">
   <defs>
     <filter id="rough-m1" x="-4%" y="-4%" width="108%" height="108%">
       <feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="2" seed="5" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="2"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.8"/>
     </filter>
   </defs>
-  <g filter="url(#rough-m1)" fill="none" stroke="#1e1e1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <g filter="url(#rough-m1)" fill="none" stroke="#1e1e1e" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
     <rect x="30" y="20" width="700" height="390" rx="14" fill="#fff"/>
     <path d="M30 62 L730 62"/>
-    <circle cx="55" cy="41" r="5"/><circle cx="74" cy="41" r="5"/><circle cx="93" cy="41" r="5"/>
+    <circle cx="55" cy="41" r="5"/>
+    <circle cx="74" cy="41" r="5"/>
+    <circle cx="93" cy="41" r="5"/>
     <rect x="600" y="30" width="110" height="24" rx="6" fill="#f1f3f5"/>
-    <!-- chat panel -->
     <rect x="48" y="78" width="270" height="315" rx="10" fill="#f8f9fa"/>
     <rect x="120" y="110" width="184" height="48" rx="10" fill="#d0bfff"/>
-    <rect x="62"  y="176" width="170" height="44" rx="10" fill="#fff"/>
-    <rect x="62"  y="356" width="244" height="28" rx="14" fill="#fff"/>
-    <!-- work panel -->
+    <rect x="62" y="176" width="170" height="44" rx="10" fill="#fff"/>
+    <rect x="62" y="356" width="244" height="28" rx="14" fill="#fff"/>
     <rect x="336" y="78" width="378" height="315" rx="10" fill="#fff"/>
     <rect x="352" y="118" width="346" height="120" rx="8" fill="#f8f9fa"/>
     <rect x="372" y="262" width="120" height="34" rx="8" fill="#b2f2bb"/>
@@ -272,29 +249,32 @@ figure.dwg figcaption { text-align: center; font-size: 0.85rem; color: #777; mar
     <text x="352" y="330" font-size="17" fill="#888">you get the final say</text>
   </g>
 </svg>
-<figcaption>Set it once, it runs every morning while you sleep — and you still hold the approve / ignore button.</figcaption>
+<figcaption>Set it once; it runs every morning while you sleep. You still hold the review / ignore decision — and the manual view is one tap away.</figcaption>
 </figure>
+### Ecommerce
 
-<p><strong>Ecommerce.</strong> You <em>can</em> search yourself, but instead you tell a chat-like surface what you&#39;re after and it filters the catalogue down for you. You keep the final say on the destructive action — checkout — while the searching and filtering is done by the agent.</p>
+<p>You <em>can</em> still search and filter the catalogue yourself — that path doesn&#39;t go away. But most of the time you shouldn&#39;t have to. You tell a chat-like surface what you are actually after — <em>running shoes, under $100, size 10, something blue</em> — and the agent does the searching and filtering and comes back with a handful of real options.</p>
+<p>Notice where the line is drawn. Searching and filtering are cheap and reversible, so the agent just does them. <strong>Checkout is destructive</strong> — money leaves your account — so that one stays behind an explicit human OK. That split, &quot;let the agent do the reversible stuff freely, gate the irreversible stuff behind me,&quot; is one of the core design decisions you now make for every single action in your product.</p>
 <figure class="dwg">
 <svg class="exdraw" viewBox="0 0 760 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ecommerce agent UI mockup">
   <defs>
     <filter id="rough-m2" x="-4%" y="-4%" width="108%" height="108%">
       <feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="2" seed="9" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="2"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.8"/>
     </filter>
   </defs>
-  <g filter="url(#rough-m2)" fill="none" stroke="#1e1e1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <g filter="url(#rough-m2)" fill="none" stroke="#1e1e1e" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
     <rect x="30" y="20" width="700" height="390" rx="14" fill="#fff"/>
     <path d="M30 62 L730 62"/>
-    <circle cx="55" cy="41" r="5"/><circle cx="74" cy="41" r="5"/><circle cx="93" cy="41" r="5"/>
+    <circle cx="55" cy="41" r="5"/>
+    <circle cx="74" cy="41" r="5"/>
+    <circle cx="93" cy="41" r="5"/>
     <rect x="585" y="30" width="125" height="24" rx="6" fill="#f1f3f5"/>
     <rect x="48" y="78" width="270" height="315" rx="10" fill="#f8f9fa"/>
     <rect x="120" y="110" width="184" height="48" rx="10" fill="#d0bfff"/>
-    <rect x="62"  y="176" width="160" height="44" rx="10" fill="#fff"/>
-    <rect x="62"  y="356" width="244" height="28" rx="14" fill="#fff"/>
+    <rect x="62" y="176" width="160" height="44" rx="10" fill="#fff"/>
+    <rect x="62" y="356" width="244" height="28" rx="14" fill="#fff"/>
     <rect x="336" y="78" width="378" height="315" rx="10" fill="#fff"/>
-    <!-- product grid 2x2 -->
     <rect x="356" y="120" width="160" height="105" rx="8" fill="#a5d8ff"/>
     <rect x="534" y="120" width="160" height="105" rx="8" fill="#a5d8ff"/>
     <rect x="356" y="240" width="160" height="105" rx="8" fill="#a5d8ff"/>
@@ -319,29 +299,31 @@ figure.dwg figcaption { text-align: center; font-size: 0.85rem; color: #777; mar
     <text x="525" y="380" font-size="17" fill="#888" text-anchor="middle">agent filters · checkout needs your OK</text>
   </g>
 </svg>
-<figcaption>The agent does the filtering and searching; the only thing it can&apos;t do without you is the irreversible part.</figcaption>
+<figcaption>The agent handles the filtering and searching. The one thing it can't do without you is the irreversible step — checkout.</figcaption>
 </figure>
+### Airline booking
 
-<p><strong>Airline booking.</strong> Same shape. You go in, say what you need, and it does it according to your needs. As the aggregator platform, your job is to provide the tools for exactly this.</p>
+<p>Same shape again. You go in and say what you need — <em>cheapest direct flight to Tokyo next Friday, aisle seat</em> — and the agent does it according to your constraints, comes back with ranked options, and books only once you confirm. As the aggregator platform, your entire job is to provide the tools that make this clean: good search, clear constraints, a confirm step on the booking. The human states intent; the agent does the legwork; the human confirms the one step that can&#39;t be undone.</p>
 <figure class="dwg">
 <svg class="exdraw" viewBox="0 0 760 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Airline booking agent UI mockup">
   <defs>
     <filter id="rough-m3" x="-4%" y="-4%" width="108%" height="108%">
       <feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="2" seed="14" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="2"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.8"/>
     </filter>
   </defs>
-  <g filter="url(#rough-m3)" fill="none" stroke="#1e1e1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <g filter="url(#rough-m3)" fill="none" stroke="#1e1e1e" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
     <rect x="30" y="20" width="700" height="390" rx="14" fill="#fff"/>
     <path d="M30 62 L730 62"/>
-    <circle cx="55" cy="41" r="5"/><circle cx="74" cy="41" r="5"/><circle cx="93" cy="41" r="5"/>
+    <circle cx="55" cy="41" r="5"/>
+    <circle cx="74" cy="41" r="5"/>
+    <circle cx="93" cy="41" r="5"/>
     <rect x="580" y="30" width="130" height="24" rx="6" fill="#f1f3f5"/>
     <rect x="48" y="78" width="270" height="315" rx="10" fill="#f8f9fa"/>
     <rect x="120" y="110" width="184" height="48" rx="10" fill="#d0bfff"/>
-    <rect x="62"  y="176" width="170" height="44" rx="10" fill="#fff"/>
-    <rect x="62"  y="356" width="244" height="28" rx="14" fill="#fff"/>
+    <rect x="62" y="176" width="170" height="44" rx="10" fill="#fff"/>
+    <rect x="62" y="356" width="244" height="28" rx="14" fill="#fff"/>
     <rect x="336" y="78" width="378" height="315" rx="10" fill="#fff"/>
-    <!-- 3 flight rows -->
     <rect x="352" y="120" width="346" height="58" rx="8" fill="#b2f2bb"/>
     <rect x="352" y="190" width="346" height="58" rx="8" fill="#f8f9fa"/>
     <rect x="352" y="260" width="346" height="58" rx="8" fill="#f8f9fa"/>
@@ -362,14 +344,16 @@ figure.dwg figcaption { text-align: center; font-size: 0.85rem; color: #777; mar
     <text x="540" y="372" font-size="17" fill="#888" text-anchor="end">you confirm &#8594;</text>
   </g>
 </svg>
-<figcaption>State the intent, get ranked options, confirm the one irreversible step yourself.</figcaption>
+<figcaption>State the intent, get ranked options that fit your constraints, confirm the one irreversible step yourself.</figcaption>
 </figure>
+Three different industries, one identical pattern. That is the tell that this is a real shift and not a fad: the same shape keeps falling out no matter what the domain is.
 
-<h2>Build for teaching, not doing</h2>
-<p>So here&#39;s the gist. When you&#39;re building on level 3, the design questions change. Think about how the UX supports <em>delegation</em> and <em>teaching</em> — and how you still give people manual controls so they can drop down and do a level-2 task themselves when they want to.</p>
-<p>At Filed we work solely on level 3. We leave the level-2 work to the incumbents. What that gives our users is the ability to hire an extra digital delegation platform — to delegate the work in their firm, instead of grinding through every task by hand.</p>
-<p>And that flips the whole orientation of the product. For 15 years we built platforms for <em>doing</em>. The platforms that win in this era are built for <em>teaching</em> — surfaces where you hand off the work, watch it happen, and step in only when it matters.</p>
-<p>If there&#39;s one line to take away, it&#39;s this: <strong>every AI-native product needs to go from doing the task to being a delegation platform.</strong> The doer changed. Design for that.</p>
+<h2>Build for teaching, not for doing</h2>
+<p>So here is the gist, and it is the thing I would tattoo on the wall of any product team building right now.</p>
+<p>When you are building at level 3, the questions you obsess over change. It stops being &quot;how do I lay out this screen so the user can do the task&quot; and becomes &quot;how do I design this so the user can <strong>delegate</strong> the task and <strong>teach</strong> the agent to do it their way&quot; — while still leaving the manual controls in place so they can drop down to a level-2 task by hand whenever they want.</p>
+<p>At Filed, we work solely at level 3. We deliberately leave the level-2 work to the incumbents — the existing tax platforms are very good at being level 2, and we are not trying to rebuild that. What we give our users is the ability to hire, in effect, an extra digital delegation platform: somewhere they can hand off the work of their firm instead of grinding through every task by hand. And the moment you frame it that way, the orientation of the whole product flips. For 15 years we built platforms for <em>doing</em>. The platforms that win this era are built for <em>teaching</em> — surfaces where you hand off work, watch it happen, correct it when it drifts, and trust it to run without you.</p>
+<p>If there is one line to take from all of this, it is this: <strong>every AI-native product has to go from doing the task to being a delegation platform.</strong></p>
+<p>The doer changed. Design for that.</p>
 
 </article>
 <div class="giscus-wrap">
