@@ -42,21 +42,19 @@ Look at the gap between the two jumps:
 
 These are not the same kind of shift, and that is exactly why our instincts mislead us here. Our entire product playbook — destinations, navigation funnels, onboarding flows, engagement metrics, time-in-app — was written for the change-of-medium era. Every line of it quietly assumes the human stays the doer. So when the doer changes, the playbook isn't slightly outdated. It is aimed at the wrong person entirely. We are still polishing the lobby while the actual work has quietly moved to a back room we never designed.
 
-## So you build a UI for agents, right? No.
+## So you build an MCP for agents, right? It depends.
 
-Here is the first wrong turn I see teams take, and I have caught myself reaching for it too. You hear "agents are the new users," and you conclude: *great, let's design a UI for agents.*
+Here is the first wrong turn I see teams take, and I have caught myself reaching for it too. You hear "agents are the new users," and you reach for the obvious move: *let's expose our product as an MCP server, ship it, and agents will start using it.*
 
-That is incorrect. **A UI is always for humans.** Agents do not want a layout. They do not need a tooltip or an onboarding tour or a reassuring micro-animation. An agent wants a clear, machine-readable contract: here is a thing you can do, here is what it expects, here is what it returns, here is what an error looks like.
-
-The way I find it useful to think about it is as a stack of three levels.
+To be clear, I am not talking about interfaces in the buttons-and-layout sense here. An MCP *is* an interface — a set of typed tools instead of screens — and building one is very often exactly the right thing to do. The wrong turn is the reflex: assuming you can bolt an MCP onto whatever you have and agents will magically show up and use it. They won't. Whether an MCP is even the right thing to build depends entirely on what your product is — and the cleanest way to reason about that is the three-level stack.
 
 @figure(_diagrams/levels.svg, "Physical → digital already built levels 1 and 2. The agent era adds level 3 on top — and that is where the new product lives.")
 
 **Level 1 — core systems, data and rails.** The ledger, the inventory, the flight database, the actual tax records. The source of truth. This barely changes; it is the bedrock everything else sits on.
 
-**Level 2 — the digital app.** This is the platform humans have been logging into for 15 years. The new requirement is that level 2 now also has to expose a second face: an interface *for agents*. Something like an MCP server — a set of typed tools agents can call. Crucially, this is not a UI. A level-2 product now has two front doors: a human UI for people, and a tool/MCP surface for agents. The underlying digital platforms — the neo-banks, the airlines, the ecommerce backends — are the ones who have to build this agent-facing door.
+**Level 2 — the digital app.** This is the platform humans have been logging into for 15 years. If you are building a level-2 product, you are digitizing something that used to live in the physical world — you *are* the underlying platform: the bank, the airline, the store. For you, an MCP is exactly the way to go. Alongside the human UI you have always had, you now open a second front door for agents: a set of typed tools they can call to actually do the thing on your platform. You are extending access to the thing you already own.
 
-The difference between a screen and a tool is the whole game, so let me make it concrete. The old way to ship a feature was to design a screen: *"add a page where the user reviews flagged transactions."* The agent-era way is to expose a capability:
+The difference between a screen and a tool is the whole game, so let me make it concrete. The old way to ship a level-2 feature was to design a screen: *"add a page where the user reviews flagged transactions."* The agent-era way is to also expose it as a capability:
 
 ```json
 {
@@ -70,11 +68,13 @@ The difference between a screen and a tool is the whole game, so let me make it 
 
 Once that capability exists, the human review screen is just *one* consumer of it. An agent is another. A scheduled automation is a third. You were forced to name the actual thing the user is trying to do, instead of the screen they happened to be looking at — and that turns out to make the human product cleaner too.
 
-**Level 3 — AI-native delegation.** This is the new layer, and it is where the new kind of product lives. It is made of four things: **chat** (how you talk to it), **skills** (how you teach it the way you do things), **workflows** (the repeatable jobs it runs), and **integrations** (how it reaches down into the level-2 platforms). The last two are what actually touch those base digital platforms — now opened up to both humans and agents.
+**Level 3 — AI-native delegation.** Now flip it around. If you are building on level 3, it is *because there are already incumbents doing level 2* — the bank, the tax software, the booking engine already exist and are good at what they do. In that case, building an MCP is **not** the right first move. Nobody is sitting around waiting to point their agent at your shiny new MCP server. Your job is to build the delegation platform itself — the place your user actually goes to hand work to AI.
 
-This is where the value sits for an AI-native company. Your job at level 3 is not to rebuild the bank. Your job is to build agents that work one level up and take on the job the way a good employee would.
+That platform is made of four things: **chat** (how you talk to it), **skills** (how you teach it the way *you* do things), **workflows** (the repeatable jobs it runs), and **integrations** (how it reaches down into the level-2 platforms to get the work done). This is where the value sits for an AI-native company. Your job is not to rebuild the bank. It is to build agents that work one level up and take on the job the way a good employee would.
 
-The practical consequence is bigger than it sounds. If you are building a bank today, you don't get to build only level 2 anymore — you build levels 1, 2, *and* 3, with your users living mostly at level 3 and dropping down to the level-2 UI only when they want to do something by hand. And if your product lives *only* at level 3, then the level-2 human UI stops being the main event. It becomes the fallback.
+Sure — later on, there may well be a case for plugging your level-3 product *into* ChatGPT and the other horizontal delegation platforms, so their agents can call into you. But that is a distribution play for down the road. Today, your primary user is a *vertical* AI user: someone in your specific domain who needs a platform where they can use AI to delegate the actual tasks of their job. Build that first.
+
+The practical consequence is bigger than it sounds. If you are an incumbent building a bank today, you don't get to build only level 2 anymore — you build levels 1, 2, *and* 3, with your users living mostly at level 3 and dropping down to the level-2 UI only when they want to do something by hand. And if you are building *only* at level 3, the level-2 UI isn't even yours — it belongs to the incumbent, and it becomes the fallback your users drop to when they want to do something by hand.
 
 ## Why a chatbot is not the answer
 
