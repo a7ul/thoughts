@@ -54,3 +54,7 @@ Taking an example from the supervisor role in industrial belts:
 In general we need interfaces that are geared towards running a task for you and giving you control when needed.
 
 These tasks should be able to run while you are sleeping and should be done the way you do them.
+
+Taking a neo bank example:
+
+- You should be able to go and set an agent to look at your balance daily and check if all transactions are what they should be, and if something shady has happened or not - instead of you doing it manually via a user interface. But at the same time you should have access to do it yourself.
