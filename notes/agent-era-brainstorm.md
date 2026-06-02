@@ -50,3 +50,7 @@ Taking an example from the supervisor role in industrial belts:
 - Industrial belts can be thought of as workflows or tasks that are repetitive and done.
 - The supervisor can see or take a peek when needed but usually gives instructions and talks to the workers.
 - The workers here now are agents.
+
+In general we need interfaces that are geared towards running a task for you and giving you control when needed.
+
+These tasks should be able to run while you are sleeping and should be done the way you do them.
