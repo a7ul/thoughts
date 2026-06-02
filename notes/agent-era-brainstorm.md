@@ -77,3 +77,5 @@ When you are building in level 3, think how the UX should be for delegation and 
 Plus how you can still give manual controls so at times users can do level 2 tasks.
 
 At Filed we are working solely on level 3 - we leave level 2 tasks to the incumbents.
+
+This gives users the ability to hire an extra digital delegation platform to delegate tasks in their firm, rather than doing the tasks themselves.
