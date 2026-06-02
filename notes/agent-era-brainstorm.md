@@ -64,3 +64,4 @@ Now another aspect is why chat is still super crucial: the supervisor role is co
 Let's do another example - ecommerce:
 
 - You should be able to search yourself if needed, but instead you can go to a chat-like thing and ask for filtering out the items you are looking for.
+- You get the final say or approval to do destructive actions, but the rest of the filtering / searching should be done by an agent.
