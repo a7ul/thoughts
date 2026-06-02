@@ -34,3 +34,19 @@ What you need is two things:
 The way I think of this is via this mental model:
 
 "If you were to delegate the task you are trying to do to another person via this interface, how would you do it and how would you correct them if they understood it wrong?"
+
+Basically in effect this means your AI native product (products that solely work on layer 3) basically contains chat, skills, workflow + integrations.
+
+And the latter two contain the base digital platforms, now open for both humans and AI.
+
+So if you are building a bank (layer 2) - you need to build layer 1, layer 2 and layer 3 now.
+
+With your users primarily working on layer 3 with some fallback to go to layer 2 if needed.
+
+Now the UX is still important - it is not always a chatbot. You need an interface to talk to an agent, but on the other side you need to be able to see the work being done.
+
+Taking an example from the supervisor role in industrial belts:
+
+- Industrial belts can be thought of as workflows or tasks that are repetitive and done.
+- The supervisor can see or take a peek when needed but usually gives instructions and talks to the workers.
+- The workers here now are agents.
