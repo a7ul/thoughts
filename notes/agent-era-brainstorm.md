@@ -69,3 +69,7 @@ Let's do another example - ecommerce:
 Let's try airline booking - same thing:
 
 - You go in and tell what you need and it does it according to your needs. So as an aggregator platform you need to provide these tools.
+
+So the gist in the end is:
+
+When you are building in level 3, think how the UX should be for delegation and teaching.
