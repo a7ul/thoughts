@@ -258,8 +258,9 @@ body {
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  padding-inline: 1.5rem;
 }
-.container { max-width: 860px; margin: 0 auto; padding: 4rem 1.5rem; }
+.container { max-width: 860px; margin: 0 auto; padding: 4rem 0; }
 a { color: inherit; text-underline-offset: 3px; }
 
 /* ── Theme toggle ────────────────────────────────────── */
@@ -540,7 +541,7 @@ figure.dwg figcaption {
 
 /* ── Responsive ─────────────────────────────────────── */
 @media (max-width: 640px) {
-  .container { padding: 2.5rem 1.25rem; }
+  .container { padding: 2.5rem 0; }
   article header h1 { font-size: 1.625rem; }
   article { font-size: 1rem; }
 }
