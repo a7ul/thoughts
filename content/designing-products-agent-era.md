@@ -1,6 +1,7 @@
 ---
 title: Designing products in the age of agents
 date: 2026-06-02T10:00:00.000Z
+description: The human-does-the-task assumption just broke. Here's what that means for how we build products.
 keywords: products, agents, ai, design, ux, delegation, mcp, engineering
 slug: designing-products-agent-era
 ---
