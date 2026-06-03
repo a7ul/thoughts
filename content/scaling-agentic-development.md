@@ -1,6 +1,7 @@
 ---
 title: How far can you push delegation to coding agents and still have control over the codebase?
 date: 2026-03-18T17:12:03.284Z
+description: I built a production-ready AI agents SDK in 5 hours by delegating almost everything to coding agents. Here's what I learned about where control breaks down.
 keywords: agents, ai, coding, engineering, speed, vibe
 slug: scaling-agentic-development
 ---

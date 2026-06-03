@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Using React hooks for functional components with perfect fallback for class components</title>
+<meta name="description" content="How to write logic once as a React hook and expose it to class components via an HOC wrapper, without duplicating code.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Caveat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="./style.css">
+<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script>
+(function(){
+  var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  document.documentElement.setAttribute('data-theme',t);
+  var link=document.getElementById('hljs-theme');
+  if(link&&t==='dark')link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){hljs.highlightAll();});</script>
+</head>
+<body>
+<div id="img-overlay" class="img-overlay"><img id="img-overlay-img" src="" alt=""></div>
+<aside class="toc-sidebar" id="toc"></aside>
+<div class="container">
+<nav><a href="./index.html">← Home</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme"></button></nav>
+<article>
+<header>
+<h1>Using React hooks for functional components with perfect fallback for class components</h1>
+<div class="post-meta">
+<span class="post-author">Atul</span> · <time datetime="2019-06-12">June 12, 2019</time>
+</div>
+</header>
+<p>This is a brief post on a pattern I recently needed. I had to abstract some functionality for use across multiple React components and chose to implement it using React hooks. However, the codebase contained many legacy class components requiring the same functionality, presenting a dilemma:</p>
+<ol>
+<li>Rewrite all components to functional components  -  not ideal</li>
+<li>Duplicate logic in both hooks and HOC formats  -  against DRY principles</li>
+</ol>
+<p>The solution: write the logic as a hook and wrap it in an HOC for class component compatibility.</p>
+<h2>Example Implementation</h2>
+<p><strong>Hook for functional components:</strong></p>
+<pre><code class="language-javascript">import React, { useState } from &#39;react&#39;
+
+export const useCountry = () =&gt; {
+  const [country] = useState(&#39;IN&#39;)
+  return country
+}
+</code></pre>
+<p><strong>HOC for class components:</strong></p>
+<pre><code class="language-javascript">import React, { useState } from &#39;react&#39;
+
+export const useCountry = () =&gt; {
+  const [country] = useState(&#39;IN&#39;)
+  return country
+}
+
+export const withCountry = (Component) =&gt; {
+  return (props) =&gt; {
+    const country = useCountry()
+    return &lt;Component {...props} country={country} /&gt;
+  }
+}
+</code></pre>
+<h2>Usage</h2>
+<p><strong>Functional component:</strong></p>
+<pre><code class="language-javascript">const MyComponent = (props) =&gt; {
+  const country = useCountry()
+  return (
+    &lt;div&gt;
+      &lt;div&gt; Hi, I am from &lt;/div&gt;
+      &lt;div&gt;{country}&lt;/div&gt;
+    &lt;/div&gt;
+  )
+}
+export default MyComponent
+</code></pre>
+<p><strong>Class component:</strong></p>
+<pre><code class="language-javascript">class MyComponent extends React.Component {
+  render() {
+    const { country } = this.props
+    return (
+      &lt;div&gt;
+        &lt;div&gt; Hi, I am from &lt;/div&gt;
+        &lt;div&gt;{country}&lt;/div&gt;
+      &lt;/div&gt;
+    )
+  }
+}
+
+export default withCountry(MyComponent)
+</code></pre>
+<p>This technique enables using the same hook with class components through an HOC pattern, maintaining code consistency across mixed component architectures.</p>
+
+</article>
+<div class="original-post-note">This post was ported over from Atul's old blog. <a href="https://blog.atulr.com/react-hooks-hocs" target="_blank" rel="noopener noreferrer">Read the original here.</a></div>
+<div class="giscus-wrap">
+<script src="https://giscus.app/client.js"
+  data-repo="a7ul/thoughts"
+  data-repo-id="R_kgDORp7Weg"
+  data-category="General"
+  data-category-id="DIC_kwDORp7Wes4C4pUS"
+  data-mapping="title"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="light"
+  data-lang="en"
+  crossorigin="anonymous"
+  async>
+</script>
+</div>
+</div>
+<script>
+(function(){
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    localStorage.setItem('theme',t);
+    var link=document.getElementById('hljs-theme');
+    if(link)link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/'+(t==='dark'?'github-dark':'github')+'.min.css';
+    var btn=document.getElementById('theme-toggle');
+    if(btn)btn.textContent=t==='dark'?'☀':'☾';
+    var gf=document.querySelector('iframe.giscus-frame');
+    if(gf)gf.contentWindow.postMessage({giscus:{setConfig:{theme:t==='dark'?'dark_dimmed':'light'}}}, 'https://giscus.app');
+  }
+  function buildToc(){
+    var toc=document.getElementById('toc');
+    if(!toc)return;
+    var headings=Array.from(document.querySelectorAll('article h2,article h3'));
+    if(headings.length<2)return;
+    var title=document.createElement('div');
+    title.className='toc-title';
+    title.textContent='On this page';
+    toc.appendChild(title);
+    var ul=document.createElement('ul');
+    headings.forEach(function(h,i){
+      if(!h.id)h.id=(h.textContent||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'h'+i;
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href='#'+h.id;
+      a.textContent=h.textContent;
+      a.className=h.tagName==='H3'?'toc-h3':'toc-h2';
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var link=toc.querySelector('a[href="#'+e.target.id+'"]');
+        if(link){
+          if(e.isIntersecting){
+            toc.querySelectorAll('a').forEach(function(a){a.classList.remove('active');});
+            link.classList.add('active');
+          }
+        }
+      });
+    },{rootMargin:'-10% 0px -80% 0px'});
+    headings.forEach(function(h){obs.observe(h);});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var cur=document.documentElement.getAttribute('data-theme')||'light';
+    var btn=document.getElementById('theme-toggle');
+    if(btn){
+      btn.textContent=cur==='dark'?'☀':'☾';
+      btn.addEventListener('click',function(){
+        applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+      });
+    }
+    buildToc();
+    initLightbox();
+  });
+  function initLightbox(){
+    var overlay=document.getElementById('img-overlay');
+    var overlayImg=document.getElementById('img-overlay-img');
+    if(!overlay||!overlayImg)return;
+    document.querySelectorAll('article img').forEach(function(img){
+      img.style.cursor='zoom-in';
+      img.addEventListener('click',function(){
+        overlayImg.setAttribute('src',img.getAttribute('src')||'');
+        overlayImg.setAttribute('alt',img.getAttribute('alt')||'');
+        overlay.classList.add('open');
+        document.body.style.overflow='hidden';
+      });
+    });
+    function close(){overlay.classList.remove('open');document.body.style.overflow='';}
+    overlay.addEventListener('click',function(e){if(e.target===overlay)close();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  }
+})();
+</script>
+</body>
+</html>

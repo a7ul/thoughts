@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 1/3 - Beginners guide to Custom React Renderers. How to build your own renderer from scratch?</title>
+<meta name="description" content="An introduction to React's architecture  -  Core, Reconciler, and Renderer  -  and the first steps toward building a custom renderer using react-reconciler.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Caveat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="./style.css">
+<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script>
+(function(){
+  var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  document.documentElement.setAttribute('data-theme',t);
+  var link=document.getElementById('hljs-theme');
+  if(link&&t==='dark')link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){hljs.highlightAll();});</script>
+</head>
+<body>
+<div id="img-overlay" class="img-overlay"><img id="img-overlay-img" src="" alt=""></div>
+<aside class="toc-sidebar" id="toc"></aside>
+<div class="container">
+<nav><a href="./index.html">← Home</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme"></button></nav>
+<article>
+<header>
+<h1>Part 1/3 - Beginners guide to Custom React Renderers. How to build your own renderer from scratch?</h1>
+<div class="post-meta">
+<span class="post-author">Atul</span> · <time datetime="2018-10-21">October 21, 2018</time>
+</div>
+</header>
+<p>This is a 3-part series. Prior familiarity with React APIs and JSX is recommended but not required.</p>
+<ul>
+<li><a href="https://reactjs.org/docs/react-api.html" target="_blank" rel="noopener noreferrer">React API documentation</a></li>
+<li><a href="https://reactjs.org/docs/jsx-in-depth.html" target="_blank" rel="noopener noreferrer">JSX in depth guide</a></li>
+</ul>
+<h2>React Core, Reconciler and Renderer</h2>
+<p>The React codebase divides into three major components.</p>
+<h3>React Core</h3>
+<p>&quot;React core only includes the APIs necessary to define components.&quot; It contains top-level APIs such as:</p>
+<ul>
+<li><code>React.createElement()</code></li>
+<li><code>React.createClass()</code></li>
+<li><code>React.Component</code></li>
+<li><code>React.Children</code></li>
+<li><code>React.PropTypes</code></li>
+</ul>
+<p>It excludes the diffing algorithm and platform-specific code.</p>
+<h3>Renderer</h3>
+<p>&quot;React was originally created for the DOM but it was later adapted to also support native platforms with React Native.&quot; Renderers manage how React component trees convert into platform-specific calls:</p>
+<ul>
+<li>React-Dom renders to DOM elements</li>
+<li>React Native renders to native platform views</li>
+</ul>
+<h3>Reconciler</h3>
+<p>The reconciler implements the diffing algorithm determining which elements require updates during state changes. It&#39;s shared across multiple platform renderers.</p>
+<p><strong>Stack Reconciler:</strong> Powers React 15 and earlier  -  maintains an internal tree of component instances processed synchronously in a single pass.</p>
+<p><strong>Fiber Reconciler:</strong> Default since React 16:</p>
+<ul>
+<li>Interruptible work chunking</li>
+<li>Work prioritization and reuse</li>
+<li>Efficient main thread management</li>
+<li>Multiple element return support from <code>render()</code></li>
+<li>Enhanced error boundary support</li>
+</ul>
+<p>Additional resources:</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=ZCuYPiUIONs" target="_blank" rel="noopener noreferrer">Cartoon Intro to Fiber by Lin Clark</a></li>
+<li><a href="https://www.youtube.com/watch?v=nLF0n9SACd4" target="_blank" rel="noopener noreferrer">Time Slicing & Suspense by Dan Abramov</a></li>
+</ul>
+<h2>Components, Instances, Elements and Fiber</h2>
+<h3>Components</h3>
+<p>Two types exist for renderers:</p>
+<p><strong>Host Components:</strong> Platform-specific elements like <code>&lt;div&gt;</code> or <code>&lt;View&gt;</code> handling mounting, updates, and unmounting.</p>
+<p><strong>Composite Components:</strong> User-defined elements like <code>&lt;MyButton&gt;</code> behaving consistently across all renderers.</p>
+<h3>Instances</h3>
+<p>&quot;For components declared as a class, the instances are the in memory initialized version of the components.&quot; They store local state and react to lifecycle events. Functional components lack instances entirely.</p>
+<h3>Elements</h3>
+<p>&quot;An element is an immutable plain object describing a component instance or DOM node and its desired properties.&quot;</p>
+<p>For a <code>Content</code> component like this:</p>
+<pre><code class="language-jsx">const Content = (props) =&gt; {
+  return &lt;p style={props.style}&gt;{props.text}&lt;/p&gt;
+}
+</code></pre>
+<p>Used as: <code>&lt;Content style=&quot;background:blue;&quot; text=&quot;hello world&quot; /&gt;</code></p>
+<p>The resulting element:</p>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;p&quot;,
+  &quot;props&quot;: {
+    &quot;style&quot;: &quot;background:blue;&quot;,
+    &quot;children&quot;: &quot;hello world&quot;
+  }
+}
+</code></pre>
+<p>With composite components, types become function references requiring recursive resolution until all types become strings (DOM elements).</p>
+<p>Further reading: <a href="https://reactjs.org/blog/2015/12/18/react-components-elements-and-instances.html" target="_blank" rel="noopener noreferrer">Dan Abramov's detailed explanation</a></p>
+<h3>Fiber</h3>
+<p>Introduced in Fiber Reconciler, &quot;a fiber is a JavaScript object that contains information about a component, its input and output.&quot; Each instance has at most two associated fibers: current (rendered) and work-in-progress.</p>
+<p>Fiber node structure:</p>
+<pre><code class="language-javascript">{
+  child, stateNode, siblings, alternate, return, type, key
+}
+</code></pre>
+<p><a href="https://giamir.com/what-is-react-fiber" target="_blank" rel="noopener noreferrer">Additional fiber details</a></p>
+<h2>Let&#39;s build a custom renderer</h2>
+<h3>Boilerplate Setup</h3>
+<p>Initialize a create-react-app project:</p>
+<pre><code class="language-bash">npx create-react-app renderer
+cd renderer
+</code></pre>
+<p>Create directory structure:</p>
+<pre><code>.
+├── README.md
+├── package.json
+├── node_modules
+├── public
+├── src
+│   ├── index.js
+│   └── renderer
+│       └── index.js
+└── yarn.lock
+</code></pre>
+<p><code>src/index.js</code>:</p>
+<pre><code class="language-jsx">import React from &#39;react&#39;
+import ReactDOM from &#39;react-dom&#39;
+
+const Text = (props) =&gt; {
+  return &lt;p className={props.className}&gt;{props.content}&lt;/p&gt;
+}
+
+const App = () =&gt; {
+  return (
+    &lt;div&gt;
+      &lt;Text className=&quot;hello-class&quot; content=&quot;Hello&quot; /&gt;
+      &lt;span style={{ color: &#39;blue&#39; }}&gt;World&lt;/span&gt;
+    &lt;/div&gt;
+  )
+}
+
+ReactDOM.render(&lt;App /&gt;, document.getElementById(&#39;root&#39;))
+</code></pre>
+<p>Run with <code>npm start</code> to verify at <a href="http://localhost:3000/" target="_blank" rel="noopener noreferrer">http://localhost:3000/</a>.</p>
+<h3>Creating the Custom Renderer</h3>
+<p>Replace <code>ReactDOM</code> with a custom renderer in <code>src/index.js</code>:</p>
+<pre><code class="language-jsx">import React from &#39;react&#39;
+import CustomRenderer from &#39;./renderer&#39;
+
+const Text = (props) =&gt; {
+  return &lt;p className={props.className}&gt;{props.content}&lt;/p&gt;
+}
+
+const App = () =&gt; {
+  return (
+    &lt;div&gt;
+      &lt;Text className=&quot;hello-class&quot; content=&quot;Hello&quot; /&gt;
+      &lt;span style={{ color: &#39;blue&#39; }}&gt;World&lt;/span&gt;
+    &lt;/div&gt;
+  )
+}
+
+CustomRenderer.render(&lt;App /&gt;, document.getElementById(&#39;root&#39;))
+</code></pre>
+<p>Initial <code>src/renderer/index.js</code>:</p>
+<pre><code class="language-javascript">const CustomRenderer = {
+  render(element, renderDom, callback) {
+    // element: React element for App component
+    // renderDom: Host root element for attachment
+    // callback: Optional callback after render completion
+    console.log(&#39;render called&#39;, element, renderDom, callback)
+  },
+}
+
+module.exports = CustomRenderer
+</code></pre>
+<p>Running shows a blank screen but the console shows the render call.</p>
+<h3>Understanding the Architecture</h3>
+<p>The React team exported an experimental <strong>react-reconciler</strong> npm package. All platform renderers require:</p>
+<ol>
+<li>A platform-specific <strong>hostConfig</strong> implementation</li>
+<li>The <strong>react-reconciler</strong> module itself</li>
+</ol>
+<p>The reconciler calls platform-specific functions via the supplied hostConfig to perform DOM changes or view updates.</p>
+<p>Install the package:</p>
+<pre><code class="language-bash">yarn add react-reconciler
+</code></pre>
+<p>Update <code>src/renderer/index.js</code>:</p>
+<pre><code class="language-javascript">const Reconciler = require(&#39;react-reconciler&#39;)
+
+const HostConfig = {
+  //TODO: Specify all required methods here
+}
+
+const reconcilerInstance = Reconciler(HostConfig)
+
+const CustomRenderer = {
+  render(element, renderDom, callback) {
+    const isAsync = false // Disables async rendering
+    const container = reconcilerInstance.createContainer(renderDom, isAsync)
+
+    const parentComponent = null
+    reconcilerInstance.updateContainer(
+      element,
+      container,
+      parentComponent,
+      callback
+    )
+  },
+}
+
+module.exports = CustomRenderer
+</code></pre>
+<h3>Process Explanation</h3>
+<ol>
+<li>Create reconciler instance with the hostConfig parameter</li>
+<li>Call <code>reconcilerInstance.createContainer</code> to create the root fiber node corresponding to <code>renderDom</code></li>
+<li>Call <code>reconcilerInstance.updateContainer</code> to initiate reconciliation and rendering</li>
+</ol>
+<p>The <code>isAsync</code> parameter controls fiber node mode. Currently all released renderers operate in synchronous mode.</p>
+<p>Running <code>yarn start</code> will produce errors about unimplemented HostConfig methods  -  which we cover in Part 2.</p>
+<hr>
+<p>Continue to <a href="/react-custom-renderer-2.html" target="_blank" rel="noopener noreferrer">Part 2/3</a> where we implement all the initial render HostConfig methods.</p>
+<h2>References</h2>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=_MAD4Oly9yg" target="_blank" rel="noopener noreferrer">Building React From Scratch by Paul O Shannessy</a></li>
+<li><a href="https://reactjs.org/docs/react-api.html" target="_blank" rel="noopener noreferrer">React API Documentation</a></li>
+<li><a href="https://reactjs.org/blog/2015/12/18/react-components-elements-and-instances.html" target="_blank" rel="noopener noreferrer">React Components, Elements, and Instances</a></li>
+<li><a href="https://giamir.com/what-is-react-fiber" target="_blank" rel="noopener noreferrer">What is React Fiber</a></li>
+<li><a href="https://github.com/acdlite/react-fiber-architecture" target="_blank" rel="noopener noreferrer">React Fiber Architecture</a></li>
+<li><a href="https://reactjs.org/docs/codebase-overview.html" target="_blank" rel="noopener noreferrer">Codebase Overview</a></li>
+</ul>
+
+</article>
+<div class="original-post-note">This post was ported over from Atul's old blog. <a href="https://blog.atulr.com/react-custom-renderer-1" target="_blank" rel="noopener noreferrer">Read the original here.</a></div>
+<div class="giscus-wrap">
+<script src="https://giscus.app/client.js"
+  data-repo="a7ul/thoughts"
+  data-repo-id="R_kgDORp7Weg"
+  data-category="General"
+  data-category-id="DIC_kwDORp7Wes4C4pUS"
+  data-mapping="title"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="light"
+  data-lang="en"
+  crossorigin="anonymous"
+  async>
+</script>
+</div>
+</div>
+<script>
+(function(){
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    localStorage.setItem('theme',t);
+    var link=document.getElementById('hljs-theme');
+    if(link)link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/'+(t==='dark'?'github-dark':'github')+'.min.css';
+    var btn=document.getElementById('theme-toggle');
+    if(btn)btn.textContent=t==='dark'?'☀':'☾';
+    var gf=document.querySelector('iframe.giscus-frame');
+    if(gf)gf.contentWindow.postMessage({giscus:{setConfig:{theme:t==='dark'?'dark_dimmed':'light'}}}, 'https://giscus.app');
+  }
+  function buildToc(){
+    var toc=document.getElementById('toc');
+    if(!toc)return;
+    var headings=Array.from(document.querySelectorAll('article h2,article h3'));
+    if(headings.length<2)return;
+    var title=document.createElement('div');
+    title.className='toc-title';
+    title.textContent='On this page';
+    toc.appendChild(title);
+    var ul=document.createElement('ul');
+    headings.forEach(function(h,i){
+      if(!h.id)h.id=(h.textContent||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'h'+i;
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href='#'+h.id;
+      a.textContent=h.textContent;
+      a.className=h.tagName==='H3'?'toc-h3':'toc-h2';
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var link=toc.querySelector('a[href="#'+e.target.id+'"]');
+        if(link){
+          if(e.isIntersecting){
+            toc.querySelectorAll('a').forEach(function(a){a.classList.remove('active');});
+            link.classList.add('active');
+          }
+        }
+      });
+    },{rootMargin:'-10% 0px -80% 0px'});
+    headings.forEach(function(h){obs.observe(h);});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var cur=document.documentElement.getAttribute('data-theme')||'light';
+    var btn=document.getElementById('theme-toggle');
+    if(btn){
+      btn.textContent=cur==='dark'?'☀':'☾';
+      btn.addEventListener('click',function(){
+        applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+      });
+    }
+    buildToc();
+    initLightbox();
+  });
+  function initLightbox(){
+    var overlay=document.getElementById('img-overlay');
+    var overlayImg=document.getElementById('img-overlay-img');
+    if(!overlay||!overlayImg)return;
+    document.querySelectorAll('article img').forEach(function(img){
+      img.style.cursor='zoom-in';
+      img.addEventListener('click',function(){
+        overlayImg.setAttribute('src',img.getAttribute('src')||'');
+        overlayImg.setAttribute('alt',img.getAttribute('alt')||'');
+        overlay.classList.add('open');
+        document.body.style.overflow='hidden';
+      });
+    });
+    function close(){overlay.classList.remove('open');document.body.style.overflow='';}
+    overlay.addEventListener('click',function(e){if(e.target===overlay)close();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Announcing NodeGui and React NodeGui - Build native desktop apps with Javascript and CSS</title>
+<meta name="description" content="Introducing NodeGui and React NodeGui  -  open source libraries for building cross-platform native desktop apps with JavaScript and CSS, powered by Qt5.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Caveat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="./style.css">
+<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script>
+(function(){
+  var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  document.documentElement.setAttribute('data-theme',t);
+  var link=document.getElementById('hljs-theme');
+  if(link&&t==='dark')link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){hljs.highlightAll();});</script>
+</head>
+<body>
+<div id="img-overlay" class="img-overlay"><img id="img-overlay-img" src="" alt=""></div>
+<aside class="toc-sidebar" id="toc"></aside>
+<div class="container">
+<nav><a href="./index.html">← Home</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme"></button></nav>
+<article>
+<header>
+<h1>Announcing NodeGui and React NodeGui - Build native desktop apps with Javascript and CSS</h1>
+<div class="post-meta">
+<span class="post-author">Atul</span> · <time datetime="2019-08-14">August 14, 2019</time>
+</div>
+</header>
+<p>We&#39;re very excited to announce the launch of <strong>NodeGui</strong> and <strong>React NodeGui</strong>!</p>
+<p><a href="https://github.com/nodegui/nodegui" target="_blank" rel="noopener noreferrer">NodeGui</a> is an open source library for building cross platform native desktop applications with JavaScript and CSS like styling. NodeGui apps can run on Mac, Windows, and Linux from a single codebase.</p>
+<p>NodeGui is powered by Qt5 which makes it CPU and memory efficient as compared to other chromium based solutions like electron. Don&#39;t get me wrong, Electron is a great framework for building cross platform apps but suffers from performance and energy related issues due to heavy reliance on Chromium. NodeGui wants to incorporate everything that is good about Electron: the ease of development, freedom of styling, native APIs, great documentation, etc. At the same time NodeGui aims to be memory and CPU efficient.</p>
+<p><a href="https://github.com/nodegui/react-nodegui" target="_blank" rel="noopener noreferrer">React NodeGui</a> is a react renderer for NodeGui. It aims to be what React Native is for mobile app development.</p>
+<p><strong>Repository links:</strong></p>
+<ul>
+<li><a href="https://github.com/nodegui/nodegui" target="_blank" rel="noopener noreferrer">https://github.com/nodegui/nodegui</a></li>
+<li><a href="https://github.com/nodegui/react-nodegui" target="_blank" rel="noopener noreferrer">https://github.com/nodegui/react-nodegui</a></li>
+</ul>
+<h2>Features</h2>
+<ul>
+<li>Cross platform. Should work on major Linux flavours, Windows and MacOS</li>
+<li>Low CPU and memory footprint. Current CPU stays at 0% on idle and memory usage is under 20mb for a hello world program.</li>
+<li>Styling with CSS (includes actual cascading). Also has full support for Flexbox layout (thanks to Yoga).</li>
+<li>Complete Nodejs api support (Currently runs on Node v12.x - and is easily upgradable). Hence has access to all nodejs compatible npm modules.</li>
+<li>Native widget event listener support. supports all event available from Qt / NodeJs.</li>
+<li>Can be used for Commercial applications.</li>
+<li>Decent Devtools support.</li>
+<li>Decent documentation and website.</li>
+<li>Good support for dark mode (Thanks to QT).</li>
+<li>First class Typescript support. (Works on regular JS projects too).</li>
+</ul>
+<h2>NodeGui</h2>
+<p>NodeGui: <a href="https://www.npmjs.com/package/@nodegui/nodegui" target="_blank" rel="noopener noreferrer">@nodegui/nodegui</a> is essentially native javascript bindings for <a href="https://www.qt.io/" target="_blank" rel="noopener noreferrer">Qt</a>. Qt is a cross-platform C++ application development framework for desktop and various other platforms. The native Javascript bindings are written using <a href="https://nodejs.org/api/n-api.html" target="_blank" rel="noopener noreferrer">N-API or node addon api</a>. This means applications written using NodeGui <strong>DO NOT</strong> open up a browser instance and render the UI in it, instead all the widgets are natively rendered. Since NodeGui is a native addon to NodeJs (extends Nodejs) you have complete access to Node APIs and all compatible npm modules. Also all debugging tools that you use with NodeJS can now be used with NodeGui applications as well.</p>
+<p>A big motivation towards choosing Qt was that it provides APIs to style a widget using CSS (this includes actual cascading and not just inline styling). Flex box support to the existing amazing Qt stylesheet was added using <a href="https://github.com/facebook/yoga/" target="_blank" rel="noopener noreferrer">Yoga</a>. Hence NodeGui supports both paint and layout properties via CSS.</p>
+<p>Some screenshots of example apps built during development:</p>
+<p><img src="https://blog.atulr.com/aa0133a07d7b6735125126a40fc97055/calculator_win.gif" alt="Calculator clone on Windows">
+<img src="https://blog.atulr.com/fc664cb2148c98d6c1405ee0832d38b3/calculator_linux.gif" alt="Calculator clone on Linux">
+<img src="https://blog.atulr.com/361956edd4ce5434869892bef38bfeee/calculator_mac.gif" alt="Calculator clone on Mac"></p>
+<h3>Try it out!</h3>
+<pre><code class="language-bash">git clone https://github.com/nodegui/nodegui-starter
+cd nodegui-starter
+npm install
+npm run build
+npm start
+</code></pre>
+<p>A simple hello world project looks like:</p>
+<pre><code class="language-javascript">const {
+  QMainWindow,
+  QWidget,
+  QLabel,
+  FlexLayout
+} = require(&quot;@nodegui/nodegui&quot;);
+
+const win = new QMainWindow();
+
+const centralWidget = new QWidget();
+centralWidget.setObjectName(&quot;myroot&quot;);
+const rootLayout = new FlexLayout();
+centralWidget.setLayout(rootLayout);
+
+const label = new QLabel();
+label.setObjectName(&quot;mylabel&quot;);
+label.setText(&quot;Hello&quot;);
+
+const label2 = new QLabel();
+label2.setText(&quot;World&quot;);
+label2.setInlineStyle(`
+  color: red;
+`);
+
+rootLayout.addWidget(label);
+rootLayout.addWidget(label2);
+win.setCentralWidget(centralWidget);
+win.setStyleSheet(
+  `
+    #myroot {
+      background-color: #009688;
+      height: &#39;100%&#39;;
+      align-items: &#39;center&#39;;
+      justify-content: &#39;center&#39;;
+    }
+    #mylabel {
+      font-size: 16px;
+      font-weight: bold;
+    }
+  `
+);
+win.show();
+
+(global as any).win = win; // prevent gc
+</code></pre>
+<h2>React NodeGui</h2>
+<p>React NodeGui: <a href="https://www.npmjs.com/package/@nodegui/react-nodegui" target="_blank" rel="noopener noreferrer">@nodegui/react-nodegui</a> is a React renderer for NodeGui. This means you can create your views using React components similar to that of React Native. React NodeGui is powered by React and Qt5 which makes it easy to build performant, native and cross-platform desktop applications. With react-nodegui you have complete access to all React APIs including hooks. React NodeGui makes it much easier to manage all the views via Javascript.</p>
+<h3>Try it out!</h3>
+<pre><code class="language-bash">git clone https://github.com/nodegui/react-nodegui-starter
+cd react-nodegui-starter
+npm install
+npm run build
+npm start
+</code></pre>
+<p>A simple hello world project:</p>
+<pre><code class="language-javascript">import { Renderer, View, Text, Window } from &#39;@nodegui/react-nodegui&#39;
+import React from &#39;react&#39;
+
+const App = () =&gt; {
+  return (
+    &lt;Window styleSheet={styleSheet}&gt;
+      &lt;View id=&quot;myroot&quot;&gt;
+        &lt;Text id=&quot;mylabel&quot;&gt;{`Hello`}&lt;/Text&gt;
+        &lt;Text style={&#39;color: red;&#39;}&gt;{`World`}&lt;/Text&gt;
+      &lt;/View&gt;
+    &lt;/Window&gt;
+  )
+}
+
+const styleSheet = `
+  #myroot {
+    background-color: #009688;
+    height: &#39;100%&#39;;
+    align-items: &#39;center&#39;;
+    justify-content: &#39;center&#39;;
+  }
+  #mylabel {
+    font-size: 16px;
+    font-weight: bold;
+  }
+`
+
+Renderer.render(&lt;App /&gt;)
+</code></pre>
+<p>The output:</p>
+<p><img src="https://blog.atulr.com/434ea0d67369ef0de94b8b547f8535cb/output.gif" alt="React NodeGui output"></p>
+<blockquote>
+<p>Disclaimer: Please keep in mind that both NodeGui and React NodeGui are at their infancy stage. Hence, I would hold on for some more time before using it in production. This post is primarily aimed at encouraging contributions to the project.</p>
+</blockquote>
+<h2>More example screenshots</h2>
+<p>The source code for all these examples: <a href="https://github.com/nodegui/react-nodegui/tree/master/examples/" target="_blank" rel="noopener noreferrer">https://github.com/nodegui/react-nodegui/tree/master/examples/</a></p>
+<p><img src="https://blog.atulr.com/fc7d4b62154c0349de95b6bee6b04854/image_view_win.gif" alt="Image Viewer on Windows">
+<img src="https://blog.atulr.com/cff49b306f38d7350ede3795e42320f7/image_view_linux.gif" alt="Image Viewer on Linux">
+<img src="https://blog.atulr.com/c7c213209aa96a3071f2be02326e4515/image_view_mac.gif" alt="Image Viewer on Mac"></p>
+<p><img src="https://blog.atulr.com/7eaa5a30bb452c3f1091ef2a58ea0478/weather_widget_mac.gif" alt="Weather widget and kitchen app">
+<img src="https://blog.atulr.com/ad030801e31a4e5e0cb1366982840321/kitchen.gif" alt="Kitchen sink example"></p>
+<h2>Development and Support</h2>
+<p>NodeGui and React NodeGui are open source projects. If you like where these projects are heading please do star the respective repos.</p>
+<p>The code is structured for simplicity such that anyone who is willing to contribute can get started quickly. There is also a decent contributor&#39;s guide which also contains links to blog posts that can get you started even if you have no clue about nodejs addons, etc. I would suggest you to give it a shot. If anything is unclear you can raise an issue on the respective project repos on Github and we would be more than happy to help.</p>
+<p>If you can support the project financially please hit the sponsor button on the Github repo.</p>
+<p>I hope we can build an awesome library together. Cheers!</p>
+
+</article>
+<div class="original-post-note">This post was ported over from Atul's old blog. <a href="https://blog.atulr.com/nodegui-intro" target="_blank" rel="noopener noreferrer">Read the original here.</a></div>
+<div class="giscus-wrap">
+<script src="https://giscus.app/client.js"
+  data-repo="a7ul/thoughts"
+  data-repo-id="R_kgDORp7Weg"
+  data-category="General"
+  data-category-id="DIC_kwDORp7Wes4C4pUS"
+  data-mapping="title"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="light"
+  data-lang="en"
+  crossorigin="anonymous"
+  async>
+</script>
+</div>
+</div>
+<script>
+(function(){
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    localStorage.setItem('theme',t);
+    var link=document.getElementById('hljs-theme');
+    if(link)link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/'+(t==='dark'?'github-dark':'github')+'.min.css';
+    var btn=document.getElementById('theme-toggle');
+    if(btn)btn.textContent=t==='dark'?'☀':'☾';
+    var gf=document.querySelector('iframe.giscus-frame');
+    if(gf)gf.contentWindow.postMessage({giscus:{setConfig:{theme:t==='dark'?'dark_dimmed':'light'}}}, 'https://giscus.app');
+  }
+  function buildToc(){
+    var toc=document.getElementById('toc');
+    if(!toc)return;
+    var headings=Array.from(document.querySelectorAll('article h2,article h3'));
+    if(headings.length<2)return;
+    var title=document.createElement('div');
+    title.className='toc-title';
+    title.textContent='On this page';
+    toc.appendChild(title);
+    var ul=document.createElement('ul');
+    headings.forEach(function(h,i){
+      if(!h.id)h.id=(h.textContent||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'h'+i;
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href='#'+h.id;
+      a.textContent=h.textContent;
+      a.className=h.tagName==='H3'?'toc-h3':'toc-h2';
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var link=toc.querySelector('a[href="#'+e.target.id+'"]');
+        if(link){
+          if(e.isIntersecting){
+            toc.querySelectorAll('a').forEach(function(a){a.classList.remove('active');});
+            link.classList.add('active');
+          }
+        }
+      });
+    },{rootMargin:'-10% 0px -80% 0px'});
+    headings.forEach(function(h){obs.observe(h);});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var cur=document.documentElement.getAttribute('data-theme')||'light';
+    var btn=document.getElementById('theme-toggle');
+    if(btn){
+      btn.textContent=cur==='dark'?'☀':'☾';
+      btn.addEventListener('click',function(){
+        applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+      });
+    }
+    buildToc();
+    initLightbox();
+  });
+  function initLightbox(){
+    var overlay=document.getElementById('img-overlay');
+    var overlayImg=document.getElementById('img-overlay-img');
+    if(!overlay||!overlayImg)return;
+    document.querySelectorAll('article img').forEach(function(img){
+      img.style.cursor='zoom-in';
+      img.addEventListener('click',function(){
+        overlayImg.setAttribute('src',img.getAttribute('src')||'');
+        overlayImg.setAttribute('alt',img.getAttribute('alt')||'');
+        overlay.classList.add('open');
+        document.body.style.overflow='hidden';
+      });
+    });
+    function close(){overlay.classList.remove('open');document.body.style.overflow='';}
+    overlay.addEventListener('click',function(e){if(e.target===overlay)close();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  }
+})();
+</script>
+</body>
+</html>

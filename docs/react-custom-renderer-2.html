@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 2/3 - Beginners guide to Custom React Renderers. How to build your own renderer from scratch?</title>
+<meta name="description" content="Implementing all the HostConfig methods needed for the initial render phase of a custom React renderer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Caveat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="./style.css">
+<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script>
+(function(){
+  var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  document.documentElement.setAttribute('data-theme',t);
+  var link=document.getElementById('hljs-theme');
+  if(link&&t==='dark')link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){hljs.highlightAll();});</script>
+</head>
+<body>
+<div id="img-overlay" class="img-overlay"><img id="img-overlay-img" src="" alt=""></div>
+<aside class="toc-sidebar" id="toc"></aside>
+<div class="container">
+<nav><a href="./index.html">← Home</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme"></button></nav>
+<article>
+<header>
+<h1>Part 2/3 - Beginners guide to Custom React Renderers. How to build your own renderer from scratch?</h1>
+<div class="post-meta">
+<span class="post-author">Atul</span> · <time datetime="2018-10-22">October 22, 2018</time>
+</div>
+</header>
+<p>This is Part 2 of a 3-part series. Be sure to read <a href="/react-custom-renderer-1.html" target="_blank" rel="noopener noreferrer">Part 1</a> before proceeding.</p>
+<p>This installment covers <strong>the initial render phase of the renderer</strong>. Part 3 will cover the update phase.</p>
+<h2>HostConfig</h2>
+<p>Renderers must implement platform-specific functions within the <strong>HostConfig</strong>. The reconciler calls different functions during initial render versus update phases triggered by <code>setState</code>.</p>
+<p>The example application we&#39;ll be rendering:</p>
+<pre><code class="language-javascript">const Text = (props) =&gt; {
+  return &lt;p className={props.className}&gt;{props.content}&lt;/p&gt;
+}
+
+const App = () =&gt; {
+  return (
+    &lt;div&gt;
+      &lt;Text className=&quot;hello-class&quot; content=&quot;Hello&quot; /&gt;
+      &lt;span style=&quot;color:blue;&quot;&gt;World&lt;/span&gt;
+    &lt;/div&gt;
+  )
+}
+</code></pre>
+<h2>Essential HostConfig Methods</h2>
+<h3>now()</h3>
+<p>Used by the reconciler to calculate the current time:</p>
+<pre><code class="language-javascript">now: Date.now,
+</code></pre>
+<h3>getRootHostContext(nextRootInstance)</h3>
+<p>Returns a context object passed to immediate children. The <code>nextRootInstance</code> is the root DOM node specified during render.</p>
+<pre><code class="language-javascript">getRootHostContext: function (nextRootInstance) {
+  let rootContext = {}
+  return rootContext
+}
+</code></pre>
+<h3>getChildHostContext(parentContext, fiberType, rootInstance)</h3>
+<p>Provides access to parent context and enables passing context to immediate children.</p>
+<pre><code class="language-javascript">getChildHostContext: function (parentContext, fiberType, rootInstance) {
+  let context = { type: fiberType }
+  return context
+}
+</code></pre>
+<h3>shouldSetTextContent(type, nextProps)</h3>
+<p>Returns a boolean determining whether text is created inside the host element or separately. When returning <code>true</code>, no separate text element is created and child traversal stops.</p>
+<pre><code class="language-javascript">shouldSetTextContent: function (type, nextProps) {
+  return false
+}
+</code></pre>
+<h3>createTextInstance(newText, rootContainerInstance, currentHostContext, workInProgress)</h3>
+<p>Creates an actual text node:</p>
+<pre><code class="language-javascript">createTextInstance: function(
+  newText,
+  rootContainerInstance,
+  currentHostContext,
+  workInProgress
+) {
+  return document.createTextNode(newText)
+}
+</code></pre>
+<h3>createInstance(type, newProps, rootContainerInstance, currentHostContext, workInProgress)</h3>
+<p>Called on all host nodes except leaf text nodes. Creates the appropriate DOM element and handles props:</p>
+<pre><code class="language-javascript">createInstance: function(
+  type,
+  newProps,
+  rootContainerInstance,
+  currentHostContext,
+  workInProgress
+) {
+  const element = document.createElement(type)
+  element.className = newProps.className || &#39;&#39;
+  element.style = newProps.style
+  return element
+}
+</code></pre>
+<h3>appendInitialChild(parent, child)</h3>
+<p>Attaches child DOM nodes to parents during initial render, called for each child of the current node:</p>
+<pre><code class="language-javascript">appendInitialChild: (parent, child) =&gt; {
+  parent.appendChild(child)
+}
+</code></pre>
+<h3>finalizeInitialChildren(instance, type, newProps, rootContainerInstance, currentHostContext)</h3>
+<p>Returns a boolean determining whether <strong>commitMount</strong> should be called for the element. Used for operations like autofocus that occur after rendering completes:</p>
+<pre><code class="language-javascript">finalizeInitialChildren: (
+  instance,
+  type,
+  newProps,
+  rootContainerInstance,
+  currentHostContext
+) =&gt; {
+  return newProps.autofocus
+}
+</code></pre>
+<h3>prepareForCommit(rootContainerInstance)</h3>
+<p>Called when the in-memory render tree is complete but before attachment to the actual DOM:</p>
+<pre><code class="language-javascript">prepareForCommit: function (rootContainerInstance) {}
+</code></pre>
+<h3>resetAfterCommit(rootContainerInstance)</h3>
+<p>Executes after the in-memory tree attaches to the root DOM element:</p>
+<pre><code class="language-javascript">resetAfterCommit: function (rootContainerInstance) {}
+</code></pre>
+<h3>appendChildToContainer(parent, child)</h3>
+<p>Attaches the in-memory tree to the root host div. Requires <code>supportsMutation: true</code>:</p>
+<pre><code class="language-javascript">appendChildToContainer: (parent, child) =&gt; {
+  parent.appendChild(child)
+},
+supportsMutation: true,
+</code></pre>
+<h3>commitMount(domElement, type, newProps, fiberNode)</h3>
+<p>Called for elements where <code>finalizeInitialChildren</code> returned <code>true</code>, after all tree attachment completes. Primarily used for autofocus:</p>
+<pre><code class="language-javascript">commitMount: (domElement, type, newProps, fiberNode) =&gt; {
+  domElement.focus()
+}
+</code></pre>
+<h2>Complete HostConfig Implementation</h2>
+<pre><code class="language-javascript">const HostConfig = {
+  now: Date.now,
+  getRootHostContext: function (nextRootInstance) {
+    let rootContext = {}
+    return rootContext
+  },
+  getChildHostContext: function (parentContext, fiberType, rootInstance) {
+    let context = { type: fiberType }
+    return context
+  },
+  shouldSetTextContent: function (type, nextProps) {
+    return false
+  },
+  createTextInstance: function (
+    newText,
+    rootContainerInstance,
+    currentHostContext,
+    workInProgress
+  ) {
+    return document.createTextNode(newText)
+  },
+  createInstance: function (
+    type,
+    newProps,
+    rootContainerInstance,
+    currentHostContext,
+    workInProgress
+  ) {
+    const element = document.createElement(type)
+    element.className = newProps.className || &#39;&#39;
+    element.style = newProps.style
+    return element
+  },
+  appendInitialChild: (parent, child) =&gt; {
+    parent.appendChild(child)
+  },
+  finalizeInitialChildren: (
+    instance,
+    type,
+    newProps,
+    rootContainerInstance,
+    currentHostContext
+  ) =&gt; {
+    return newProps.autofocus
+  },
+  prepareForCommit: function (rootContainerInstance) {},
+  resetAfterCommit: function (rootContainerInstance) {},
+  commitMount: (domElement, type, newProps, fiberNode) =&gt; {
+    domElement.focus()
+  },
+  appendChildToContainer: (parent, child) =&gt; {
+    parent.appendChild(child)
+  },
+  supportsMutation: true,
+}
+</code></pre>
+<p>With these implementations, a functional custom React renderer capable of rendering JSX to the DOM is achieved.</p>
+<p>Continue to <a href="/react-custom-renderer-3.html" target="_blank" rel="noopener noreferrer">Part 3/3</a> where we handle the update phase.</p>
+<h2>References</h2>
+<ul>
+<li>React DOM source code</li>
+<li>React Reconciler documentation</li>
+</ul>
+
+</article>
+<div class="original-post-note">This post was ported over from Atul's old blog. <a href="https://blog.atulr.com/react-custom-renderer-2" target="_blank" rel="noopener noreferrer">Read the original here.</a></div>
+<div class="giscus-wrap">
+<script src="https://giscus.app/client.js"
+  data-repo="a7ul/thoughts"
+  data-repo-id="R_kgDORp7Weg"
+  data-category="General"
+  data-category-id="DIC_kwDORp7Wes4C4pUS"
+  data-mapping="title"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="light"
+  data-lang="en"
+  crossorigin="anonymous"
+  async>
+</script>
+</div>
+</div>
+<script>
+(function(){
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    localStorage.setItem('theme',t);
+    var link=document.getElementById('hljs-theme');
+    if(link)link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/'+(t==='dark'?'github-dark':'github')+'.min.css';
+    var btn=document.getElementById('theme-toggle');
+    if(btn)btn.textContent=t==='dark'?'☀':'☾';
+    var gf=document.querySelector('iframe.giscus-frame');
+    if(gf)gf.contentWindow.postMessage({giscus:{setConfig:{theme:t==='dark'?'dark_dimmed':'light'}}}, 'https://giscus.app');
+  }
+  function buildToc(){
+    var toc=document.getElementById('toc');
+    if(!toc)return;
+    var headings=Array.from(document.querySelectorAll('article h2,article h3'));
+    if(headings.length<2)return;
+    var title=document.createElement('div');
+    title.className='toc-title';
+    title.textContent='On this page';
+    toc.appendChild(title);
+    var ul=document.createElement('ul');
+    headings.forEach(function(h,i){
+      if(!h.id)h.id=(h.textContent||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'h'+i;
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href='#'+h.id;
+      a.textContent=h.textContent;
+      a.className=h.tagName==='H3'?'toc-h3':'toc-h2';
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var link=toc.querySelector('a[href="#'+e.target.id+'"]');
+        if(link){
+          if(e.isIntersecting){
+            toc.querySelectorAll('a').forEach(function(a){a.classList.remove('active');});
+            link.classList.add('active');
+          }
+        }
+      });
+    },{rootMargin:'-10% 0px -80% 0px'});
+    headings.forEach(function(h){obs.observe(h);});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var cur=document.documentElement.getAttribute('data-theme')||'light';
+    var btn=document.getElementById('theme-toggle');
+    if(btn){
+      btn.textContent=cur==='dark'?'☀':'☾';
+      btn.addEventListener('click',function(){
+        applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+      });
+    }
+    buildToc();
+    initLightbox();
+  });
+  function initLightbox(){
+    var overlay=document.getElementById('img-overlay');
+    var overlayImg=document.getElementById('img-overlay-img');
+    if(!overlay||!overlayImg)return;
+    document.querySelectorAll('article img').forEach(function(img){
+      img.style.cursor='zoom-in';
+      img.addEventListener('click',function(){
+        overlayImg.setAttribute('src',img.getAttribute('src')||'');
+        overlayImg.setAttribute('alt',img.getAttribute('alt')||'');
+        overlay.classList.add('open');
+        document.body.style.overflow='hidden';
+      });
+    });
+    function close(){overlay.classList.remove('open');document.body.style.overflow='';}
+    overlay.addEventListener('click',function(e){if(e.target===overlay)close();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  }
+})();
+</script>
+</body>
+</html>

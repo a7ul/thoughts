@@ -1,0 +1,40 @@
+<svg class="exdraw" viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three eras: physical, digital, agentic">
+  <defs>
+    <filter id="rough-e" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2"/>
+    </filter>
+  </defs>
+  <g filter="url(#rough-e)" fill="none" stroke="#1e1e1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="20" y="80" width="210" height="200" rx="12" fill="#ffec99"/>
+    <rect x="275" y="80" width="210" height="200" rx="12" fill="#a5d8ff"/>
+    <rect x="530" y="80" width="210" height="200" rx="12" fill="#d0bfff"/>
+    <circle cx="100" cy="140" r="11" fill="#fff"/>
+    <path d="M100 151 L100 196 M84 168 L116 168 M100 196 L88 219 M100 196 L112 219"/>
+    <rect x="142" y="150" width="46" height="60" rx="4" fill="#fff"/>
+    <path d="M150 166 L180 166 M150 178 L180 178 M150 190 L172 190"/>
+    <circle cx="345" cy="140" r="11" fill="#fff"/>
+    <path d="M345 151 L345 196 M329 168 L361 168 M345 196 L333 219 M345 196 L357 219"/>
+    <rect x="378" y="150" width="72" height="52" rx="4" fill="#fff"/>
+    <path d="M388 164 L432 164 M388 176 L424 176 M414 202 L414 214 M398 214 L430 214"/>
+    <circle cx="572" cy="132" r="9" fill="#fff"/>
+    <path d="M572 141 L572 176 M560 155 L584 155 M572 176 L563 196 M572 176 L581 196"/>
+    <rect x="625" y="150" width="46" height="40" rx="7" fill="#fff"/>
+    <path d="M648 150 L648 140"/>
+    <circle cx="648" cy="136" r="3" fill="#1e1e1e"/>
+    <circle cx="638" cy="168" r="3.2" fill="#1e1e1e"/>
+    <circle cx="658" cy="168" r="3.2" fill="#1e1e1e"/>
+    <path d="M633 190 L633 210 L663 210 L663 190 M625 196 L617 206 M671 196 L679 206"/>
+    <path d="M234 180 L271 180 M271 180 L263 175 M271 180 L263 185"/>
+    <path d="M489 180 L526 180 M526 180 L518 175 M526 180 L518 185"/>
+  </g>
+  <g class="hw" fill="#1e1e1e" text-anchor="middle">
+    <text x="125" y="58" font-size="30" font-weight="700">Physical</text>
+    <text x="380" y="58" font-size="30" font-weight="700">Digital</text>
+    <text x="635" y="58" font-size="30" font-weight="700">Agentic</text>
+    <text x="125" y="305" font-size="21" fill="#555">go there, do it yourself</text>
+    <text x="380" y="305" font-size="21" fill="#555">log in, do it yourself</text>
+    <text x="635" y="305" font-size="21" fill="#555">delegate &amp; verify</text>
+    <text x="380" y="352" font-size="24" font-weight="700">Every leap changed the medium — this one changes the doer.</text>
+  </g>
+</svg>

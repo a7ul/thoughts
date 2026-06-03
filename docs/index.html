@@ -6,22 +6,196 @@
 <title>Atul's Blog</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap">
+<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
 <link rel="stylesheet" href="style.css">
+<script>
+(function(){
+  var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  document.documentElement.setAttribute('data-theme',t);
+  var link=document.getElementById('hljs-theme');
+  if(link&&t==='dark')link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+})();
+</script>
 </head>
 <body>
 <div class="container">
 <header class="site-header">
+<div class="site-header-top">
 <h1>Atul's Blog</h1>
+<button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme"></button>
+</div>
 <p class="site-bio">Cofounder &amp; CTO at <a href="https://filed.com" target="_blank" rel="noopener">Filed</a>. He has been building software for about 11+ years. This is where he stores all of his secret thoughts.</p>
 </header>
 <ul class="post-list">
 <li>
+<time class="post-date" datetime="2026-06-02">June 2, 2026</time>
+<h2><a href="designing-products-agent-era.html">Designing products in the age of agents</a></h2>
+<p class="post-desc">The human-does-the-task assumption just broke. Here's what that means for how we build products.</p>
+</li>
+<li>
 <time class="post-date" datetime="2026-03-18">March 18, 2026</time>
 <h2><a href="scaling-agentic-development.html">How far can you push delegation to coding agents and still have control over the codebase?</a></h2>
-
+<p class="post-desc">I built a production-ready AI agents SDK in 5 hours by delegating almost everything to coding agents. Here's what I learned about where control breaks down.</p>
+</li>
+<li>
+<time class="post-date" datetime="2022-06-14">June 14, 2022</time>
+<h2><a href="graphql-auth.html">Deep dive on authentication, authorization and RBAC for GraphQL Servers</a></h2>
+<p class="post-desc">How to design a declarative, flexible, deny-first RBAC system for GraphQL servers using schema directives.</p>
+</li>
+<li>
+<time class="post-date" datetime="2021-07-28">July 28, 2021</time>
+<h2><a href="docker-local-production-image.html">Use the same Dockerfile for both local development and production with multi-stage builds</a></h2>
+<p class="post-desc">How to use Docker multi-stage builds to eliminate the need for separate Dockerfiles for development and production.</p>
+</li>
+<li>
+<time class="post-date" datetime="2020-01-24">January 24, 2020</time>
+<h2><a href="nodegui-v0-13-0.html">NodeGui v0.13.0</a></h2>
+<p class="post-desc">Major NodeGui release featuring prebuilt binaries, Windows plugin support, and an updated documentation site.</p>
+</li>
+<li>
+<time class="post-date" datetime="2019-09-22">September 22, 2019</time>
+<h2><a href="nodegui-v0-2-0.html">NodeGUI v0.2.0</a></h2>
+<p class="post-desc">NodeGUI v0.2.0 brings a new CMake build system, native plugin support, and several component additions.</p>
+</li>
+<li>
+<time class="post-date" datetime="2019-09-04">September 4, 2019</time>
+<h2><a href="nodegui-packer.html">Announcing Packer for NodeGUI and React NodeGUI</a></h2>
+<p class="post-desc">Packer is a new npm tool that packages NodeGUI and React NodeGUI apps into standalone executables for Mac, Windows, and Linux.</p>
+</li>
+<li>
+<time class="post-date" datetime="2019-08-14">August 14, 2019</time>
+<h2><a href="nodegui-intro.html">Announcing NodeGui and React NodeGui - Build native desktop apps with Javascript and CSS</a></h2>
+<p class="post-desc">Introducing NodeGui and React NodeGui  -  open source libraries for building cross-platform native desktop apps with JavaScript and CSS, powered by Qt5.</p>
+</li>
+<li>
+<time class="post-date" datetime="2019-06-12">June 12, 2019</time>
+<h2><a href="react-hooks-hocs.html">Using React hooks for functional components with perfect fallback for class components</a></h2>
+<p class="post-desc">How to write logic once as a React hook and expose it to class components via an HOC wrapper, without duplicating code.</p>
+</li>
+<li>
+<time class="post-date" datetime="2019-05-28">May 28, 2019</time>
+<h2><a href="docker-local-environment.html">Simplified guide to using Docker for local development environment</a></h2>
+<p class="post-desc">How to use Docker and docker-compose to set up a productive local development environment across multiple services written in different languages.</p>
+</li>
+<li>
+<time class="post-date" datetime="2019-01-15">January 15, 2019</time>
+<h2><a href="rate-limiter.html">An alternative approach to building a simple API Rate limiter using NodeJS and Redis</a></h2>
+<p class="post-desc">An alternative Redis-based approach to API rate limiting that avoids common algorithms and uses atomic transactions for correctness.</p>
+</li>
+<li>
+<time class="post-date" datetime="2019-01-08">January 8, 2019</time>
+<h2><a href="react-custom-renderer-3.html">Part 3/3 - Beginners guide to Custom React Renderers. How to build your own renderer from scratch?</a></h2>
+<p class="post-desc">Completing the custom React renderer by implementing the update phase  -  prepareUpdate, commitUpdate, commitTextUpdate, and all the mutation methods.</p>
+</li>
+<li>
+<time class="post-date" datetime="2018-10-22">October 22, 2018</time>
+<h2><a href="react-custom-renderer-2.html">Part 2/3 - Beginners guide to Custom React Renderers. How to build your own renderer from scratch?</a></h2>
+<p class="post-desc">Implementing all the HostConfig methods needed for the initial render phase of a custom React renderer.</p>
+</li>
+<li>
+<time class="post-date" datetime="2018-10-21">October 21, 2018</time>
+<h2><a href="react-custom-renderer-1.html">Part 1/3 - Beginners guide to Custom React Renderers. How to build your own renderer from scratch?</a></h2>
+<p class="post-desc">An introduction to React's architecture  -  Core, Reconciler, and Renderer  -  and the first steps toward building a custom renderer using react-reconciler.</p>
+</li>
+<li>
+<time class="post-date" datetime="2018-09-25">September 25, 2018</time>
+<h2><a href="web-notifications.html">Beginners guide to Web Push Notifications using Service Workers</a></h2>
+<p class="post-desc">A step-by-step guide to implementing web push notifications using Service Workers, the Push API, and the Notification API.</p>
+</li>
+<li>
+<time class="post-date" datetime="2018-08-06">August 6, 2018</time>
+<h2><a href="localhost-https.html">HTTPS certificate generation explained! Now setup HTTPS for local development environment (without sudo)</a></h2>
+<p class="post-desc">How to generate self-signed SSL certificates and set up HTTPS for local development without requiring sudo  -  covering the full CSR, Root CA, and domain cert flow.</p>
+</li>
+<li>
+<time class="post-date" datetime="2018-07-04">July 4, 2018</time>
+<h2><a href="debugging-node-addons-vscode.html">Debugging NodeJS C++ Addons using VS Code</a></h2>
+<p class="post-desc">How to set up VS Code with LLDB to debug NodeJS native C++ addons with proper breakpoints and variable inspection.</p>
+</li>
+<li>
+<time class="post-date" datetime="2018-06-15">June 15, 2018</time>
+<h2><a href="node-addon-guide.html">Beginners guide to writing NodeJS Addons using C++ and N-API (node-addon-api)</a></h2>
+<p class="post-desc">How to write Node.js native addons in C++ using N-API  -  covering function exports, class exports, and passing complex objects between JavaScript and C++.</p>
 </li></ul>
 <footer class="site-footer">Link to the old blog site: <a href="https://blog.atulr.com" target="_blank" rel="noopener">https://blog.atulr.com</a></footer>
 </div>
+<script>
+(function(){
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    localStorage.setItem('theme',t);
+    var link=document.getElementById('hljs-theme');
+    if(link)link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/'+(t==='dark'?'github-dark':'github')+'.min.css';
+    var btn=document.getElementById('theme-toggle');
+    if(btn)btn.textContent=t==='dark'?'☀':'☾';
+    var gf=document.querySelector('iframe.giscus-frame');
+    if(gf)gf.contentWindow.postMessage({giscus:{setConfig:{theme:t==='dark'?'dark_dimmed':'light'}}}, 'https://giscus.app');
+  }
+  function buildToc(){
+    var toc=document.getElementById('toc');
+    if(!toc)return;
+    var headings=Array.from(document.querySelectorAll('article h2,article h3'));
+    if(headings.length<2)return;
+    var title=document.createElement('div');
+    title.className='toc-title';
+    title.textContent='On this page';
+    toc.appendChild(title);
+    var ul=document.createElement('ul');
+    headings.forEach(function(h,i){
+      if(!h.id)h.id=(h.textContent||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'h'+i;
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href='#'+h.id;
+      a.textContent=h.textContent;
+      a.className=h.tagName==='H3'?'toc-h3':'toc-h2';
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var link=toc.querySelector('a[href="#'+e.target.id+'"]');
+        if(link){
+          if(e.isIntersecting){
+            toc.querySelectorAll('a').forEach(function(a){a.classList.remove('active');});
+            link.classList.add('active');
+          }
+        }
+      });
+    },{rootMargin:'-10% 0px -80% 0px'});
+    headings.forEach(function(h){obs.observe(h);});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var cur=document.documentElement.getAttribute('data-theme')||'light';
+    var btn=document.getElementById('theme-toggle');
+    if(btn){
+      btn.textContent=cur==='dark'?'☀':'☾';
+      btn.addEventListener('click',function(){
+        applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+      });
+    }
+    buildToc();
+    initLightbox();
+  });
+  function initLightbox(){
+    var overlay=document.getElementById('img-overlay');
+    var overlayImg=document.getElementById('img-overlay-img');
+    if(!overlay||!overlayImg)return;
+    document.querySelectorAll('article img').forEach(function(img){
+      img.style.cursor='zoom-in';
+      img.addEventListener('click',function(){
+        overlayImg.setAttribute('src',img.getAttribute('src')||'');
+        overlayImg.setAttribute('alt',img.getAttribute('alt')||'');
+        overlay.classList.add('open');
+        document.body.style.overflow='hidden';
+      });
+    });
+    function close(){overlay.classList.remove('open');document.body.style.overflow='';}
+    overlay.addEventListener('click',function(e){if(e.target===overlay)close();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  }
+})();
+</script>
 </body>
 </html>

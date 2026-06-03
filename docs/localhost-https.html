@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTTPS certificate generation explained! Now setup HTTPS for local development environment (without sudo)</title>
+<meta name="description" content="How to generate self-signed SSL certificates and set up HTTPS for local development without requiring sudo  -  covering the full CSR, Root CA, and domain cert flow.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Caveat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="./style.css">
+<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script>
+(function(){
+  var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  document.documentElement.setAttribute('data-theme',t);
+  var link=document.getElementById('hljs-theme');
+  if(link&&t==='dark')link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){hljs.highlightAll();});</script>
+</head>
+<body>
+<div id="img-overlay" class="img-overlay"><img id="img-overlay-img" src="" alt=""></div>
+<aside class="toc-sidebar" id="toc"></aside>
+<div class="container">
+<nav><a href="./index.html">← Home</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme"></button></nav>
+<article>
+<header>
+<h1>HTTPS certificate generation explained! Now setup HTTPS for local development environment (without sudo)</h1>
+<div class="post-meta">
+<span class="post-author">Atul</span> · <time datetime="2018-08-06">August 6, 2018</time>
+</div>
+</header>
+<p>Beginning in July 2018 with the release of Chrome 68, Chrome marks all HTTP sites as &quot;not secure.&quot; On top of that, HTTPS is a search ranking factor. Developing locally with HTTPS prevents mixed-content issues and ensures parity with production environments.</p>
+<p>This post explains how to set up HTTPS for local development without requiring administrator privileges.</p>
+<h2>Overview</h2>
+<p>The process involves three steps:</p>
+<ol>
+<li><strong>Certificate Signing Request (CSR)</strong>  -  Generate a private/public key pair and a CSR containing domain information</li>
+<li><strong>Root CA Certificate</strong>  -  Create a self-signed Certificate Authority</li>
+<li><strong>Domain Certificate</strong>  -  Use the CA to sign the CSR and produce a domain-specific certificate</li>
+</ol>
+<h2>Step 1: Generate a Root CA</h2>
+<p>A Certificate Authority (CA) is used to sign your development certificates. The browser trusts your CA, and therefore trusts anything signed by it.</p>
+<pre><code class="language-bash"># Generate CA private key
+openssl genrsa -des3 -out rootCA.key 4096
+
+# Generate root CA certificate (valid 3650 days = 10 years)
+openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 3650 -out rootCA.pem
+</code></pre>
+<p>When prompted, fill in the fields (Country, Organization, etc.)  -  these are only for your local CA and don&#39;t need to match anything real.</p>
+<h2>Step 2: Generate a Server Certificate</h2>
+<pre><code class="language-bash"># Generate server private key (no passphrase  -  important for servers)
+openssl genrsa -out myserver.key 2048
+
+# Generate a Certificate Signing Request
+openssl req -new -key myserver.key -out myserver.csr
+</code></pre>
+<p>When filling in the CSR details, set <code>Common Name</code> to <code>localhost</code> (or your local domain).</p>
+<h2>Step 3: Sign the Certificate with your CA</h2>
+<pre><code class="language-bash"># Sign the CSR with the root CA  -  valid 500 days
+openssl x509 -req \
+  -in myserver.csr \
+  -CA rootCA.pem \
+  -CAkey rootCA.key \
+  -CAcreateserial \
+  -out myserver.crt \
+  -days 500 \
+  -sha256
+</code></pre>
+<p>Now you have:</p>
+<ul>
+<li><code>rootCA.key</code> + <code>rootCA.pem</code>  -  your local CA (keep the key safe)</li>
+<li><code>myserver.key</code> + <code>myserver.crt</code>  -  your server certificate and key</li>
+</ul>
+<h2>Using Certificates in Node.js</h2>
+<pre><code class="language-javascript">const https = require(&#39;https&#39;)
+const fs = require(&#39;fs&#39;)
+
+const options = {
+  key: fs.readFileSync(&#39;myserver.key&#39;),
+  cert: fs.readFileSync(&#39;myserver.crt&#39;),
+}
+
+https.createServer(options, (req, res) =&gt; {
+  res.writeHead(200)
+  res.end(&#39;Hello HTTPS World\n&#39;)
+}).listen(443)
+</code></pre>
+<h2>Using with http-server (frontend dev)</h2>
+<pre><code class="language-bash">npm install -g http-server
+http-server -S -C myserver.crt -K myserver.key -p 8443
+</code></pre>
+<h2>Making your browser trust the CA</h2>
+<p>For your browser to accept these certificates without warnings, you need to import <code>rootCA.pem</code> as a trusted Certificate Authority.</p>
+<p><strong>Chrome:</strong></p>
+<ol>
+<li>Go to <code>Settings → Privacy and security → Security → Manage certificates</code></li>
+<li>Open the <code>Authorities</code> tab</li>
+<li>Click <code>Import</code> and select <code>rootCA.pem</code></li>
+<li>Check &quot;Trust this certificate for identifying websites&quot;</li>
+</ol>
+<p><strong>Firefox:</strong></p>
+<ol>
+<li>Go to <code>Preferences → Privacy &amp; Security → Certificates → View Certificates</code></li>
+<li>Open the <code>Authorities</code> tab</li>
+<li>Click <code>Import</code> and select <code>rootCA.pem</code></li>
+<li>Check &quot;Trust this CA to identify websites&quot;</li>
+</ol>
+<p>After importing, restart your browser and reload your local HTTPS site  -  no more security warnings.</p>
+<blockquote>
+<p><strong>Important:</strong> These certificates are for development only. Self-signed certificates won&#39;t be trusted by your users&#39; browsers in production. Use a proper CA (like Let&#39;s Encrypt) for production.</p>
+</blockquote>
+
+</article>
+<div class="original-post-note">This post was ported over from Atul's old blog. <a href="https://blog.atulr.com/localhost-https" target="_blank" rel="noopener noreferrer">Read the original here.</a></div>
+<div class="giscus-wrap">
+<script src="https://giscus.app/client.js"
+  data-repo="a7ul/thoughts"
+  data-repo-id="R_kgDORp7Weg"
+  data-category="General"
+  data-category-id="DIC_kwDORp7Wes4C4pUS"
+  data-mapping="title"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="light"
+  data-lang="en"
+  crossorigin="anonymous"
+  async>
+</script>
+</div>
+</div>
+<script>
+(function(){
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    localStorage.setItem('theme',t);
+    var link=document.getElementById('hljs-theme');
+    if(link)link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/'+(t==='dark'?'github-dark':'github')+'.min.css';
+    var btn=document.getElementById('theme-toggle');
+    if(btn)btn.textContent=t==='dark'?'☀':'☾';
+    var gf=document.querySelector('iframe.giscus-frame');
+    if(gf)gf.contentWindow.postMessage({giscus:{setConfig:{theme:t==='dark'?'dark_dimmed':'light'}}}, 'https://giscus.app');
+  }
+  function buildToc(){
+    var toc=document.getElementById('toc');
+    if(!toc)return;
+    var headings=Array.from(document.querySelectorAll('article h2,article h3'));
+    if(headings.length<2)return;
+    var title=document.createElement('div');
+    title.className='toc-title';
+    title.textContent='On this page';
+    toc.appendChild(title);
+    var ul=document.createElement('ul');
+    headings.forEach(function(h,i){
+      if(!h.id)h.id=(h.textContent||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'h'+i;
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href='#'+h.id;
+      a.textContent=h.textContent;
+      a.className=h.tagName==='H3'?'toc-h3':'toc-h2';
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var link=toc.querySelector('a[href="#'+e.target.id+'"]');
+        if(link){
+          if(e.isIntersecting){
+            toc.querySelectorAll('a').forEach(function(a){a.classList.remove('active');});
+            link.classList.add('active');
+          }
+        }
+      });
+    },{rootMargin:'-10% 0px -80% 0px'});
+    headings.forEach(function(h){obs.observe(h);});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var cur=document.documentElement.getAttribute('data-theme')||'light';
+    var btn=document.getElementById('theme-toggle');
+    if(btn){
+      btn.textContent=cur==='dark'?'☀':'☾';
+      btn.addEventListener('click',function(){
+        applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+      });
+    }
+    buildToc();
+    initLightbox();
+  });
+  function initLightbox(){
+    var overlay=document.getElementById('img-overlay');
+    var overlayImg=document.getElementById('img-overlay-img');
+    if(!overlay||!overlayImg)return;
+    document.querySelectorAll('article img').forEach(function(img){
+      img.style.cursor='zoom-in';
+      img.addEventListener('click',function(){
+        overlayImg.setAttribute('src',img.getAttribute('src')||'');
+        overlayImg.setAttribute('alt',img.getAttribute('alt')||'');
+        overlay.classList.add('open');
+        document.body.style.overflow='hidden';
+      });
+    });
+    function close(){overlay.classList.remove('open');document.body.style.overflow='';}
+    overlay.addEventListener('click',function(e){if(e.target===overlay)close();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  }
+})();
+</script>
+</body>
+</html>

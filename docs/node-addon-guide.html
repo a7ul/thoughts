@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beginners guide to writing NodeJS Addons using C++ and N-API (node-addon-api)</title>
+<meta name="description" content="How to write Node.js native addons in C++ using N-API  -  covering function exports, class exports, and passing complex objects between JavaScript and C++.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Caveat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="./style.css">
+<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script>
+(function(){
+  var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  document.documentElement.setAttribute('data-theme',t);
+  var link=document.getElementById('hljs-theme');
+  if(link&&t==='dark')link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){hljs.highlightAll();});</script>
+</head>
+<body>
+<div id="img-overlay" class="img-overlay"><img id="img-overlay-img" src="" alt=""></div>
+<aside class="toc-sidebar" id="toc"></aside>
+<div class="container">
+<nav><a href="./index.html">← Home</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme"></button></nav>
+<article>
+<header>
+<h1>Beginners guide to writing NodeJS Addons using C++ and N-API (node-addon-api)</h1>
+<div class="post-meta">
+<span class="post-author">Atul</span> · <time datetime="2018-06-15">June 15, 2018</time>
+</div>
+</header>
+<p>Node.js Addons are dynamically-linked shared objects written in C++ that can be loaded via <code>require()</code> and used as ordinary Node.js modules. They primarily interface between JavaScript and C/C++ libraries.</p>
+<p>Common reasons to write addons:</p>
+<ul>
+<li>Accessing native APIs difficult to implement in JavaScript alone</li>
+<li>Integrating third-party C/C++ libraries</li>
+<li>Rewriting performance-critical modules in C++</li>
+</ul>
+<h2>What is N-API?</h2>
+<p>N-API (Native API) is an ABI-stable API for building native addons independent of the underlying JavaScript runtime (like V8). It ensures addons compiled for one Node.js version work on later versions without recompilation. N-API became stable in Node v10.</p>
+<p>The <code>node-addon-api</code> package provides C++ wrapper classes for N-API, offering C++ object models and exception handling with minimal overhead.</p>
+<h2>Setting Up: Boilerplate Configuration</h2>
+<h3>Project Initialization</h3>
+<pre><code class="language-bash">mkdir test-addon
+cd test-addon
+git init
+npm init
+</code></pre>
+<h3>Installing Dependencies</h3>
+<pre><code class="language-bash">npm install node-gyp --save-dev
+npm install node-addon-api
+</code></pre>
+<p><code>node-gyp</code> compiles the addons. <code>node-addon-api</code> simplifies C++ addon development.</p>
+<h3>Core Configuration Files</h3>
+<p><strong><code>.gitignore</code></strong></p>
+<pre><code>node_modules
+*.log
+build
+</code></pre>
+<p><strong><code>binding.gyp</code></strong></p>
+<pre><code class="language-gyp">{
+    &quot;targets&quot;: [{
+        &quot;target_name&quot;: &quot;testaddon&quot;,
+        &quot;cflags!&quot;: [ &quot;-fno-exceptions&quot; ],
+        &quot;cflags_cc!&quot;: [ &quot;-fno-exceptions&quot; ],
+        &quot;sources&quot;: [
+            &quot;cppsrc/main.cpp&quot;
+        ],
+        &#39;include_dirs&#39;: [
+            &quot;&lt;!@(node -p \&quot;require(&#39;node-addon-api&#39;).include\&quot;)&quot;
+        ],
+        &#39;libraries&#39;: [],
+        &#39;dependencies&#39;: [
+            &quot;&lt;!(node -p \&quot;require(&#39;node-addon-api&#39;).gyp\&quot;)&quot;
+        ],
+        &#39;defines&#39;: [ &#39;NAPI_DISABLE_CPP_EXCEPTIONS&#39; ]
+    }]
+}
+</code></pre>
+<p><strong><code>package.json</code></strong></p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;test-addon&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;main&quot;: &quot;index.js&quot;,
+  &quot;gypfile&quot;: true,
+  &quot;scripts&quot;: {
+    &quot;build&quot;: &quot;node-gyp rebuild&quot;,
+    &quot;clean&quot;: &quot;node-gyp clean&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;node-gyp&quot;: &quot;^3.7.0&quot;
+  },
+  &quot;dependencies&quot;: {
+    &quot;node-addon-api&quot;: &quot;^1.3.0&quot;
+  }
+}
+</code></pre>
+<p><strong><code>cppsrc/main.cpp</code></strong></p>
+<pre><code class="language-cpp">#include &lt;napi.h&gt;
+
+Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
+  return exports;
+}
+
+NODE_API_MODULE(testaddon, InitAll)
+</code></pre>
+<p><strong><code>index.js</code></strong></p>
+<pre><code class="language-javascript">const testAddon = require(&#39;./build/Release/testaddon.node&#39;)
+
+module.exports = testAddon
+</code></pre>
+<p>Build with <code>npm run build</code>.</p>
+<h3>Understanding the Boilerplate</h3>
+<ul>
+<li><code>#include &lt;napi.h&gt;</code> includes the N-API header</li>
+<li><code>NODE_API_MODULE</code> registers the module entry point  -  parameters are module name and init function</li>
+<li><code>InitAll</code> receives <code>env</code> (JavaScript runtime context) and <code>exports</code> (object for exporting functions/classes)</li>
+</ul>
+<h2>Exporting C++ Functions</h2>
+<h3>Simple Function Export</h3>
+<p>Create <code>cppsrc/Samples/functionexample.h</code>:</p>
+<pre><code class="language-cpp">#include &lt;napi.h&gt;
+namespace functionexample {
+  std::string hello();
+  Napi::String HelloWrapped(const Napi::CallbackInfo&amp; info);
+  Napi::Object Init(Napi::Env env, Napi::Object exports);
+}
+</code></pre>
+<p>Create <code>cppsrc/Samples/functionexample.cpp</code>:</p>
+<pre><code class="language-cpp">#include &quot;functionexample.h&quot;
+
+std::string functionexample::hello(){
+  return &quot;Hello World&quot;;
+}
+
+Napi::String functionexample::HelloWrapped(const Napi::CallbackInfo&amp; info)
+{
+  Napi::Env env = info.Env();
+  Napi::String returnValue = Napi::String::New(env, functionexample::hello());
+  return returnValue;
+}
+
+Napi::Object functionexample::Init(Napi::Env env, Napi::Object exports)
+{
+  exports.Set(
+    &quot;hello&quot;, Napi::Function::New(env, functionexample::HelloWrapped)
+  );
+  return exports;
+}
+</code></pre>
+<p>Key concepts:</p>
+<ul>
+<li>Every exported function needs a wrapped version (e.g., <code>HelloWrapped</code>)</li>
+<li>Wrapped functions take <code>CallbackInfo</code> containing context and parameters</li>
+<li>The <code>Init</code> function registers the wrapper with the exports object</li>
+</ul>
+<p>Update <code>main.cpp</code>:</p>
+<pre><code class="language-cpp">#include &lt;napi.h&gt;
+#include &quot;Samples/functionexample.h&quot;
+
+Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
+  return functionexample::Init(env, exports);
+}
+
+NODE_API_MODULE(testaddon, InitAll)
+</code></pre>
+<p>Update <code>index.js</code>:</p>
+<pre><code class="language-javascript">const testAddon = require(&#39;./build/Release/testaddon.node&#39;);
+console.log(&#39;addon&#39;, testAddon);
+console.log(testAddon.hello());
+module.exports = testAddon;
+</code></pre>
+<p>After rebuilding: <code>node index.js</code> outputs:</p>
+<pre><code>addon { hello: [Function] }
+Hello World
+</code></pre>
+<h3>Functions with Parameters</h3>
+<p>Add an <code>add</code> function to <code>functionexample.cpp</code>:</p>
+<pre><code class="language-cpp">int functionexample::add(int a, int b){
+  return a + b;
+}
+
+Napi::Number functionexample::AddWrapped(const Napi::CallbackInfo&amp; info) {
+    Napi::Env env = info.Env();
+    if (info.Length() &lt; 2 || !info[0].IsNumber() || !info[1].IsNumber()) {
+        Napi::TypeError::New(env, &quot;Number expected&quot;).ThrowAsJavaScriptException();
+    }
+
+    Napi::Number first = info[0].As&lt;Napi::Number&gt;();
+    Napi::Number second = info[1].As&lt;Napi::Number&gt;();
+    int returnValue = functionexample::add(first.Int32Value(), second.Int32Value());
+    return Napi::Number::New(env, returnValue);
+}
+</code></pre>
+<p>Test with:</p>
+<pre><code class="language-javascript">console.log(&#39;add &#39;, testAddon.add(5, 10));
+// Output: add 15
+</code></pre>
+<h2>Exporting C++ Classes</h2>
+<h3>Basic Class Structure</h3>
+<p>Create <code>cppsrc/Samples/actualclass.h</code>:</p>
+<pre><code class="language-cpp">class ActualClass {
+ public:
+  ActualClass(double value);
+  double getValue();
+  double add(double toAdd);
+ private:
+  double value_;
+};
+</code></pre>
+<p>Create <code>cppsrc/Samples/actualclass.cpp</code>:</p>
+<pre><code class="language-cpp">#include &quot;actualclass.h&quot;
+
+ActualClass::ActualClass(double value){
+    this-&gt;value_ = value;
+}
+
+double ActualClass::getValue()
+{
+  return this-&gt;value_;
+}
+
+double ActualClass::add(double toAdd)
+{
+  this-&gt;value_ += toAdd;
+  return this-&gt;value_;
+}
+</code></pre>
+<h3>Creating the Wrapper Class</h3>
+<p>Create <code>cppsrc/Samples/classexample.h</code>:</p>
+<pre><code class="language-cpp">#include &lt;napi.h&gt;
+#include &quot;actualclass.h&quot;
+
+class ClassExample : public Napi::ObjectWrap&lt;ClassExample&gt; {
+ public:
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  ClassExample(const Napi::CallbackInfo&amp; info);
+
+ private:
+  static Napi::FunctionReference constructor;
+  Napi::Value GetValue(const Napi::CallbackInfo&amp; info);
+  Napi::Value Add(const Napi::CallbackInfo&amp; info);
+  ActualClass *actualClass_;
+};
+</code></pre>
+<p>Create <code>cppsrc/Samples/classexample.cpp</code>:</p>
+<pre><code class="language-cpp">#include &quot;classexample.h&quot;
+
+Napi::FunctionReference ClassExample::constructor;
+
+Napi::Object ClassExample::Init(Napi::Env env, Napi::Object exports) {
+  Napi::HandleScope scope(env);
+
+  Napi::Function func = DefineClass(env, &quot;ClassExample&quot;, {
+    InstanceMethod(&quot;add&quot;, &amp;ClassExample::Add),
+    InstanceMethod(&quot;getValue&quot;, &amp;ClassExample::GetValue),
+  });
+
+  constructor = Napi::Persistent(func);
+  constructor.SuppressDestruct();
+
+  exports.Set(&quot;ClassExample&quot;, func);
+  return exports;
+}
+
+ClassExample::ClassExample(const Napi::CallbackInfo&amp; info) : Napi::ObjectWrap&lt;ClassExample&gt;(info)  {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+
+  int length = info.Length();
+  if (length != 1 || !info[0].IsNumber()) {
+    Napi::TypeError::New(env, &quot;Number expected&quot;).ThrowAsJavaScriptException();
+  }
+
+  Napi::Number value = info[0].As&lt;Napi::Number&gt;();
+  this-&gt;actualClass_ = new ActualClass(value.DoubleValue());
+}
+
+Napi::Value ClassExample::GetValue(const Napi::CallbackInfo&amp; info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+  double num = this-&gt;actualClass_-&gt;getValue();
+  return Napi::Number::New(env, num);
+}
+
+Napi::Value ClassExample::Add(const Napi::CallbackInfo&amp; info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+
+  if (info.Length() != 1 || !info[0].IsNumber()) {
+    Napi::TypeError::New(env, &quot;Number expected&quot;).ThrowAsJavaScriptException();
+  }
+
+  Napi::Number toAdd = info[0].As&lt;Napi::Number&gt;();
+  double answer = this-&gt;actualClass_-&gt;add(toAdd.DoubleValue());
+  return Napi::Number::New(info.Env(), answer);
+}
+</code></pre>
+<p>Key concepts:</p>
+<ul>
+<li>Wrapper classes extend <code>Napi::ObjectWrap&lt;ClassName&gt;</code></li>
+<li><code>DefineClass</code> creates the class exported to JavaScript</li>
+<li><code>InstanceMethod</code> registers member functions</li>
+<li><code>Napi::FunctionReference</code> stores the class constructor</li>
+</ul>
+<p>Test:</p>
+<pre><code class="language-javascript">const classInstance = new testAddon.ClassExample(4.3);
+console.log(&#39;Testing class initial value:&#39;, classInstance.getValue());
+console.log(&#39;After adding 3.3:&#39;, classInstance.add(3.3));
+// Testing class initial value: 4.3
+// After adding 3.3: 7.6
+</code></pre>
+<h2>Passing Complex Objects Between Worlds</h2>
+<p>To pass an existing class instance as a constructor argument, use <code>Napi::ObjectWrap::Unwrap()</code>:</p>
+<pre><code class="language-cpp">ClassExample::ClassExample(const Napi::CallbackInfo&amp; info) : Napi::ObjectWrap&lt;ClassExample&gt;(info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+
+  int length = info.Length();
+  if (length != 1) {
+    Napi::TypeError::New(env, &quot;Only one argument expected&quot;).ThrowAsJavaScriptException();
+  }
+
+  if(!info[0].IsNumber()){
+    Napi::Object object_parent = info[0].As&lt;Napi::Object&gt;();
+    ClassExample* example_parent = Napi::ObjectWrap&lt;ClassExample&gt;::Unwrap(object_parent);
+    ActualClass* parent_actual_class_instance = example_parent-&gt;GetInternalInstance();
+    this-&gt;actualClass_ = new ActualClass(parent_actual_class_instance-&gt;getValue());
+    return;
+  }
+
+  Napi::Number value = info[0].As&lt;Napi::Number&gt;();
+  this-&gt;actualClass_ = new ActualClass(value.DoubleValue());
+}
+
+ActualClass* ClassExample::GetInternalInstance() {
+  return this-&gt;actualClass_;
+}
+</code></pre>
+<p>Test:</p>
+<pre><code class="language-javascript">const prevInstance = new testAddon.ClassExample(4.3);
+console.log(&#39;Initial value:&#39;, prevInstance.getValue());
+console.log(&#39;After adding 3.3:&#39;, prevInstance.add(3.3));
+
+const newFromExisting = new testAddon.ClassExample(prevInstance);
+console.log(&#39;Value of derived instance:&#39;, newFromExisting.getValue());
+// Initial value: 4.3
+// After adding 3.3: 7.6
+// Value of derived instance: 7.6
+</code></pre>
+<h2>Summary</h2>
+<p>N-API provides a stable interface for building Node.js addons in C++. The workflow:</p>
+<ol>
+<li>Write C++ implementation</li>
+<li>Create N-API wrapper functions/classes</li>
+<li>Register exports via <code>Init</code></li>
+<li>Update <code>binding.gyp</code> with source files</li>
+<li>Rebuild with <code>npm run build</code></li>
+</ol>
+<h2>References</h2>
+<ul>
+<li><a href="https://github.com/nodejs/abi-stable-node-addon-examples/" target="_blank" rel="noopener noreferrer">ABI-Stable Node Addon Examples</a></li>
+<li><a href="https://github.com/nodejs/node-addon-api.git/" target="_blank" rel="noopener noreferrer">node-addon-api Repository</a></li>
+<li><a href="https://nodejs.org/api/addons.html" target="_blank" rel="noopener noreferrer">Node.js Addons Documentation</a></li>
+<li><a href="https://github.com/master-atul/blog-addons-example" target="_blank" rel="noopener noreferrer">Complete Example Source Code</a></li>
+</ul>
+
+</article>
+<div class="original-post-note">This post was ported over from Atul's old blog. <a href="https://blog.atulr.com/node-addon-guide" target="_blank" rel="noopener noreferrer">Read the original here.</a></div>
+<div class="giscus-wrap">
+<script src="https://giscus.app/client.js"
+  data-repo="a7ul/thoughts"
+  data-repo-id="R_kgDORp7Weg"
+  data-category="General"
+  data-category-id="DIC_kwDORp7Wes4C4pUS"
+  data-mapping="title"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="light"
+  data-lang="en"
+  crossorigin="anonymous"
+  async>
+</script>
+</div>
+</div>
+<script>
+(function(){
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    localStorage.setItem('theme',t);
+    var link=document.getElementById('hljs-theme');
+    if(link)link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/'+(t==='dark'?'github-dark':'github')+'.min.css';
+    var btn=document.getElementById('theme-toggle');
+    if(btn)btn.textContent=t==='dark'?'☀':'☾';
+    var gf=document.querySelector('iframe.giscus-frame');
+    if(gf)gf.contentWindow.postMessage({giscus:{setConfig:{theme:t==='dark'?'dark_dimmed':'light'}}}, 'https://giscus.app');
+  }
+  function buildToc(){
+    var toc=document.getElementById('toc');
+    if(!toc)return;
+    var headings=Array.from(document.querySelectorAll('article h2,article h3'));
+    if(headings.length<2)return;
+    var title=document.createElement('div');
+    title.className='toc-title';
+    title.textContent='On this page';
+    toc.appendChild(title);
+    var ul=document.createElement('ul');
+    headings.forEach(function(h,i){
+      if(!h.id)h.id=(h.textContent||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'h'+i;
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href='#'+h.id;
+      a.textContent=h.textContent;
+      a.className=h.tagName==='H3'?'toc-h3':'toc-h2';
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var link=toc.querySelector('a[href="#'+e.target.id+'"]');
+        if(link){
+          if(e.isIntersecting){
+            toc.querySelectorAll('a').forEach(function(a){a.classList.remove('active');});
+            link.classList.add('active');
+          }
+        }
+      });
+    },{rootMargin:'-10% 0px -80% 0px'});
+    headings.forEach(function(h){obs.observe(h);});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var cur=document.documentElement.getAttribute('data-theme')||'light';
+    var btn=document.getElementById('theme-toggle');
+    if(btn){
+      btn.textContent=cur==='dark'?'☀':'☾';
+      btn.addEventListener('click',function(){
+        applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+      });
+    }
+    buildToc();
+    initLightbox();
+  });
+  function initLightbox(){
+    var overlay=document.getElementById('img-overlay');
+    var overlayImg=document.getElementById('img-overlay-img');
+    if(!overlay||!overlayImg)return;
+    document.querySelectorAll('article img').forEach(function(img){
+      img.style.cursor='zoom-in';
+      img.addEventListener('click',function(){
+        overlayImg.setAttribute('src',img.getAttribute('src')||'');
+        overlayImg.setAttribute('alt',img.getAttribute('alt')||'');
+        overlay.classList.add('open');
+        document.body.style.overflow='hidden';
+      });
+    });
+    function close(){overlay.classList.remove('open');document.body.style.overflow='';}
+    overlay.addEventListener('click',function(e){if(e.target===overlay)close();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  }
+})();
+</script>
+</body>
+</html>
