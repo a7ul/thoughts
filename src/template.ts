@@ -294,8 +294,6 @@ nav a:hover { color: var(--text); }
 /* ── Site header (home) ─────────────────────────────── */
 .site-header {
   margin-bottom: 3.5rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid var(--border);
 }
 .site-header-top {
   display: flex;
@@ -320,10 +318,8 @@ nav a:hover { color: var(--text); }
 .post-list { list-style: none; }
 .post-list li {
   padding: 1.75rem 0;
-  border-bottom: 1px solid var(--border);
 }
 .post-list li:first-child { padding-top: 0; }
-.post-list li:last-child { border-bottom: none; }
 
 .post-date {
   display: block;
