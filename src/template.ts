@@ -121,7 +121,7 @@ export function postPage(params: {
 ${description ? `<meta name="description" content="${escapeHtml(description)}">` : ""}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&family=Caveat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Caveat:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="${root}style.css">
 <link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
 ${THEME_SCRIPT}
@@ -189,7 +189,7 @@ ${p.description ? `<p class="post-desc">${escapeHtml(p.description)}</p>` : ""}
 <title>${escapeHtml(siteTitle)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap">
 <link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
 <link rel="stylesheet" href="style.css">
 ${THEME_SCRIPT}
@@ -398,7 +398,7 @@ article a {
 article a:hover { text-decoration-color: var(--text); }
 
 article code {
-  font-family: 'Geist Mono', ui-monospace, 'SF Mono', monospace;
+  font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
   font-size: 0.875em;
   background: var(--inline-code-bg);
   border: 1px solid var(--code-border);
