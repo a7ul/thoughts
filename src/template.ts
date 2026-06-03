@@ -259,7 +259,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
-.container { max-width: 760px; margin: 0 auto; padding: 4rem 1.5rem; }
+.container { max-width: 860px; margin: 0 auto; padding: 4rem 1.5rem; }
 a { color: inherit; text-underline-offset: 3px; }
 
 /* ── Theme toggle ────────────────────────────────────── */
@@ -490,7 +490,7 @@ figure.dwg figcaption {
   .toc-sidebar {
     display: block;
     position: fixed;
-    left: calc(50vw - 380px - 210px - 1.5rem);
+    left: calc(50vw - 430px - 210px - 1.5rem);
     top: 4rem;
     width: 190px;
     max-height: calc(100vh - 6rem);
