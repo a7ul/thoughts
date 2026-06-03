@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debugging NodeJS C++ Addons using VS Code</title>
+<meta name="description" content="How to set up VS Code with LLDB to debug NodeJS native C++ addons with proper breakpoints and variable inspection.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&family=Caveat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="./style.css">
+<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script>
+(function(){
+  var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  document.documentElement.setAttribute('data-theme',t);
+  var link=document.getElementById('hljs-theme');
+  if(link&&t==='dark')link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){hljs.highlightAll();});</script>
+</head>
+<body>
+<div id="img-overlay" class="img-overlay"><img id="img-overlay-img" src="" alt=""></div>
+<aside class="toc-sidebar" id="toc"></aside>
+<div class="container">
+<nav><a href="./index.html">← Home</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme"></button></nav>
+<article>
+<header>
+<h1>Debugging NodeJS C++ Addons using VS Code</h1>
+<div class="post-meta">
+<span class="post-author">Atul</span> · <time datetime="2018-07-04">July 4, 2018</time>
+</div>
+</header>
+<p>Programming in a new language or domain seems hard until you know how to debug properly. While working on a NodeJS addon using C++ and N-API, I initially relied on basic logging statements but found this approach time-consuming. Here&#39;s how to set up proper debugging in VS Code.</p>
+<p>This guide is for macOS, but similar steps apply to Windows and Linux.</p>
+<h2>Prerequisites</h2>
+<p>A basic NodeJS addon project. You can clone the example at <a href="https://github.com/master-atul/basic-node-addon" target="_blank" rel="noopener noreferrer">https://github.com/master-atul/basic-node-addon</a> and run <code>npm install</code>.</p>
+<h2>Setting Up</h2>
+<h3>1. Add debug build scripts to package.json</h3>
+<pre><code class="language-json">&quot;scripts&quot;: {
+   &quot;start&quot;: &quot;node index.js&quot;,
+   &quot;build:dev&quot;: &quot;node-gyp -j 16 build --debug&quot;,
+   &quot;build&quot;: &quot;node-gyp -j 16 build&quot;,
+   &quot;rebuild:dev&quot;: &quot;node-gyp -j 16 rebuild --debug&quot;,
+   &quot;rebuild&quot;: &quot;node-gyp -j 16 rebuild&quot;,
+   &quot;clean&quot;: &quot;node-gyp clean&quot;
+}
+</code></pre>
+<p><strong>Important:</strong> Debug builds output to <code>build/Debug/yournode.node</code>, while release builds output to <code>build/Release/yournode.node</code>. Make sure your <code>require()</code> path matches.</p>
+<h3>2. Install the LLDB extension</h3>
+<p>Install <a href="https://github.com/vadimcn/vscode-lldb" target="_blank" rel="noopener noreferrer">vscode-lldb</a> by Vadim Chugunov from the VS Code marketplace.</p>
+<h3>3. Configure launch.json</h3>
+<p>Press <code>Cmd+Shift+P</code> and type &quot;open launch.json&quot;. Set it up as follows:</p>
+<pre><code class="language-json">{
+  &quot;version&quot;: &quot;0.2.0&quot;,
+  &quot;configurations&quot;: [{
+     &quot;type&quot;: &quot;lldb&quot;,
+     &quot;request&quot;: &quot;launch&quot;,
+     &quot;name&quot;: &quot;Launch Program&quot;,
+     &quot;preLaunchTask&quot;: &quot;npm: build:dev&quot;,
+     &quot;program&quot;: &quot;/absolute/path/to/node&quot;,
+     &quot;args&quot;: [
+        &quot;/absolute/path/to/your/index.js&quot;
+     ]
+  }]
+}
+</code></pre>
+<p>The <code>type: &quot;lldb&quot;</code> setting requires the extension from step 2.</p>
+<h3>4. Configure the pre-launch task</h3>
+<p>Press <code>Cmd+Shift+P</code> and type &quot;configure task&quot;. Select <code>npm: build:dev</code> from the list. VS Code will automatically create a <code>tasks.json</code> file in <code>.vscode</code>.</p>
+<p>Sample config files are at <a href="https://github.com/master-atul/basic-node-addon/tree/master/.vscode" target="_blank" rel="noopener noreferrer">https://github.com/master-atul/basic-node-addon/tree/master/.vscode</a>.</p>
+<h2>Running the Debugger</h2>
+<ol>
+<li>Open your C++ file (e.g., <code>cppsrc/test.cpp</code>)</li>
+<li>Set breakpoints by clicking in the editor margin</li>
+<li>Click the debugging icon in the left sidebar</li>
+<li>Click &quot;Launch Program&quot; or &quot;Debug&quot;</li>
+</ol>
+<p>The debugger shows variables, call stacks, and all the information you&#39;d expect — no more printf debugging.</p>
+
+</article>
+<div class="giscus-wrap">
+<script src="https://giscus.app/client.js"
+  data-repo="a7ul/thoughts"
+  data-repo-id="R_kgDORp7Weg"
+  data-category="General"
+  data-category-id="DIC_kwDORp7Wes4C4pUS"
+  data-mapping="title"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="light"
+  data-lang="en"
+  crossorigin="anonymous"
+  async>
+</script>
+</div>
+</div>
+<script>
+(function(){
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    localStorage.setItem('theme',t);
+    var link=document.getElementById('hljs-theme');
+    if(link)link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/'+(t==='dark'?'github-dark':'github')+'.min.css';
+    var btn=document.getElementById('theme-toggle');
+    if(btn)btn.textContent=t==='dark'?'☀':'☾';
+    var gf=document.querySelector('iframe.giscus-frame');
+    if(gf)gf.contentWindow.postMessage({giscus:{setConfig:{theme:t==='dark'?'dark_dimmed':'light'}}}, 'https://giscus.app');
+  }
+  function buildToc(){
+    var toc=document.getElementById('toc');
+    if(!toc)return;
+    var headings=Array.from(document.querySelectorAll('article h2,article h3'));
+    if(headings.length<2)return;
+    var title=document.createElement('div');
+    title.className='toc-title';
+    title.textContent='On this page';
+    toc.appendChild(title);
+    var ul=document.createElement('ul');
+    headings.forEach(function(h,i){
+      if(!h.id)h.id=(h.textContent||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'h'+i;
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href='#'+h.id;
+      a.textContent=h.textContent;
+      a.className=h.tagName==='H3'?'toc-h3':'toc-h2';
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var link=toc.querySelector('a[href="#'+e.target.id+'"]');
+        if(link){
+          if(e.isIntersecting){
+            toc.querySelectorAll('a').forEach(function(a){a.classList.remove('active');});
+            link.classList.add('active');
+          }
+        }
+      });
+    },{rootMargin:'-10% 0px -80% 0px'});
+    headings.forEach(function(h){obs.observe(h);});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var cur=document.documentElement.getAttribute('data-theme')||'light';
+    var btn=document.getElementById('theme-toggle');
+    if(btn){
+      btn.textContent=cur==='dark'?'☀':'☾';
+      btn.addEventListener('click',function(){
+        applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+      });
+    }
+    buildToc();
+    initLightbox();
+  });
+  function initLightbox(){
+    var overlay=document.getElementById('img-overlay');
+    var overlayImg=document.getElementById('img-overlay-img');
+    if(!overlay||!overlayImg)return;
+    document.querySelectorAll('article img').forEach(function(img){
+      img.style.cursor='zoom-in';
+      img.addEventListener('click',function(){
+        overlayImg.setAttribute('src',img.getAttribute('src')||'');
+        overlayImg.setAttribute('alt',img.getAttribute('alt')||'');
+        overlay.classList.add('open');
+        document.body.style.overflow='hidden';
+      });
+    });
+    function close(){overlay.classList.remove('open');document.body.style.overflow='';}
+    overlay.addEventListener('click',function(e){if(e.target===overlay)close();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  }
+})();
+</script>
+</body>
+</html>

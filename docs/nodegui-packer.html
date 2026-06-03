@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Announcing Packer for NodeGUI and React NodeGUI</title>
+<meta name="description" content="Packer is a new npm tool that packages NodeGUI and React NodeGUI apps into standalone executables for Mac, Windows, and Linux.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&family=Caveat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="./style.css">
+<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script>
+(function(){
+  var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  document.documentElement.setAttribute('data-theme',t);
+  var link=document.getElementById('hljs-theme');
+  if(link&&t==='dark')link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){hljs.highlightAll();});</script>
+</head>
+<body>
+<div id="img-overlay" class="img-overlay"><img id="img-overlay-img" src="" alt=""></div>
+<aside class="toc-sidebar" id="toc"></aside>
+<div class="container">
+<nav><a href="./index.html">← Home</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme"></button></nav>
+<article>
+<header>
+<h1>Announcing Packer for NodeGUI and React NodeGUI</h1>
+<div class="post-meta">
+<span class="post-author">Atul</span> · <time datetime="2019-09-04">September 4, 2019</time>
+</div>
+</header>
+<p><strong>Packer</strong> is an npm module enabling developers to package applications built with NodeGUI or React NodeGUI into standalone executables. The tool works across Mac, Windows, and Linux.</p>
+<p>Repository: <a href="https://github.com/nodegui/packer" target="_blank" rel="noopener noreferrer">https://github.com/nodegui/packer</a></p>
+<p>This is an initial MVP release. Platform-specific outputs:</p>
+<ul>
+<li><strong>macOS</strong> — generates a <code>.dmg</code> file</li>
+<li><strong>Linux</strong> — produces an AppImage (comparable to macOS <code>.app</code>)</li>
+<li><strong>Windows</strong> — outputs a folder containing the executable and necessary DLLs</li>
+</ul>
+<p>Cross-platform builds are not supported in this initial release; run packer in the target OS environment.</p>
+<h2>Usage</h2>
+<p>Install as a dev dependency:</p>
+<pre><code class="language-bash">npm install --save-dev @nodegui/packer
+</code></pre>
+<p>Initialize the project:</p>
+<pre><code class="language-bash">npx nodegui-packer --init MyApp
+</code></pre>
+<p>This creates a <code>deploy</code> directory template for customization with icons, metadata, and native features.</p>
+<p>Package the application:</p>
+<pre><code class="language-bash">npx nodegui-packer --pack &lt;path to dist&gt;
+</code></pre>
+<p>This processes the dist folder and generates standalone executables in the <code>build</code> directory.</p>
+<h2>Technical Implementation</h2>
+<p>Packer leverages Qt&#39;s official deployment tools:</p>
+<ul>
+<li><strong>Mac</strong>: <a href="https://doc.qt.io/qt-5.9/osx-deployment.html#macdeploy" target="_blank" rel="noopener noreferrer">macdeployqt</a></li>
+<li><strong>Windows</strong>: <a href="https://doc.qt.io/qt-5/windows-deployment.html" target="_blank" rel="noopener noreferrer">windeployqt</a></li>
+<li><strong>Linux</strong>: <a href="https://github.com/probonopd/linuxdeployqt" target="_blank" rel="noopener noreferrer">linuxdeployqt</a></li>
+</ul>
+<h2>Requirements</h2>
+<ul>
+<li>Qode v1.0.4+ (NodeGUI v0.1.7+)</li>
+</ul>
+<h2>Planned Enhancements</h2>
+<ol>
+<li>Cross-platform build support</li>
+<li>Improved documentation</li>
+<li>Reduced unnecessary dynamic libraries</li>
+<li>Smaller qode binary size</li>
+</ol>
+<p>Community contributions are welcome!</p>
+
+</article>
+<div class="giscus-wrap">
+<script src="https://giscus.app/client.js"
+  data-repo="a7ul/thoughts"
+  data-repo-id="R_kgDORp7Weg"
+  data-category="General"
+  data-category-id="DIC_kwDORp7Wes4C4pUS"
+  data-mapping="title"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="light"
+  data-lang="en"
+  crossorigin="anonymous"
+  async>
+</script>
+</div>
+</div>
+<script>
+(function(){
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    localStorage.setItem('theme',t);
+    var link=document.getElementById('hljs-theme');
+    if(link)link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/'+(t==='dark'?'github-dark':'github')+'.min.css';
+    var btn=document.getElementById('theme-toggle');
+    if(btn)btn.textContent=t==='dark'?'☀':'☾';
+    var gf=document.querySelector('iframe.giscus-frame');
+    if(gf)gf.contentWindow.postMessage({giscus:{setConfig:{theme:t==='dark'?'dark_dimmed':'light'}}}, 'https://giscus.app');
+  }
+  function buildToc(){
+    var toc=document.getElementById('toc');
+    if(!toc)return;
+    var headings=Array.from(document.querySelectorAll('article h2,article h3'));
+    if(headings.length<2)return;
+    var title=document.createElement('div');
+    title.className='toc-title';
+    title.textContent='On this page';
+    toc.appendChild(title);
+    var ul=document.createElement('ul');
+    headings.forEach(function(h,i){
+      if(!h.id)h.id=(h.textContent||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'h'+i;
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href='#'+h.id;
+      a.textContent=h.textContent;
+      a.className=h.tagName==='H3'?'toc-h3':'toc-h2';
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var link=toc.querySelector('a[href="#'+e.target.id+'"]');
+        if(link){
+          if(e.isIntersecting){
+            toc.querySelectorAll('a').forEach(function(a){a.classList.remove('active');});
+            link.classList.add('active');
+          }
+        }
+      });
+    },{rootMargin:'-10% 0px -80% 0px'});
+    headings.forEach(function(h){obs.observe(h);});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var cur=document.documentElement.getAttribute('data-theme')||'light';
+    var btn=document.getElementById('theme-toggle');
+    if(btn){
+      btn.textContent=cur==='dark'?'☀':'☾';
+      btn.addEventListener('click',function(){
+        applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+      });
+    }
+    buildToc();
+    initLightbox();
+  });
+  function initLightbox(){
+    var overlay=document.getElementById('img-overlay');
+    var overlayImg=document.getElementById('img-overlay-img');
+    if(!overlay||!overlayImg)return;
+    document.querySelectorAll('article img').forEach(function(img){
+      img.style.cursor='zoom-in';
+      img.addEventListener('click',function(){
+        overlayImg.setAttribute('src',img.getAttribute('src')||'');
+        overlayImg.setAttribute('alt',img.getAttribute('alt')||'');
+        overlay.classList.add('open');
+        document.body.style.overflow='hidden';
+      });
+    });
+    function close(){overlay.classList.remove('open');document.body.style.overflow='';}
+    overlay.addEventListener('click',function(e){if(e.target===overlay)close();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  }
+})();
+</script>
+</body>
+</html>

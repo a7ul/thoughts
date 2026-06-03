@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>An alternative approach to building a simple API Rate limiter using NodeJS and Redis</title>
+<meta name="description" content="An alternative Redis-based approach to API rate limiting that avoids common algorithms and uses atomic transactions for correctness.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&family=Caveat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="./style.css">
+<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script>
+(function(){
+  var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  document.documentElement.setAttribute('data-theme',t);
+  var link=document.getElementById('hljs-theme');
+  if(link&&t==='dark')link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){hljs.highlightAll();});</script>
+</head>
+<body>
+<div id="img-overlay" class="img-overlay"><img id="img-overlay-img" src="" alt=""></div>
+<aside class="toc-sidebar" id="toc"></aside>
+<div class="container">
+<nav><a href="./index.html">← Home</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme"></button></nav>
+<article>
+<header>
+<h1>An alternative approach to building a simple API Rate limiter using NodeJS and Redis</h1>
+<div class="post-meta">
+<span class="post-author">Atul</span> · <time datetime="2019-01-15">January 15, 2019</time>
+</div>
+</header>
+<p>Recently I came across an interesting problem of building an API rate limiter. While doing a bit of research on the same, I came across various algorithms and approaches. Some of the popular algorithms used to implement rate limiting are:</p>
+<ul>
+<li>Token bucket</li>
+<li>Leaky bucket</li>
+<li>Fixed window counter</li>
+<li>Sliding window log</li>
+<li>Sliding window counter</li>
+</ul>
+<p><strong>This post is NOT about these algorithms.</strong> I will try and explain an <em>alternative</em> approach here which makes use of certain Redis specific features.</p>
+<h2>Design/Algorithm</h2>
+<p>High level system setup:</p>
+<p><img src="https://blog.atulr.com/static/06207e9db428f01238d7bd5c1c1e5d55/4d4a2/high_level.png" alt="High level system setup"></p>
+<p>Lets say we have some way of uniquely identifying the source of each request. This can be the ip address, API key, user token or even user name.</p>
+<p>For this example lets assume this unique identifier is a user token and we want to set a rate limit of 20 requests per min for the user. Now for each user we maintain one key in our redis store.</p>
+<p>Basic idea is whenever we receive a request:</p>
+<ul>
+<li><p>We extract the <strong>unique id (user_token)</strong> that helps us identify the user. Lets say <code>user_token=&quot;abcdefghijklmno&quot;</code></p>
+</li>
+<li><p>Start a <strong>transaction</strong> to our redis store.</p>
+</li>
+<li><p><strong>Set a redis key</strong> with value 0 if it doesnt exist already and <strong>expiry as 60sec</strong></p>
+</li>
+</ul>
+<pre><code>SET abcdefghijklmno 0 EX 60 NX
+</code></pre>
+<p>This will allow us to set the key to 0 if it doesnt exist and auto expire/clean the key after 60 secs. Note this doesnt alter the key if it already exists.</p>
+<ul>
+<li><strong>Increment the value</strong> of the key</li>
+</ul>
+<pre><code>INCR abcdefghijklmno
+</code></pre>
+<ul>
+<li><p><strong>Execute the transaction</strong>. By doing these two operations in a transaction we do this atomically and hence are safe from race conditions.</p>
+</li>
+<li><p>In the result of the transaction we will get the current value of <code>abcdefghijklmno</code> which is the total requests made by the user within 60sec. If this value is greater than the threshold (in our case 20) we reject the request.</p>
+</li>
+</ul>
+<h3>TLDR;</h3>
+<p>Redis commands:</p>
+<pre><code>&gt; MULTI
+OK
+&gt; SET &lt;user_token&gt; 0 EX 60 NX
+QUEUED
+&gt; INCR &lt;user_token&gt;
+QUEUED
+&gt; EXEC
+1) OK
+2) (integer) 1
+</code></pre>
+<p>If the value of the integer in the last result is greater than 20 we reject the request.</p>
+<h2>Show me some code</h2>
+<p>Lets take the case of a simple express server:</p>
+<pre><code class="language-javascript">const app = express()
+app.post(&#39;/login&#39;, loginHandler)
+app.get(&#39;/ping&#39;, pingHandler)
+app.get(&#39;/api-1&#39;, api1Handler)
+app.post(&#39;/api-2&#39;, api2Handler)
+app.get(&#39;/api-3&#39;, api3Handler)
+</code></pre>
+<p>To rate limit <code>/api-1</code>, <code>/api-2</code> and <code>/api-3</code> to 20 requests per min, create an express middleware: <strong>rateLimiter.js</strong></p>
+<pre><code class="language-javascript">const rateLimiter = (req, res, next) =&gt; {
+  return next()
+}
+
+module.exports = { rateLimiter }
+</code></pre>
+<p>And add it before the endpoints to be rate limited:</p>
+<pre><code class="language-javascript">const { rateLimiter } = require(&#39;./rateLimiter&#39;)
+
+const app = express()
+app.post(&#39;/login&#39;, loginHandler)
+app.get(&#39;/ping&#39;, pingHandler)
+app.use(rateLimiter) // middleware to limit requests to api-1, api-2, api-3
+app.get(&#39;/api-1&#39;, api1Handler)
+app.post(&#39;/api-2&#39;, api2Handler)
+app.get(&#39;/api-3&#39;, api3Handler)
+</code></pre>
+<p>Now modify <strong>rateLimiter.js</strong> with the actual logic:</p>
+<pre><code class="language-javascript">const redis = require(&#39;redis&#39;)
+
+const client = redis.createClient(process.env.REDIS_URL)
+
+client.on(&#39;error&#39;, err =&gt; console.log(`Error ${err}`))
+
+const rateLimiter = (req, res, next) =&gt; {
+  const token = req.user.token // unique identifier - can be ip, API_KEY, etc
+  client
+    .multi() // start a transaction
+    .set([token, 0, &#39;EX&#39;, 60, &#39;NX&#39;]) // SET UUID 0 EX 60 NX
+    .incr(token) // INCR UUID
+    .exec((err, replies) =&gt; {
+      if (err) {
+        return res.status(500).send(err.message)
+      }
+      const reqCount = replies[1]
+      if (reqCount &gt; 20) {
+        return res
+          .status(403)
+          .send(`Quota of ${20} per ${60}sec exceeded`)
+      }
+      return next()
+    })
+}
+
+module.exports = { rateLimiter }
+</code></pre>
+<p>In ~20 lines of code we have our very own simple and performant rate limiter.</p>
+<h2>References</h2>
+<ul>
+<li><a href="https://medium.com/@saisandeepmopuri/system-design-rate-limiter-and-data-modelling-9304b0d18250" target="_blank" rel="noopener noreferrer">https://medium.com/@saisandeepmopuri/system-design-rate-limiter-and-data-modelling-9304b0d18250</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Rate_limiting" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Rate_limiting</a></li>
+<li><a href="https://redis.io/commands" target="_blank" rel="noopener noreferrer">https://redis.io/commands</a></li>
+</ul>
+
+</article>
+<div class="giscus-wrap">
+<script src="https://giscus.app/client.js"
+  data-repo="a7ul/thoughts"
+  data-repo-id="R_kgDORp7Weg"
+  data-category="General"
+  data-category-id="DIC_kwDORp7Wes4C4pUS"
+  data-mapping="title"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="light"
+  data-lang="en"
+  crossorigin="anonymous"
+  async>
+</script>
+</div>
+</div>
+<script>
+(function(){
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    localStorage.setItem('theme',t);
+    var link=document.getElementById('hljs-theme');
+    if(link)link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/'+(t==='dark'?'github-dark':'github')+'.min.css';
+    var btn=document.getElementById('theme-toggle');
+    if(btn)btn.textContent=t==='dark'?'☀':'☾';
+    var gf=document.querySelector('iframe.giscus-frame');
+    if(gf)gf.contentWindow.postMessage({giscus:{setConfig:{theme:t==='dark'?'dark_dimmed':'light'}}}, 'https://giscus.app');
+  }
+  function buildToc(){
+    var toc=document.getElementById('toc');
+    if(!toc)return;
+    var headings=Array.from(document.querySelectorAll('article h2,article h3'));
+    if(headings.length<2)return;
+    var title=document.createElement('div');
+    title.className='toc-title';
+    title.textContent='On this page';
+    toc.appendChild(title);
+    var ul=document.createElement('ul');
+    headings.forEach(function(h,i){
+      if(!h.id)h.id=(h.textContent||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'h'+i;
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href='#'+h.id;
+      a.textContent=h.textContent;
+      a.className=h.tagName==='H3'?'toc-h3':'toc-h2';
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var link=toc.querySelector('a[href="#'+e.target.id+'"]');
+        if(link){
+          if(e.isIntersecting){
+            toc.querySelectorAll('a').forEach(function(a){a.classList.remove('active');});
+            link.classList.add('active');
+          }
+        }
+      });
+    },{rootMargin:'-10% 0px -80% 0px'});
+    headings.forEach(function(h){obs.observe(h);});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var cur=document.documentElement.getAttribute('data-theme')||'light';
+    var btn=document.getElementById('theme-toggle');
+    if(btn){
+      btn.textContent=cur==='dark'?'☀':'☾';
+      btn.addEventListener('click',function(){
+        applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+      });
+    }
+    buildToc();
+    initLightbox();
+  });
+  function initLightbox(){
+    var overlay=document.getElementById('img-overlay');
+    var overlayImg=document.getElementById('img-overlay-img');
+    if(!overlay||!overlayImg)return;
+    document.querySelectorAll('article img').forEach(function(img){
+      img.style.cursor='zoom-in';
+      img.addEventListener('click',function(){
+        overlayImg.setAttribute('src',img.getAttribute('src')||'');
+        overlayImg.setAttribute('alt',img.getAttribute('alt')||'');
+        overlay.classList.add('open');
+        document.body.style.overflow='hidden';
+      });
+    });
+    function close(){overlay.classList.remove('open');document.body.style.overflow='';}
+    overlay.addEventListener('click',function(e){if(e.target===overlay)close();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  }
+})();
+</script>
+</body>
+</html>

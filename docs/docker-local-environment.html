@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simplified guide to using Docker for local development environment</title>
+<meta name="description" content="How to use Docker and docker-compose to set up a productive local development environment across multiple services written in different languages.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&family=Caveat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="./style.css">
+<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script>
+(function(){
+  var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  document.documentElement.setAttribute('data-theme',t);
+  var link=document.getElementById('hljs-theme');
+  if(link&&t==='dark')link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){hljs.highlightAll();});</script>
+</head>
+<body>
+<div id="img-overlay" class="img-overlay"><img id="img-overlay-img" src="" alt=""></div>
+<aside class="toc-sidebar" id="toc"></aside>
+<div class="container">
+<nav><a href="./index.html">← Home</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme"></button></nav>
+<article>
+<header>
+<h1>Simplified guide to using Docker for local development environment</h1>
+<div class="post-meta">
+<span class="post-author">Atul</span> · <time datetime="2019-05-28">May 28, 2019</time>
+</div>
+</header>
+<p>I recently started working at <a href="https://anyfin.com/en" target="_blank" rel="noopener noreferrer">Anyfin</a>. As a new engineer on the team, I had to setup the entire development environment. Drawing my expectations from my previous work engagements I thought this would take me a couple of days. But to my surprise I had a working setup of quite a few backend services written in NodeJS, Golang and Python along side the web site and portal (Javascript) in ~5hrs. This post will explain on how we use Docker at Anyfin to setup a productive local development environment quite easily.</p>
+<p><strong>Credit:</strong> The entire credit for the setup goes to my colleagues at Anyfin.</p>
+<h2>Example Architecture</h2>
+<p>Lets say we have a set of services that have the following architecture:</p>
+<ul>
+<li><strong>NJS1</strong> - NodeJS service running on port <strong>7000</strong>, dependent on Db1 (port <strong>5433</strong>)</li>
+<li><strong>Py1</strong> - Python service running on port <strong>9000</strong>, dependent on Db1 (port <strong>5433</strong>)</li>
+<li><strong>Go1</strong> - Golang service running on port <strong>5000</strong>, dependent on Db1 (port <strong>5433</strong>)</li>
+<li><strong>NJS2</strong> - NodeJS service running on port <strong>8000</strong>, dependent on Db2 (port <strong>5432</strong>)</li>
+<li><strong>Web</strong> - webpack dev server for frontend running on port <strong>8080</strong></li>
+</ul>
+<p>The code for these services: <a href="https://github.com/a7ul/blog-docker-dev-environment-example" target="_blank" rel="noopener noreferrer">https://github.com/a7ul/blog-docker-dev-environment-example</a></p>
+<p><img src="https://blog.atulr.com/f069ee90ad81928b31443a2451837f10/architecture.svg" alt="Example architecture"></p>
+<h2>Issues with a typical setup</h2>
+<ol>
+<li><p><strong>Terminal hell:</strong> To run all of those services, we would need to open up multiple terminal tabs/windows and then run them separately. This becomes harder to manage as the number of services grow.</p>
+</li>
+<li><p><strong>Incompatible dependencies</strong>: If our services depend on different node versions, we need to manually switch node versions before running each one. Similarly, multiple database servers need to be running on different ports — all manual and cumbersome.</p>
+</li>
+<li><p><strong>Fresh setup</strong>: Setting up all services on a new machine requires tracking all dependencies and their versions. This leads to the popular &quot;Works on my machine&quot; problem.</p>
+</li>
+</ol>
+<h2>Docker based local development environment</h2>
+<blockquote>
+<p>&quot;Docker is a tool designed to make it easier to create, deploy, and run applications by using containers.&quot;</p>
+</blockquote>
+<p>Containers allow a developer to package up an application with all of the parts it needs, such as libraries and other dependencies, and ship it all out as one package.</p>
+<h3>Mental model</h3>
+<h4>Docker container</h4>
+<p>For the time being, consider a <strong>Docker Container</strong> as an extremely lightweight isolated Linux-based virtual machine inside which we will run our application service. The container will contain our code and all of its dependencies. We use one docker container per service and separate docker containers for our databases.</p>
+<p><img src="https://blog.atulr.com/413c6e75962d7baf8224cf72b52dac28/containers_mental_modal.svg" alt="Containers mental model"></p>
+<h4>Docker-Compose</h4>
+<blockquote>
+<p>&quot;Docker compose is a tool for defining and running multi-container Docker applications.&quot;</p>
+</blockquote>
+<p>With Compose, you use a YAML file to configure your application&#39;s services. Then, with a single command, you create and start all the services from your configuration.</p>
+<p>Docker compose contains:</p>
+<ul>
+<li><strong>Services</strong>: Individual docker containers with their ports and configurations</li>
+<li><strong>Networks</strong>: Allows different services to communicate with each other</li>
+<li><strong>Volumes</strong>: Persistent storage for containers (think permanent hard drives)</li>
+</ul>
+<p><img src="https://blog.atulr.com/5c736f83bee4417992e76fd0dcf5e271/compose_mental_modal.svg" alt="Docker Compose mental model"></p>
+<h2>Setting it up</h2>
+<p>Clone the example repo:</p>
+<pre><code class="language-bash">git clone https://github.com/a7ul/blog-docker-dev-environment-example.git
+cd blog-docker-dev-environment-example
+git checkout tags/basic-setup
+git checkout -b tryingout
+</code></pre>
+<p>Project structure:</p>
+<pre><code>.
+├── go1
+│   ├── README.md
+│   └── main.go
+├── njs1
+│   ├── README.md
+│   ├── index.js
+│   ├── package-lock.json
+│   └── package.json
+├── njs2
+│   ├── README.md
+│   ├── index.js
+│   ├── package-lock.json
+│   └── package.json
+└── py1
+    ├── README.md
+    ├── requirements.txt
+    └── server
+        ├── __init__.py
+        └── __main__.py
+</code></pre>
+<h3>Enter docker</h3>
+<p>Make sure you have docker running: <a href="https://www.docker.com/get-started" target="_blank" rel="noopener noreferrer">https://www.docker.com/get-started</a></p>
+<p>First create a Dockerfile for njs1: <strong>blog-docker-dev-environment-example/njs1/Dockerfile</strong></p>
+<pre><code class="language-dockerfile">FROM node:6.17.0
+
+WORKDIR /root
+ADD . /root
+</code></pre>
+<p>Now create <strong>blog-docker-dev-environment-example/docker-compose.yml</strong>:</p>
+<pre><code class="language-yaml">version: &#39;3&#39;
+services:
+  njs1:
+    build: ./njs1
+    command: sh -c &quot;npm install &amp;&amp; npm start&quot;
+    environment:
+      - NODE_ENV=development
+      - PORT=7000
+    ports:
+      - &#39;7000:7000&#39;
+    working_dir: /root/njs1
+</code></pre>
+<p>In the folder containing <strong>docker-compose.yml</strong> run:</p>
+<pre><code class="language-bash">docker-compose up
+</code></pre>
+<p>If all goes well you should see it building the container and in the end:</p>
+<pre><code>NJS1 app listening on port 7000!
+</code></pre>
+<p>Open <code>http://localhost:7000</code> to test it out.</p>
+<p><strong>docker-compose fields in detail:</strong></p>
+<ul>
+<li><code>build:</code> — Path to the Dockerfile folder (or the Dockerfile itself)</li>
+<li><code>command:</code> — Command to run when the container starts</li>
+<li><code>environment:</code> — Environment variables to set</li>
+<li><code>ports:</code> — Mapping of container port to host port</li>
+<li><code>working_dir:</code> — Path inside the container to run the command from</li>
+</ul>
+<h3>Making it efficient for development</h3>
+<p>Right now you can&#39;t edit source code without rebuilding the container. To fix this, we use <strong>volumes</strong> to mount our local source directly into the container.</p>
+<p>Modify <strong>njs1/Dockerfile</strong> to not copy project files:</p>
+<pre><code class="language-dockerfile">FROM node:6.17.0
+
+# WORKDIR /root   &lt;-- comment out
+# ADD . /root     &lt;-- these two lines
+</code></pre>
+<p>Then tell docker-compose to mount the local directory:</p>
+<pre><code class="language-yaml">version: &#39;3&#39;
+services:
+  njs1:
+    build: ./njs1
+    command: sh -c &quot;npm install &amp;&amp; npm start&quot;
+    environment:
+      - NODE_ENV=development
+      - PORT=7000
+    ports:
+      - &#39;7000:7000&#39;
+    working_dir: /root/njs1
+    volumes:
+      - ./njs1:/root/njs1:cached
+</code></pre>
+<p>Now add nodemon for auto-reload:</p>
+<pre><code class="language-bash">cd njs1
+npm install --save-dev nodemon
+</code></pre>
+<p>Update <code>package.json</code> scripts:</p>
+<pre><code class="language-json">&quot;scripts&quot;: {
+  &quot;start&quot;: &quot;nodemon index.js&quot;
+}
+</code></pre>
+<p>Rebuild and run:</p>
+<pre><code class="language-bash">docker-compose up --build
+</code></pre>
+<p>The <code>--build</code> flag tells docker-compose to rebuild the images. Now you can edit <code>njs1/index.js</code> and nodemon will auto-reload inside the container.</p>
+<p><img src="https://blog.atulr.com/63b09e0c3873a09e618abf0daf1c5e26/works_meme.gif" alt="It works!"></p>
+<h3>Finishing things up</h3>
+<p>After adding all services, the full <code>docker-compose.yml</code> looks like:</p>
+<pre><code class="language-yaml">version: &#39;3&#39;
+
+services:
+  njs1:
+    build: ./njs1
+    command: sh -c &quot;npm install &amp;&amp; npm start&quot;
+    environment:
+      - NODE_ENV=development
+      - PORT=7000
+    ports:
+      - &#39;7000:7000&#39;
+    working_dir: /root/njs1
+    volumes:
+      - ./njs1:/root/njs1:cached
+
+  njs2:
+    image: node:12.3-alpine
+    command: sh -c &quot;npm install &amp;&amp; npm start&quot;
+    environment:
+      - NODE_ENV=development
+      - PORT=8000
+    ports:
+      - &#39;8000:8000&#39;
+    working_dir: /root/njs2
+    volumes:
+      - ./njs2:/root/njs2:cached
+
+  py1:
+    image: python:3-stretch
+    command: sh -c &quot;pip install -r requirements.txt &amp;&amp; python -m server&quot;
+    environment:
+      - PORT=9000
+      - FLASK_ENV=development
+    ports:
+      - &#39;9000:9000&#39;
+    working_dir: /root/py1
+    volumes:
+      - ./py1:/root/py1:cached
+
+  go1:
+    image: golang:1.12-alpine
+    command: sh -c &quot;go run .&quot;
+    environment:
+      - PORT=5000
+    ports:
+      - &#39;5000:5000&#39;
+    working_dir: /root/go1
+    volumes:
+      - ./go1:/root/go1:cached
+</code></pre>
+<p>Note: For simple setups you can use the <code>image:</code> property to reference a docker-hub image directly instead of writing your own Dockerfile.</p>
+<p>Full docker-compose reference: <a href="https://docs.docker.com/compose/compose-file/" target="_blank" rel="noopener noreferrer">https://docs.docker.com/compose/compose-file/</a></p>
+<h2>Commands Cheatsheet</h2>
+<p><strong>Start all services</strong> (detached):</p>
+<pre><code class="language-bash">docker-compose start
+</code></pre>
+<p><strong>Stop all services:</strong></p>
+<pre><code class="language-bash">docker-compose stop
+</code></pre>
+<p><strong>Launch a specific service:</strong></p>
+<pre><code class="language-bash">docker-compose up njs1
+</code></pre>
+<p><strong>Restart a single service:</strong></p>
+<pre><code class="language-bash">docker-compose restart njs1
+</code></pre>
+<p><strong>Logs from a specific service:</strong></p>
+<pre><code class="language-bash">docker-compose logs -f njs1
+</code></pre>
+<p><strong>SSH into a particular service container:</strong></p>
+<pre><code class="language-bash">docker-compose exec njs1 bash
+</code></pre>
+<h2>Tips for a smoother workflow</h2>
+<h3>Services running too slow?</h3>
+<p>You might notice services launching very slowly. This is often because Docker is allocated too little CPU/RAM.</p>
+<p>Go to: <code>Docker icon → Preferences → Advanced</code></p>
+<p>Change the slider to give CPU &gt; 3 cores and RAM &gt; 6GB.</p>
+<h3>Low on space / want to start fresh?</h3>
+<p>Remove all docker containers:</p>
+<pre><code class="language-bash">docker rm $(docker ps -a -q) -f
+</code></pre>
+<p>Remove all docker images:</p>
+<pre><code class="language-bash">docker rmi $(docker images) -f
+</code></pre>
+<h3>Same Dockerfile for local development and production?</h3>
+<p>I wrote a follow up post all about this:</p>
+<blockquote>
+<p><a href="/docker-local-production-image.html" target="_blank" rel="noopener noreferrer">Use the same Dockerfile for both local development and production with multi-stage builds</a></p>
+</blockquote>
+
+</article>
+<div class="giscus-wrap">
+<script src="https://giscus.app/client.js"
+  data-repo="a7ul/thoughts"
+  data-repo-id="R_kgDORp7Weg"
+  data-category="General"
+  data-category-id="DIC_kwDORp7Wes4C4pUS"
+  data-mapping="title"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="light"
+  data-lang="en"
+  crossorigin="anonymous"
+  async>
+</script>
+</div>
+</div>
+<script>
+(function(){
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    localStorage.setItem('theme',t);
+    var link=document.getElementById('hljs-theme');
+    if(link)link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/'+(t==='dark'?'github-dark':'github')+'.min.css';
+    var btn=document.getElementById('theme-toggle');
+    if(btn)btn.textContent=t==='dark'?'☀':'☾';
+    var gf=document.querySelector('iframe.giscus-frame');
+    if(gf)gf.contentWindow.postMessage({giscus:{setConfig:{theme:t==='dark'?'dark_dimmed':'light'}}}, 'https://giscus.app');
+  }
+  function buildToc(){
+    var toc=document.getElementById('toc');
+    if(!toc)return;
+    var headings=Array.from(document.querySelectorAll('article h2,article h3'));
+    if(headings.length<2)return;
+    var title=document.createElement('div');
+    title.className='toc-title';
+    title.textContent='On this page';
+    toc.appendChild(title);
+    var ul=document.createElement('ul');
+    headings.forEach(function(h,i){
+      if(!h.id)h.id=(h.textContent||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'h'+i;
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href='#'+h.id;
+      a.textContent=h.textContent;
+      a.className=h.tagName==='H3'?'toc-h3':'toc-h2';
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var link=toc.querySelector('a[href="#'+e.target.id+'"]');
+        if(link){
+          if(e.isIntersecting){
+            toc.querySelectorAll('a').forEach(function(a){a.classList.remove('active');});
+            link.classList.add('active');
+          }
+        }
+      });
+    },{rootMargin:'-10% 0px -80% 0px'});
+    headings.forEach(function(h){obs.observe(h);});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var cur=document.documentElement.getAttribute('data-theme')||'light';
+    var btn=document.getElementById('theme-toggle');
+    if(btn){
+      btn.textContent=cur==='dark'?'☀':'☾';
+      btn.addEventListener('click',function(){
+        applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+      });
+    }
+    buildToc();
+    initLightbox();
+  });
+  function initLightbox(){
+    var overlay=document.getElementById('img-overlay');
+    var overlayImg=document.getElementById('img-overlay-img');
+    if(!overlay||!overlayImg)return;
+    document.querySelectorAll('article img').forEach(function(img){
+      img.style.cursor='zoom-in';
+      img.addEventListener('click',function(){
+        overlayImg.setAttribute('src',img.getAttribute('src')||'');
+        overlayImg.setAttribute('alt',img.getAttribute('alt')||'');
+        overlay.classList.add('open');
+        document.body.style.overflow='hidden';
+      });
+    });
+    function close(){overlay.classList.remove('open');document.body.style.overflow='';}
+    overlay.addEventListener('click',function(e){if(e.target===overlay)close();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  }
+})();
+</script>
+</body>
+</html>

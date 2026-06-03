@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep dive on authentication, authorization and RBAC for GraphQL Servers</title>
+<meta name="description" content="How to design a declarative, flexible, deny-first RBAC system for GraphQL servers using schema directives.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&family=Caveat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="./style.css">
+<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script>
+(function(){
+  var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  document.documentElement.setAttribute('data-theme',t);
+  var link=document.getElementById('hljs-theme');
+  if(link&&t==='dark')link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){hljs.highlightAll();});</script>
+</head>
+<body>
+<div id="img-overlay" class="img-overlay"><img id="img-overlay-img" src="" alt=""></div>
+<aside class="toc-sidebar" id="toc"></aside>
+<div class="container">
+<nav><a href="./index.html">← Home</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme"></button></nav>
+<article>
+<header>
+<h1>Deep dive on authentication, authorization and RBAC for GraphQL Servers</h1>
+<div class="post-meta">
+<span class="post-author">Atul</span> · <time datetime="2022-06-14">June 14, 2022</time>
+</div>
+</header>
+<p>GraphQL is a powerful tool for building strongly typed, self-documenting applications. A key strength is that the server provides a single endpoint exposing all data in a graph structure that clients can request. However, this requires controlling who (authentication) can access and interact with what parts (authorization) of the exposed data.</p>
+<p>This article designs a GraphQL security approach with three core characteristics:</p>
+<ol>
+<li><strong>Declarative</strong> — Access control rules are defined in the schema itself, making them easier to maintain and understand</li>
+<li><strong>Flexible Role-Based Access Control</strong> — Different user types access different graph parts based on their role</li>
+<li><strong>Deny-First with Explicit Authorization</strong> — Following least privilege principles, all access is denied unless explicitly authorized</li>
+</ol>
+<h2>Authentication</h2>
+<p>Authentication determines if a user is logged in and establishes their identity. In GraphQL servers, requests flow through several layers:</p>
+<ul>
+<li><strong>Schema</strong>: Parses GraphQL queries and validates them</li>
+<li><strong>Context</strong>: Sets up an object passed to all resolvers; created fresh for each request</li>
+<li><strong>Resolvers</strong>: Contains application business logic</li>
+</ul>
+<p>Authentication can be implemented at different stages, though earlier implementation is preferable.</p>
+<h3>Apollo Server Implementation</h3>
+<p>For standalone Apollo Server:</p>
+<pre><code class="language-javascript">import { ApolloServer } from &#39;apollo-server&#39;;
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: ({ req }) =&gt; {
+    const token = req.headers.authorization || &#39;&#39;;
+    const user = getUser(token);
+    return { user };
+  },
+});
+
+server.listen().then(({ url }) =&gt; {
+  console.log(`🚀 Server ready at ${url}`);
+});
+</code></pre>
+<h3>Apollo Server with Express</h3>
+<p>When using Apollo Server with Express, authentication can occur even earlier via middleware:</p>
+<pre><code class="language-javascript">import { ApolloServer, gql } from &#39;apollo-server-express&#39;;
+import express from &#39;express&#39;;
+import { expressjwt } from &#39;express-jwt&#39;;
+
+async function startApolloServer(typeDefs, resolvers) {
+  const app = express();
+
+  app.use(
+    expressjwt({
+      secret: &#39;jwt-secret&#39;,
+      credentialsRequired: false,
+      algorithms: [&#39;HS256&#39;],
+    })
+  );
+
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: ({ req }) =&gt; ({
+      user: req.auth,
+    }),
+  });
+
+  await server.start();
+  server.applyMiddleware({ app });
+
+  app.listen({ port: 3000 }, () =&gt;
+    console.log(`🚀 Server ready at http://localhost:3000${server.graphqlPath}`)
+  );
+}
+
+await startApolloServer(typeDefs, resolvers);
+</code></pre>
+<h2>Authorization</h2>
+<p>Authorization determines what an authenticated user can access or see.</p>
+<h3>Basic All-or-Nothing Approach</h3>
+<p>For initial development stages, a basic approach blocks unauthorized users from executing any queries:</p>
+<pre><code class="language-javascript">context: ({ req }) =&gt; {
+  const user = getUser(req);
+
+  if (!user) {
+    throw new AuthenticationError(&#39;you must be logged in&#39;);
+  }
+
+  if (!user.roles.includes(&#39;admin&#39;)) {
+    throw new ForbiddenError(&#39;you must be an admin&#39;);
+  }
+
+  return { user };
+};
+</code></pre>
+<h3>Role-Based Access Control (RBAC)</h3>
+<p>As applications grow, users with different roles need different access levels. RBAC introduces <strong>roles</strong> and <strong>permissions</strong> concepts.</p>
+<p><strong>Roles</strong> are identifiers assigned to user groups. JWTs can include roles in their payload:</p>
+<pre><code class="language-json">{
+  &quot;username&quot;: &quot;hawkeye&quot;,
+  &quot;type&quot;: &quot;employee&quot;,
+  &quot;roles&quot;: [&quot;employee&quot;, &quot;roles-editor&quot;],
+  &quot;iat&quot;: 1654104898,
+  &quot;exp&quot;: 1656696898
+}
+</code></pre>
+<p><strong>Permissions</strong> are identifiers for data groups. Fields are annotated with an <code>@auth</code> directive specifying required permissions:</p>
+<pre><code class="language-graphql">directive @auth(permissions: [String!]) on FIELD_DEFINITION
+
+type Query {
+  customers: [Customer] @auth(permissions: [&quot;customer:read&quot;])
+  me: Customer @auth(permissions: [&quot;self:customer&quot;])
+}
+
+type Mutation {
+  login(username: String!): AccessToken!
+  updateCustomer(customerId: ID!, name: String): Customer
+    @auth(permissions: [&quot;customer:write&quot;])
+  updateEmployeeRole(employeeId: ID!, role: String): Boolean
+    @auth(permissions: [&quot;iam:write&quot;])
+}
+
+type AccessToken {
+  token: String
+}
+
+type Customer {
+  id: ID
+  username: String
+  internalNote: String @auth(permissions: [&quot;notes:read&quot;])
+}
+</code></pre>
+<p>Roles map to permissions:</p>
+<pre><code class="language-json">{
+  &quot;anonymous&quot;: { &quot;permissions&quot;: [] },
+  &quot;customer&quot;: { &quot;permissions&quot;: [&quot;self:customer&quot;] },
+  &quot;employee&quot;: { &quot;permissions&quot;: [&quot;customer:read&quot;, &quot;customer:write&quot;, &quot;notes:read&quot;] },
+  &quot;employee-readonly&quot;: { &quot;permissions&quot;: [&quot;customer:read&quot;, &quot;notes:read&quot;] },
+  &quot;roles-editor&quot;: { &quot;permissions&quot;: [&quot;iam:write&quot;] },
+  &quot;profile-service&quot;: { &quot;permissions&quot;: [&quot;customer:read&quot;] }
+}
+</code></pre>
+<h2>Field-Level Authorization Implementation</h2>
+<p>The <code>@auth</code> directive is a GraphQL schema directive that decorates parts of the schema with custom configuration. To implement it:</p>
+<ol>
+<li>Parse the schema and walk through each field</li>
+<li>For fields with <code>@auth</code> directives, replace the resolver with a custom one</li>
+<li>The custom resolver checks if the user has required permissions, then calls the original resolver or throws an error</li>
+</ol>
+<p><strong>Installation:</strong></p>
+<pre><code class="language-bash">npm install @graphql-tools/schema @graphql-tools/utils
+</code></pre>
+<p><strong>src/graphql/directives.js:</strong></p>
+<pre><code class="language-javascript">import { mapSchema, getDirective, MapperKind } from &#39;@graphql-tools/utils&#39;;
+
+export function getAuthorizedSchema(schema) {
+  const authorizedSchema = mapSchema(schema, {
+    [MapperKind.OBJECT_FIELD]: (fieldConfig) =&gt; {
+      const fieldAuthDirective = getDirective(schema, fieldConfig, &#39;auth&#39;)?.[0];
+
+      if (fieldAuthDirective) {
+        const originalResolver = fieldConfig.resolve ?? defaultFieldResolver;
+        fieldConfig.resolve = (source, args, context, info) =&gt; {
+          const user = context.user;
+          const fieldPermissions = fieldAuthDirective.permissions;
+          if (!isAuthorized(fieldPermissions, user)) {
+            throw new ForbiddenError(&#39;Unauthorized&#39;);
+          }
+          return originalResolver(source, args, context, info);
+        };
+      }
+      return fieldConfig;
+    },
+  });
+  return authorizedSchema;
+}
+
+function isAuthorized(fieldPermissions, user) {
+  const userRoles = user?.roles ?? [];
+  const userPermissions = new Set();
+  userRoles.forEach((roleKey) =&gt; {
+    const role = RolePermissions[roleKey] ?? RolePermissions.anonymous;
+    role.permissions?.forEach((permission) =&gt; userPermissions.add(permission));
+  });
+
+  for (const permission of fieldPermissions) {
+    if (userPermissions.has(permission)) {
+      return true;
+    }
+  }
+  return false;
+}
+</code></pre>
+<p><strong>Using the schema:</strong></p>
+<pre><code class="language-javascript">async function startApolloServer(typeDefs, resolvers) {
+  let schema = makeExecutableSchema({ typeDefs, resolvers });
+  schema = getAuthorizedSchema(schema);
+
+  const server = new ApolloServer({
+    schema,
+    context: ({ req }) =&gt; ({
+      user: req.auth,
+    }),
+  });
+
+  await server.start();
+  server.listen().then(({ url }) =&gt; {
+    console.log(`🚀 Server ready at ${url}`);
+  });
+}
+
+await startApolloServer(typeDefs, resolvers);
+</code></pre>
+<h2>Type-Level Authorization</h2>
+<p>Field-level authorization alone is insufficient because GraphQL&#39;s tree structure allows accessing the same information via multiple paths.</p>
+<p>Consider this schema:</p>
+<pre><code class="language-graphql">type Query {
+  customers: [Customer] @auth(permissions: [&quot;customer:read&quot;])
+  me: Customer @auth(permissions: [&quot;self:customer&quot;])
+  getCustomerInvoices(customerId: ID!): [Invoice]
+    @auth(permissions: [&quot;invoice:read&quot;])
+}
+
+type Customer {
+  id: ID
+  username: String
+  name: String
+  invoices: [Invoice]
+  internalNote: String @auth(permissions: [&quot;notes:read&quot;])
+}
+
+type Invoice {
+  id: ID!
+  customerId: ID!
+  amount: Float!
+}
+</code></pre>
+<p>A user with only <code>customer:read</code> could access invoices through the <code>Customer.invoices</code> field, bypassing the <code>invoice:read</code> requirement.</p>
+<p>The solution is adding <code>@auth</code> at the type level:</p>
+<pre><code class="language-graphql">directive @auth(permissions: [String!]) on FIELD_DEFINITION | OBJECT
+
+type Invoice @auth(permissions: [&quot;invoice:read&quot;]) {
+  id: ID!
+  customerId: ID!
+  amount: Float!
+}
+</code></pre>
+<p><strong>Implementation:</strong></p>
+<pre><code class="language-javascript">function gatherTypePermissions(schema) {
+  const typePermissionMapping = new Map();
+  mapSchema(schema, {
+    [MapperKind.OBJECT_TYPE]: (typeConfig) =&gt; {
+      const typeAuthDirective = getDirective(schema, typeConfig, &#39;auth&#39;)?.[0];
+      const typeLevelPermissions = typeAuthDirective?.permissions ?? [];
+      typePermissionMapping.set(typeConfig.name, typeLevelPermissions);
+      return typeConfig;
+    },
+  });
+  return typePermissionMapping;
+}
+
+export function getAuthorizedSchema(schema) {
+  const typePermissionMapping = gatherTypePermissions(schema);
+
+  const authorizedSchema = mapSchema(schema, {
+    [MapperKind.OBJECT_FIELD]: (fieldConfig, fieldName, typeName) =&gt; {
+      const fieldAuthDirective = getDirective(schema, fieldConfig, &quot;auth&quot;)?.[0];
+      const fieldPermissions = fieldAuthDirective?.permissions ?? [];
+      const typePermissions = typePermissionMapping.get(typeName) ?? [];
+
+      if (fieldPermissions.length &gt; 0 || typePermissions.length &gt; 0) {
+        const originalResolver = fieldConfig.resolve ?? defaultFieldResolver;
+        fieldConfig.resolve = (source, args, context, info) =&gt; {
+          const user = context.user;
+          if (!isAuthorized(fieldPermissions, typePermissions, user)) {
+            throw new ForbiddenError(&quot;Unauthorized&quot;);
+          }
+          return originalResolver(source, args, context, info);
+        };
+      }
+      return fieldConfig;
+    },
+  });
+  return authorizedSchema;
+}
+
+function isAuthorized(fieldPermissions, typePermissions, user) {
+  const userRoles = user?.roles ?? [];
+  const userPermissions = new Set();
+  userRoles.forEach((roleKey) =&gt; {
+    const role = RolePermissions[roleKey] ?? RolePermissions.anonymous;
+    role.permissions?.forEach((permission) =&gt; userPermissions.add(permission));
+  });
+
+  for (const permission of fieldPermissions) {
+    if (userPermissions.has(permission)) return true;
+  }
+
+  if (fieldPermissions.length === 0) {
+    for (const typePermission of typePermissions) {
+      if (userPermissions.has(typePermission)) return true;
+    }
+  }
+  return false;
+}
+</code></pre>
+<p>Type-level <code>@auth</code> provides defaults, but field-level directives override them:</p>
+<pre><code class="language-graphql">type Invoice @auth(permissions: [&quot;invoice:read&quot;]) {
+  id: ID!
+  customerId: ID!
+  amount: Float!
+  signedBy: Admin @auth(permissions: [&quot;admin:read&quot;])
+}
+</code></pre>
+<h2>Deny-First and Explicit Authorization</h2>
+<p>Current approaches treat fields without <code>@auth</code> as publicly accessible. Following the principle of least privilege, access should be denied by default and only opened via explicit <code>@auth</code> directives.</p>
+<p><strong>Without deny-first</strong> ❌</p>
+<pre><code class="language-graphql">type Query {
+  # Accidentally missing @auth; now publicly exposed
+  customers: [Customer]
+  health: String
+  me: Customer @auth(permissions: [&quot;self:customer&quot;])
+}
+</code></pre>
+<p><strong>With deny-first</strong> ✅</p>
+<pre><code class="language-graphql">type Query {
+  # Missing @auth; denied by default; prevents accidental leak
+  customers: [Customer]
+  # Explicitly marked public via self:anyone
+  health: String @auth(permissions: [&quot;self:anyone&quot;])
+  me: Customer @auth(permissions: [&quot;self:customer&quot;])
+}
+</code></pre>
+<p><strong>Implementation:</strong></p>
+<pre><code class="language-javascript">function shouldDenyFieldByDefault(fieldPermissions, typePermissions, fieldName, typeName) {
+  if (fieldName.startsWith(&quot;_&quot;) || typeName.startsWith(&quot;_&quot;)) {
+    return false;
+  }
+  return fieldPermissions.length === 0 &amp;&amp; typePermissions.length === 0;
+}
+
+export function getAuthorizedSchema(schema) {
+  const typePermissionMapping = gatherTypePermissions(schema);
+
+  const authorizedSchema = mapSchema(schema, {
+    [MapperKind.OBJECT_FIELD]: (fieldConfig, fieldName, typeName) =&gt; {
+      const fieldAuthDirective = getDirective(schema, fieldConfig, &quot;auth&quot;)?.[0];
+      const fieldPermissions = fieldAuthDirective?.permissions ?? [];
+      const typePermissions = typePermissionMapping.get(typeName) ?? [];
+
+      if (shouldDenyFieldByDefault(fieldPermissions, typePermissions, fieldName, typeName)) {
+        fieldConfig.resolve = () =&gt; {
+          throw new ForbiddenError(
+            `No access control specified for ${typeName}.${fieldName}. Deny by default`
+          );
+        };
+        return fieldConfig;
+      }
+
+      if (fieldPermissions.length &gt; 0 || typePermissions.length &gt; 0) {
+        const originalResolver = fieldConfig.resolve ?? defaultFieldResolver;
+        fieldConfig.resolve = (source, args, context, info) =&gt; {
+          const user = context.user;
+          if (!isAuthorized(fieldPermissions, typePermissions, user)) {
+            throw new ForbiddenError(&quot;Unauthorized&quot;);
+          }
+          return originalResolver(source, args, context, info);
+        };
+      }
+      return fieldConfig;
+    },
+  });
+  return authorizedSchema;
+}
+
+function isAuthorized(fieldPermissions, typePermissions, user) {
+  const userRoles = user?.roles ?? [];
+  const userPermissions = new Set([&quot;self:anyone&quot;]);
+  userRoles.forEach((roleKey) =&gt; {
+    const role = RolePermissions[roleKey] ?? RolePermissions.anonymous;
+    role.permissions?.forEach((permission) =&gt; userPermissions.add(permission));
+  });
+
+  for (const permission of fieldPermissions) {
+    if (userPermissions.has(permission)) return true;
+  }
+
+  if (fieldPermissions.length === 0) {
+    for (const typePermission of typePermissions) {
+      if (userPermissions.has(typePermission)) return true;
+    }
+  }
+  return false;
+}
+</code></pre>
+<p><strong>Important caveats:</strong></p>
+<p>The deny-by-default approach applies to all types and fields. Returned types must also have explicit permissions:</p>
+<pre><code class="language-graphql">type Mutation {
+  login(username: String!): AccessToken! @auth(permissions: [&quot;self:anyone&quot;])
+}
+
+type AccessToken @auth(permissions: [&quot;self:anyone&quot;]) {
+  token: String
+}
+</code></pre>
+<h2>Summary</h2>
+<p>The <code>@auth</code> schema directive enables secure GraphQL schema design with these characteristics:</p>
+<ul>
+<li><strong>Declarative</strong> — The schema documents authorization rules and serves as the source of truth</li>
+<li><strong>Flexible</strong> — Role + type/field-level permissions enable RBAC without sacrificing developer experience</li>
+<li><strong>Deny-first</strong> — Follows least privilege by denying unauthorized access, preventing accidental exposure</li>
+</ul>
+<p>Complete working code is available at the <a href="https://github.com/a7ul/blog-graphql-auth-example" target="_blank" rel="noopener noreferrer">blog-graphql-auth-example</a> repository under tags: <code>field-auth</code>, <code>type-auth</code>, and <code>deny-by-default</code>.</p>
+<h2>References</h2>
+<ul>
+<li><a href="https://www.apollographql.com/docs/apollo-server/security/authentication/" target="_blank" rel="noopener noreferrer">Apollo Server Security Documentation</a></li>
+<li><a href="https://www.apollographql.com/docs/apollo-server/schema/creating-directives" target="_blank" rel="noopener noreferrer">Apollo Server Directives</a></li>
+</ul>
+
+</article>
+<div class="giscus-wrap">
+<script src="https://giscus.app/client.js"
+  data-repo="a7ul/thoughts"
+  data-repo-id="R_kgDORp7Weg"
+  data-category="General"
+  data-category-id="DIC_kwDORp7Wes4C4pUS"
+  data-mapping="title"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="light"
+  data-lang="en"
+  crossorigin="anonymous"
+  async>
+</script>
+</div>
+</div>
+<script>
+(function(){
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    localStorage.setItem('theme',t);
+    var link=document.getElementById('hljs-theme');
+    if(link)link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/'+(t==='dark'?'github-dark':'github')+'.min.css';
+    var btn=document.getElementById('theme-toggle');
+    if(btn)btn.textContent=t==='dark'?'☀':'☾';
+    var gf=document.querySelector('iframe.giscus-frame');
+    if(gf)gf.contentWindow.postMessage({giscus:{setConfig:{theme:t==='dark'?'dark_dimmed':'light'}}}, 'https://giscus.app');
+  }
+  function buildToc(){
+    var toc=document.getElementById('toc');
+    if(!toc)return;
+    var headings=Array.from(document.querySelectorAll('article h2,article h3'));
+    if(headings.length<2)return;
+    var title=document.createElement('div');
+    title.className='toc-title';
+    title.textContent='On this page';
+    toc.appendChild(title);
+    var ul=document.createElement('ul');
+    headings.forEach(function(h,i){
+      if(!h.id)h.id=(h.textContent||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'h'+i;
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href='#'+h.id;
+      a.textContent=h.textContent;
+      a.className=h.tagName==='H3'?'toc-h3':'toc-h2';
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var link=toc.querySelector('a[href="#'+e.target.id+'"]');
+        if(link){
+          if(e.isIntersecting){
+            toc.querySelectorAll('a').forEach(function(a){a.classList.remove('active');});
+            link.classList.add('active');
+          }
+        }
+      });
+    },{rootMargin:'-10% 0px -80% 0px'});
+    headings.forEach(function(h){obs.observe(h);});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var cur=document.documentElement.getAttribute('data-theme')||'light';
+    var btn=document.getElementById('theme-toggle');
+    if(btn){
+      btn.textContent=cur==='dark'?'☀':'☾';
+      btn.addEventListener('click',function(){
+        applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+      });
+    }
+    buildToc();
+    initLightbox();
+  });
+  function initLightbox(){
+    var overlay=document.getElementById('img-overlay');
+    var overlayImg=document.getElementById('img-overlay-img');
+    if(!overlay||!overlayImg)return;
+    document.querySelectorAll('article img').forEach(function(img){
+      img.style.cursor='zoom-in';
+      img.addEventListener('click',function(){
+        overlayImg.setAttribute('src',img.getAttribute('src')||'');
+        overlayImg.setAttribute('alt',img.getAttribute('alt')||'');
+        overlay.classList.add('open');
+        document.body.style.overflow='hidden';
+      });
+    });
+    function close(){overlay.classList.remove('open');document.body.style.overflow='';}
+    overlay.addEventListener('click',function(e){if(e.target===overlay)close();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  }
+})();
+</script>
+</body>
+</html>

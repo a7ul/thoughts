@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 3/3 - Beginners guide to Custom React Renderers. How to build your own renderer from scratch?</title>
+<meta name="description" content="Completing the custom React renderer by implementing the update phase — prepareUpdate, commitUpdate, commitTextUpdate, and all the mutation methods.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&family=Caveat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="./style.css">
+<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script>
+(function(){
+  var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  document.documentElement.setAttribute('data-theme',t);
+  var link=document.getElementById('hljs-theme');
+  if(link&&t==='dark')link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){hljs.highlightAll();});</script>
+</head>
+<body>
+<div id="img-overlay" class="img-overlay"><img id="img-overlay-img" src="" alt=""></div>
+<aside class="toc-sidebar" id="toc"></aside>
+<div class="container">
+<nav><a href="./index.html">← Home</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme"></button></nav>
+<article>
+<header>
+<h1>Part 3/3 - Beginners guide to Custom React Renderers. How to build your own renderer from scratch?</h1>
+<div class="post-meta">
+<span class="post-author">Atul</span> · <time datetime="2019-01-08">January 8, 2019</time>
+</div>
+</header>
+<p>This is the final part of a 3-part series. Be sure to read <a href="/react-custom-renderer-1.html" target="_blank" rel="noopener noreferrer">Part 1</a> and <a href="/react-custom-renderer-2.html" target="_blank" rel="noopener noreferrer">Part 2</a> before proceeding.</p>
+<p>This installment covers specifically <strong>the update phase of the renderer</strong>.</p>
+<h2>Overview of Current Progress</h2>
+<p>At this stage, the renderer successfully renders React applications into the DOM tree. The existing <code>HostConfig</code> includes methods for initial rendering: <code>now</code>, <code>getRootHostContext</code>, <code>getChildHostContext</code>, <code>shouldSetTextContent</code>, <code>createTextInstance</code>, <code>createInstance</code>, <code>appendInitialChild</code>, <code>finalizeInitialChildren</code>, <code>prepareForCommit</code>, <code>resetAfterCommit</code>, <code>commitMount</code>, <code>appendChildToContainer</code>, and <code>supportsMutation</code>.</p>
+<h2>Adding Interactivity</h2>
+<p>Let&#39;s add state management with a button that updates the current timestamp when clicked:</p>
+<pre><code class="language-javascript">import React from &#39;react&#39;
+import CustomRenderer from &#39;./renderer&#39;
+
+const Text = (props) =&gt; {
+  return &lt;p className={props.className}&gt;{props.content}&lt;/p&gt;
+}
+
+class App extends React.Component {
+  state = {
+    text: Date.now(),
+  }
+  onButtonClick = () =&gt; {
+    this.setState(() =&gt; ({ text: Date.now() }))
+  }
+  render() {
+    return (
+      &lt;div&gt;
+        &lt;Text className=&quot;hello-class&quot; content={this.state.text} /&gt;
+        &lt;span style=&quot;color:blue;&quot; autofocus&gt;
+          World
+        &lt;/span&gt;
+        &lt;button onClick={this.onButtonClick}&gt;Get current time&lt;/button&gt;
+      &lt;/div&gt;
+    )
+  }
+}
+
+CustomRenderer.render(&lt;App /&gt;, document.getElementById(&#39;root&#39;))
+</code></pre>
+<p>Initially, clicking the button produces no visible effect. The renderer lacks handling for the <code>onClick</code> prop. Add event listener support to <code>createInstance</code>:</p>
+<pre><code class="language-javascript">createInstance: function(
+    type,
+    newProps,
+    rootContainerInstance,
+    currentHostContext,
+    workInProgress
+  ) {
+    const element = document.createElement(type);
+    element.className = newProps.className || &quot;&quot;;
+    element.style = newProps.style;
+    if (newProps.onClick) {
+      element.addEventListener(&quot;click&quot;, newProps.onClick);
+    }
+    return element;
+  }
+</code></pre>
+<p>This triggers errors about missing <code>prepareUpdate</code> and <code>commitTextUpdate</code> methods — which we implement next.</p>
+<h2>Key Update Methods</h2>
+<h3>prepareUpdate</h3>
+<pre><code class="language-javascript">function prepareUpdate(
+  instance,
+  type,
+  oldProps,
+  newProps,
+  rootContainerInstance,
+  currentHostContext
+) {
+  return { /* update payload */ }
+}
+</code></pre>
+<p>Called during the <strong>render phase</strong> to signal whether updates are needed. No DOM changes should occur here — those belong in the commit phase. Returns a payload object indicating what needs to change.</p>
+<pre><code class="language-javascript">prepareUpdate: function (
+  instance,
+  type,
+  oldProps,
+  newProps,
+  rootContainerInstance,
+  currentHostContext
+) {
+  return; // return nothing
+}
+</code></pre>
+<h3>commitUpdate</h3>
+<pre><code class="language-javascript">function commitUpdate(
+  instance,
+  updatePayload,
+  type,
+  oldProps,
+  newProps,
+  finishedWork
+) {}
+</code></pre>
+<p>Executes all updates queued in <code>prepareUpdate</code>. This is where actual DOM manipulation occurs during the <strong>commit phase</strong>.</p>
+<pre><code class="language-javascript">commitUpdate: function(
+    instance,
+    updatePayload,
+    type,
+    oldProps,
+    newProps,
+    finishedWork
+  ) {
+    return; // return nothing
+  }
+</code></pre>
+<h3>commitTextUpdate</h3>
+<pre><code class="language-javascript">function commitTextUpdate(textInstance, oldText, newText) {
+  /** perform dom update on textInstance **/
+}
+</code></pre>
+<p>Performs DOM updates on text nodes:</p>
+<pre><code class="language-javascript">commitTextUpdate: function(textInstance, oldText, newText) {
+    textInstance.nodeValue = newText;
+}
+</code></pre>
+<p>After implementing <code>commitTextUpdate</code>, the button becomes functional and state updates are reflected in the UI.</p>
+<h2>Edge Case Methods</h2>
+<h3>appendChild</h3>
+<p>Appends a new child element to the end of a parent. Triggered when conditionally rendered elements become visible:</p>
+<pre><code class="language-javascript">appendChild: function(parentInstance, child) {
+    parentInstance.appendChild(child);
+}
+</code></pre>
+<h3>insertBefore</h3>
+<p>Inserts a child before an existing sibling element:</p>
+<pre><code class="language-javascript">insertBefore: (parentInstance, child, beforeChild) =&gt; {
+  parentInstance.insertBefore(child, beforeChild)
+}
+</code></pre>
+<h3>removeChild</h3>
+<p>Removes a child element from its parent:</p>
+<pre><code class="language-javascript">removeChild: function(parentInstance, child) {
+ parentInstance.removeChild(child);
+}
+</code></pre>
+<h3>insertInContainerBefore</h3>
+<p>Inserts an element before another at the top-level component tree. Useful for Fragment components or multiple root elements:</p>
+<pre><code class="language-javascript">insertInContainerBefore: function(container, child, beforeChild) {
+  container.insertBefore(child, beforeChild);
+}
+</code></pre>
+<h3>removeChildFromContainer</h3>
+<p>Removes a top-level element from the root container:</p>
+<pre><code class="language-javascript">removeChildFromContainer: function(container, child) {
+  container.removeChild(child);
+}
+</code></pre>
+<h3>resetTextContent</h3>
+<p>Resets text content of an element. Leave as a no-op:</p>
+<pre><code class="language-javascript">resetTextContent: function(domElement) {
+
+}
+</code></pre>
+<h3>shouldDeprioritizeSubtree</h3>
+<p>Enables performance optimization by deprioritizing rendering of hidden or offscreen subtrees:</p>
+<pre><code class="language-javascript">shouldDeprioritizeSubtree: function(type, nextProps) {
+  return !!nextProps.hidden
+}
+</code></pre>
+<h2>Complete HostConfig</h2>
+<pre><code class="language-javascript">const HostConfig = {
+  now: Date.now,
+  getRootHostContext: function (nextRootInstance) {
+    let rootContext = {}
+    return rootContext
+  },
+  getChildHostContext: function (parentContext, fiberType, rootInstance) {
+    let context = { type: fiberType }
+    return context
+  },
+  shouldSetTextContent: function (type, nextProps) {
+    return false
+  },
+  createTextInstance: function (
+    newText,
+    rootContainerInstance,
+    currentHostContext,
+    workInProgress
+  ) {
+    return document.createTextNode(newText)
+  },
+  createInstance: function (
+    type,
+    newProps,
+    rootContainerInstance,
+    currentHostContext,
+    workInProgress
+  ) {
+    const element = document.createElement(type)
+    element.className = newProps.className || &#39;&#39;
+    element.style = newProps.style
+    if (newProps.onClick) {
+      element.addEventListener(&#39;click&#39;, newProps.onClick)
+    }
+    return element
+  },
+  appendInitialChild: (parent, child) =&gt; {
+    parent.appendChild(child)
+  },
+  finalizeInitialChildren: (
+    instance,
+    type,
+    newProps,
+    rootContainerInstance,
+    currentHostContext
+  ) =&gt; {
+    return newProps.autofocus
+  },
+  prepareForCommit: function (rootContainerInstance) {},
+  resetAfterCommit: function (rootContainerInstance) {},
+  commitMount: (domElement, type, newProps, fiberNode) =&gt; {
+    domElement.focus()
+  },
+  appendChildToContainer: (parent, child) =&gt; {
+    parent.appendChild(child)
+  },
+  supportsMutation: true,
+  prepareUpdate: function (
+    instance,
+    type,
+    oldProps,
+    newProps,
+    rootContainerInstance,
+    currentHostContext
+  ) {
+    return
+  },
+  commitUpdate: function (
+    instance,
+    updatePayload,
+    type,
+    oldProps,
+    newProps,
+    finishedWork
+  ) {
+    return
+  },
+  commitTextUpdate: function (textInstance, oldText, newText) {
+    textInstance.nodeValue = newText
+  },
+  appendChild: function (parentInstance, child) {
+    parentInstance.appendChild(child)
+  },
+  insertBefore: (parentInstance, child, beforeChild) =&gt; {
+    parentInstance.insertBefore(child, beforeChild)
+  },
+  removeChild: function (parentInstance, child) {
+    parentInstance.removeChild(child)
+  },
+  insertInContainerBefore: function (container, child, beforeChild) {
+    container.insertBefore(child, beforeChild)
+  },
+  removeChildFromContainer: function (container, child) {
+    container.removeChild(child)
+  },
+  resetTextContent: function (domElement) {},
+  shouldDeprioritizeSubtree: function (type, nextProps) {
+    return !!nextProps.hidden
+  },
+}
+</code></pre>
+<p>The complete source code is available on <a href="https://github.com/a7ul/blog-custom-renderer" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+
+</article>
+<div class="giscus-wrap">
+<script src="https://giscus.app/client.js"
+  data-repo="a7ul/thoughts"
+  data-repo-id="R_kgDORp7Weg"
+  data-category="General"
+  data-category-id="DIC_kwDORp7Wes4C4pUS"
+  data-mapping="title"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="light"
+  data-lang="en"
+  crossorigin="anonymous"
+  async>
+</script>
+</div>
+</div>
+<script>
+(function(){
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    localStorage.setItem('theme',t);
+    var link=document.getElementById('hljs-theme');
+    if(link)link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/'+(t==='dark'?'github-dark':'github')+'.min.css';
+    var btn=document.getElementById('theme-toggle');
+    if(btn)btn.textContent=t==='dark'?'☀':'☾';
+    var gf=document.querySelector('iframe.giscus-frame');
+    if(gf)gf.contentWindow.postMessage({giscus:{setConfig:{theme:t==='dark'?'dark_dimmed':'light'}}}, 'https://giscus.app');
+  }
+  function buildToc(){
+    var toc=document.getElementById('toc');
+    if(!toc)return;
+    var headings=Array.from(document.querySelectorAll('article h2,article h3'));
+    if(headings.length<2)return;
+    var title=document.createElement('div');
+    title.className='toc-title';
+    title.textContent='On this page';
+    toc.appendChild(title);
+    var ul=document.createElement('ul');
+    headings.forEach(function(h,i){
+      if(!h.id)h.id=(h.textContent||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'h'+i;
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href='#'+h.id;
+      a.textContent=h.textContent;
+      a.className=h.tagName==='H3'?'toc-h3':'toc-h2';
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var link=toc.querySelector('a[href="#'+e.target.id+'"]');
+        if(link){
+          if(e.isIntersecting){
+            toc.querySelectorAll('a').forEach(function(a){a.classList.remove('active');});
+            link.classList.add('active');
+          }
+        }
+      });
+    },{rootMargin:'-10% 0px -80% 0px'});
+    headings.forEach(function(h){obs.observe(h);});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var cur=document.documentElement.getAttribute('data-theme')||'light';
+    var btn=document.getElementById('theme-toggle');
+    if(btn){
+      btn.textContent=cur==='dark'?'☀':'☾';
+      btn.addEventListener('click',function(){
+        applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+      });
+    }
+    buildToc();
+    initLightbox();
+  });
+  function initLightbox(){
+    var overlay=document.getElementById('img-overlay');
+    var overlayImg=document.getElementById('img-overlay-img');
+    if(!overlay||!overlayImg)return;
+    document.querySelectorAll('article img').forEach(function(img){
+      img.style.cursor='zoom-in';
+      img.addEventListener('click',function(){
+        overlayImg.setAttribute('src',img.getAttribute('src')||'');
+        overlayImg.setAttribute('alt',img.getAttribute('alt')||'');
+        overlay.classList.add('open');
+        document.body.style.overflow='hidden';
+      });
+    });
+    function close(){overlay.classList.remove('open');document.body.style.overflow='';}
+    overlay.addEventListener('click',function(e){if(e.target===overlay)close();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  }
+})();
+</script>
+</body>
+</html>
