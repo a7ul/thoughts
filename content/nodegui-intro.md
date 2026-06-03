@@ -1,7 +1,8 @@
 ---
 title: Announcing NodeGui and React NodeGui - Build native desktop apps with Javascript and CSS
 date: 2019-08-14
-description: Introducing NodeGui and React NodeGui — open source libraries for building cross-platform native desktop apps with JavaScript and CSS, powered by Qt5.
+originalUrl: https://blog.atulr.com/nodegui-intro
+description: Introducing NodeGui and React NodeGui  -  open source libraries for building cross-platform native desktop apps with JavaScript and CSS, powered by Qt5.
 ---
 
 We're very excited to announce the launch of **NodeGui** and **React NodeGui**!

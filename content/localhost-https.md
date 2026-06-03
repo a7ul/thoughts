@@ -1,7 +1,8 @@
 ---
 title: HTTPS certificate generation explained! Now setup HTTPS for local development environment (without sudo)
 date: 2018-08-06
-description: How to generate self-signed SSL certificates and set up HTTPS for local development without requiring sudo — covering the full CSR, Root CA, and domain cert flow.
+originalUrl: https://blog.atulr.com/localhost-https
+description: How to generate self-signed SSL certificates and set up HTTPS for local development without requiring sudo  -  covering the full CSR, Root CA, and domain cert flow.
 ---
 
 Beginning in July 2018 with the release of Chrome 68, Chrome marks all HTTP sites as "not secure." On top of that, HTTPS is a search ranking factor. Developing locally with HTTPS prevents mixed-content issues and ensures parity with production environments.
@@ -12,9 +13,9 @@ This post explains how to set up HTTPS for local development without requiring a
 
 The process involves three steps:
 
-1. **Certificate Signing Request (CSR)** — Generate a private/public key pair and a CSR containing domain information
-2. **Root CA Certificate** — Create a self-signed Certificate Authority
-3. **Domain Certificate** — Use the CA to sign the CSR and produce a domain-specific certificate
+1. **Certificate Signing Request (CSR)**  -  Generate a private/public key pair and a CSR containing domain information
+2. **Root CA Certificate**  -  Create a self-signed Certificate Authority
+3. **Domain Certificate**  -  Use the CA to sign the CSR and produce a domain-specific certificate
 
 ## Step 1: Generate a Root CA
 
@@ -28,12 +29,12 @@ openssl genrsa -des3 -out rootCA.key 4096
 openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 3650 -out rootCA.pem
 ```
 
-When prompted, fill in the fields (Country, Organization, etc.) — these are only for your local CA and don't need to match anything real.
+When prompted, fill in the fields (Country, Organization, etc.)  -  these are only for your local CA and don't need to match anything real.
 
 ## Step 2: Generate a Server Certificate
 
 ```bash
-# Generate server private key (no passphrase — important for servers)
+# Generate server private key (no passphrase  -  important for servers)
 openssl genrsa -out myserver.key 2048
 
 # Generate a Certificate Signing Request
@@ -45,7 +46,7 @@ When filling in the CSR details, set `Common Name` to `localhost` (or your local
 ## Step 3: Sign the Certificate with your CA
 
 ```bash
-# Sign the CSR with the root CA — valid 500 days
+# Sign the CSR with the root CA  -  valid 500 days
 openssl x509 -req \
   -in myserver.csr \
   -CA rootCA.pem \
@@ -58,8 +59,8 @@ openssl x509 -req \
 
 Now you have:
 
-- `rootCA.key` + `rootCA.pem` — your local CA (keep the key safe)
-- `myserver.key` + `myserver.crt` — your server certificate and key
+- `rootCA.key` + `rootCA.pem`  -  your local CA (keep the key safe)
+- `myserver.key` + `myserver.crt`  -  your server certificate and key
 
 ## Using Certificates in Node.js
 
@@ -103,6 +104,6 @@ For your browser to accept these certificates without warnings, you need to impo
 3. Click `Import` and select `rootCA.pem`
 4. Check "Trust this CA to identify websites"
 
-After importing, restart your browser and reload your local HTTPS site — no more security warnings.
+After importing, restart your browser and reload your local HTTPS site  -  no more security warnings.
 
 > **Important:** These certificates are for development only. Self-signed certificates won't be trusted by your users' browsers in production. Use a proper CA (like Let's Encrypt) for production.

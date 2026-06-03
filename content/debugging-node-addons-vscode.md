@@ -1,6 +1,7 @@
 ---
 title: Debugging NodeJS C++ Addons using VS Code
 date: 2018-07-04
+originalUrl: https://medium.com/@a7ul/debugging-nodejs-c-addons-using-vs-code-27e9940fc3ad
 description: How to set up VS Code with LLDB to debug NodeJS native C++ addons with proper breakpoints and variable inspection.
 ---
 
@@ -68,4 +69,4 @@ Sample config files are at [https://github.com/master-atul/basic-node-addon/tree
 3. Click the debugging icon in the left sidebar
 4. Click "Launch Program" or "Debug"
 
-The debugger shows variables, call stacks, and all the information you'd expect — no more printf debugging.
+The debugger shows variables, call stacks, and all the information you'd expect  -  no more printf debugging.

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Part 1/3 - Beginners guide to Custom React Renderers. How to build your own renderer from scratch?</title>
-<meta name="description" content="An introduction to React's architecture — Core, Reconciler, and Renderer — and the first steps toward building a custom renderer using react-reconciler.">
+<meta name="description" content="An introduction to React's architecture  -  Core, Reconciler, and Renderer  -  and the first steps toward building a custom renderer using react-reconciler.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Caveat:wght@400;500;600;700&display=swap">
@@ -58,7 +58,7 @@
 </ul>
 <h3>Reconciler</h3>
 <p>The reconciler implements the diffing algorithm determining which elements require updates during state changes. It&#39;s shared across multiple platform renderers.</p>
-<p><strong>Stack Reconciler:</strong> Powers React 15 and earlier — maintains an internal tree of component instances processed synchronously in a single pass.</p>
+<p><strong>Stack Reconciler:</strong> Powers React 15 and earlier  -  maintains an internal tree of component instances processed synchronously in a single pass.</p>
 <p><strong>Fiber Reconciler:</strong> Default since React 16:</p>
 <ul>
 <li>Interruptible work chunking</li>
@@ -220,7 +220,7 @@ module.exports = CustomRenderer
 <li>Call <code>reconcilerInstance.updateContainer</code> to initiate reconciliation and rendering</li>
 </ol>
 <p>The <code>isAsync</code> parameter controls fiber node mode. Currently all released renderers operate in synchronous mode.</p>
-<p>Running <code>yarn start</code> will produce errors about unimplemented HostConfig methods — which we cover in Part 2.</p>
+<p>Running <code>yarn start</code> will produce errors about unimplemented HostConfig methods  -  which we cover in Part 2.</p>
 <hr>
 <p>Continue to <a href="/react-custom-renderer-2.html" target="_blank" rel="noopener noreferrer">Part 2/3</a> where we implement all the initial render HostConfig methods.</p>
 <h2>References</h2>
@@ -234,6 +234,7 @@ module.exports = CustomRenderer
 </ul>
 
 </article>
+<div class="original-post-note">This post was ported over from Atul's old blog. <a href="https://blog.atulr.com/react-custom-renderer-1" target="_blank" rel="noopener noreferrer">Read the original here.</a></div>
 <div class="giscus-wrap">
 <script src="https://giscus.app/client.js"
   data-repo="a7ul/thoughts"

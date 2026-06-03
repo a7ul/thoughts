@@ -109,8 +109,9 @@ export function postPage(params: {
   description: string;
   htmlContent: string;
   outputPath: string;
+  originalUrl?: string;
 }): string {
-  const { title, date, description, htmlContent, outputPath } = params;
+  const { title, date, description, htmlContent, outputPath, originalUrl } = params;
   const root = rootRelative(outputPath);
   return `<!DOCTYPE html>
 <html lang="en">
@@ -142,6 +143,7 @@ ${THEME_SCRIPT}
 </header>
 ${htmlContent}
 </article>
+${originalUrl ? `<div class="original-post-note">This post was ported over from Atul's old blog. <a href="${originalUrl}" target="_blank" rel="noopener noreferrer">Read the original here.</a></div>` : ""}
 <div class="giscus-wrap">
 <script src="https://giscus.app/client.js"
   data-repo="a7ul/thoughts"
@@ -520,6 +522,17 @@ figure.dwg figcaption {
   }
   .toc-sidebar a.toc-h3 { padding-left: 1.5rem; font-size: 0.75rem; }
 }
+
+/* ── Original post note ─────────────────────────────── */
+.original-post-note {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-light);
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+.original-post-note a { color: var(--text-muted); }
+.original-post-note a:hover { color: var(--text); }
 
 /* ── Comments ───────────────────────────────────────── */
 .giscus-wrap { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-light); }

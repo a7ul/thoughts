@@ -1,7 +1,8 @@
 ---
 title: Beginners guide to writing NodeJS Addons using C++ and N-API (node-addon-api)
 date: 2018-06-15
-description: How to write Node.js native addons in C++ using N-API — covering function exports, class exports, and passing complex objects between JavaScript and C++.
+originalUrl: https://blog.atulr.com/node-addon-guide
+description: How to write Node.js native addons in C++ using N-API  -  covering function exports, class exports, and passing complex objects between JavaScript and C++.
 ---
 
 Node.js Addons are dynamically-linked shared objects written in C++ that can be loaded via `require()` and used as ordinary Node.js modules. They primarily interface between JavaScript and C/C++ libraries.
@@ -111,7 +112,7 @@ Build with `npm run build`.
 ### Understanding the Boilerplate
 
 - `#include <napi.h>` includes the N-API header
-- `NODE_API_MODULE` registers the module entry point — parameters are module name and init function
+- `NODE_API_MODULE` registers the module entry point  -  parameters are module name and init function
 - `InitAll` receives `env` (JavaScript runtime context) and `exports` (object for exporting functions/classes)
 
 ## Exporting C++ Functions

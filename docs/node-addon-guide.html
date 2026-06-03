@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Beginners guide to writing NodeJS Addons using C++ and N-API (node-addon-api)</title>
-<meta name="description" content="How to write Node.js native addons in C++ using N-API — covering function exports, class exports, and passing complex objects between JavaScript and C++.">
+<meta name="description" content="How to write Node.js native addons in C++ using N-API  -  covering function exports, class exports, and passing complex objects between JavaScript and C++.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Caveat:wght@400;500;600;700&display=swap">
@@ -117,7 +117,7 @@ module.exports = testAddon
 <h3>Understanding the Boilerplate</h3>
 <ul>
 <li><code>#include &lt;napi.h&gt;</code> includes the N-API header</li>
-<li><code>NODE_API_MODULE</code> registers the module entry point — parameters are module name and init function</li>
+<li><code>NODE_API_MODULE</code> registers the module entry point  -  parameters are module name and init function</li>
 <li><code>InitAll</code> receives <code>env</code> (JavaScript runtime context) and <code>exports</code> (object for exporting functions/classes)</li>
 </ul>
 <h2>Exporting C++ Functions</h2>
@@ -370,6 +370,7 @@ console.log(&#39;Value of derived instance:&#39;, newFromExisting.getValue());
 </ul>
 
 </article>
+<div class="original-post-note">This post was ported over from Atul's old blog. <a href="https://blog.atulr.com/node-addon-guide" target="_blank" rel="noopener noreferrer">Read the original here.</a></div>
 <div class="giscus-wrap">
 <script src="https://giscus.app/client.js"
   data-repo="a7ul/thoughts"

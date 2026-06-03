@@ -4,6 +4,7 @@ export interface Frontmatter {
   description?: string;
   tags?: string[];
   draft?: boolean;
+  originalUrl?: string;
 }
 
 export interface Post {

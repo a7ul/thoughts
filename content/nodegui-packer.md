@@ -1,6 +1,7 @@
 ---
 title: Announcing Packer for NodeGUI and React NodeGUI
 date: 2019-09-04
+originalUrl: https://medium.com/nodegui/announcing-packer-for-nodegui-and-react-nodegui-1bfc635da402
 description: Packer is a new npm tool that packages NodeGUI and React NodeGUI apps into standalone executables for Mac, Windows, and Linux.
 ---
 
@@ -10,9 +11,9 @@ Repository: [https://github.com/nodegui/packer](https://github.com/nodegui/packe
 
 This is an initial MVP release. Platform-specific outputs:
 
-- **macOS** — generates a `.dmg` file
-- **Linux** — produces an AppImage (comparable to macOS `.app`)
-- **Windows** — outputs a folder containing the executable and necessary DLLs
+- **macOS**  -  generates a `.dmg` file
+- **Linux**  -  produces an AppImage (comparable to macOS `.app`)
+- **Windows**  -  outputs a folder containing the executable and necessary DLLs
 
 Cross-platform builds are not supported in this initial release; run packer in the target OS environment.
 

@@ -1,6 +1,7 @@
 ---
 title: Simplified guide to using Docker for local development environment
 date: 2019-05-28
+originalUrl: https://blog.atulr.com/docker-local-environment
 description: How to use Docker and docker-compose to set up a productive local development environment across multiple services written in different languages.
 ---
 
@@ -26,7 +27,7 @@ The code for these services: [https://github.com/a7ul/blog-docker-dev-environmen
 
 1. **Terminal hell:** To run all of those services, we would need to open up multiple terminal tabs/windows and then run them separately. This becomes harder to manage as the number of services grow.
 
-2. **Incompatible dependencies**: If our services depend on different node versions, we need to manually switch node versions before running each one. Similarly, multiple database servers need to be running on different ports — all manual and cumbersome.
+2. **Incompatible dependencies**: If our services depend on different node versions, we need to manually switch node versions before running each one. Similarly, multiple database servers need to be running on different ports  -  all manual and cumbersome.
 
 3. **Fresh setup**: Setting up all services on a new machine requires tracking all dependencies and their versions. This leads to the popular "Works on my machine" problem.
 
@@ -139,11 +140,11 @@ Open `http://localhost:7000` to test it out.
 
 **docker-compose fields in detail:**
 
-- `build:` — Path to the Dockerfile folder (or the Dockerfile itself)
-- `command:` — Command to run when the container starts
-- `environment:` — Environment variables to set
-- `ports:` — Mapping of container port to host port
-- `working_dir:` — Path inside the container to run the command from
+- `build:`  -  Path to the Dockerfile folder (or the Dockerfile itself)
+- `command:`  -  Command to run when the container starts
+- `environment:`  -  Environment variables to set
+- `ports:`  -  Mapping of container port to host port
+- `working_dir:`  -  Path inside the container to run the command from
 
 ### Making it efficient for development
 

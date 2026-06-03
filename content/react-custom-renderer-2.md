@@ -1,6 +1,7 @@
 ---
 title: "Part 2/3 - Beginners guide to Custom React Renderers. How to build your own renderer from scratch?"
 date: 2018-10-22
+originalUrl: https://blog.atulr.com/react-custom-renderer-2
 description: Implementing all the HostConfig methods needed for the initial render phase of a custom React renderer.
 ---
 

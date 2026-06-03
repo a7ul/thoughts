@@ -1,6 +1,7 @@
 ---
 title: Deep dive on authentication, authorization and RBAC for GraphQL Servers
 date: 2022-06-14
+originalUrl: https://blog.atulr.com/graphql-auth
 description: How to design a declarative, flexible, deny-first RBAC system for GraphQL servers using schema directives.
 ---
 
@@ -8,9 +9,9 @@ GraphQL is a powerful tool for building strongly typed, self-documenting applica
 
 This article designs a GraphQL security approach with three core characteristics:
 
-1. **Declarative** — Access control rules are defined in the schema itself, making them easier to maintain and understand
-2. **Flexible Role-Based Access Control** — Different user types access different graph parts based on their role
-3. **Deny-First with Explicit Authorization** — Following least privilege principles, all access is denied unless explicitly authorized
+1. **Declarative**  -  Access control rules are defined in the schema itself, making them easier to maintain and understand
+2. **Flexible Role-Based Access Control**  -  Different user types access different graph parts based on their role
+3. **Deny-First with Explicit Authorization**  -  Following least privilege principles, all access is denied unless explicitly authorized
 
 ## Authentication
 
@@ -472,9 +473,9 @@ type AccessToken @auth(permissions: ["self:anyone"]) {
 
 The `@auth` schema directive enables secure GraphQL schema design with these characteristics:
 
-- **Declarative** — The schema documents authorization rules and serves as the source of truth
-- **Flexible** — Role + type/field-level permissions enable RBAC without sacrificing developer experience
-- **Deny-first** — Follows least privilege by denying unauthorized access, preventing accidental exposure
+- **Declarative**  -  The schema documents authorization rules and serves as the source of truth
+- **Flexible**  -  Role + type/field-level permissions enable RBAC without sacrificing developer experience
+- **Deny-first**  -  Follows least privilege by denying unauthorized access, preventing accidental exposure
 
 Complete working code is available at the [blog-graphql-auth-example](https://github.com/a7ul/blog-graphql-auth-example) repository under tags: `field-auth`, `type-auth`, and `deny-by-default`.
 

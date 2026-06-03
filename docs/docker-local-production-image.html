@@ -33,7 +33,7 @@
 <span class="post-author">Atul</span> · <time datetime="2021-07-28">July 28, 2021</time>
 </div>
 </header>
-<p>This is a follow-up to my <a href="/docker-local-environment.html" target="_blank" rel="noopener noreferrer">earlier post</a> on using Docker for local development. One problem we kept running into at Anyfin was maintaining two separate Dockerfiles — one for local development and one for production. Whenever we updated a dependency, we had to update both files, risking inconsistencies between environments.</p>
+<p>This is a follow-up to my <a href="/docker-local-environment.html" target="_blank" rel="noopener noreferrer">earlier post</a> on using Docker for local development. One problem we kept running into at Anyfin was maintaining two separate Dockerfiles  -  one for local development and one for production. Whenever we updated a dependency, we had to update both files, risking inconsistencies between environments.</p>
 <p>Multi-stage builds solve this cleanly.</p>
 <h2>The problem</h2>
 <p>The typical setup involved separate files:</p>
@@ -74,8 +74,8 @@ CMD [&quot;node&quot;, &quot;index.js&quot;]
 </code></pre>
 <h3>What changed</h3>
 <ul>
-<li>Local development uses the <code>base</code> stage via the <code>target</code> parameter — gets the system dependencies, mounts source via volumes</li>
-<li>Production builds the full <code>prod</code> stage — copies and installs only production dependencies</li>
+<li>Local development uses the <code>base</code> stage via the <code>target</code> parameter  -  gets the system dependencies, mounts source via volumes</li>
+<li>Production builds the full <code>prod</code> stage  -  copies and installs only production dependencies</li>
 <li>Single source of truth: bump Node version in one place and both environments update</li>
 </ul>
 <h3>Key benefits</h3>
@@ -88,6 +88,7 @@ CMD [&quot;node&quot;, &quot;index.js&quot;]
 <p>This pattern has worked well for us across multiple services at Anyfin and has saved us from several &quot;works locally but breaks in prod&quot; incidents that were caused by environment drift.</p>
 
 </article>
+<div class="original-post-note">This post was ported over from Atul's old blog. <a href="https://blog.atulr.com/docker-local-production-image" target="_blank" rel="noopener noreferrer">Read the original here.</a></div>
 <div class="giscus-wrap">
 <script src="https://giscus.app/client.js"
   data-repo="a7ul/thoughts"

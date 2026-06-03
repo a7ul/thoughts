@@ -1,6 +1,7 @@
 ---
 title: Beginners guide to Web Push Notifications using Service Workers
 date: 2018-09-25
+originalUrl: https://blog.atulr.com/web-notifications
 description: A step-by-step guide to implementing web push notifications using Service Workers, the Push API, and the Notification API.
 ---
 

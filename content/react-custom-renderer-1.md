@@ -1,7 +1,8 @@
 ---
 title: "Part 1/3 - Beginners guide to Custom React Renderers. How to build your own renderer from scratch?"
 date: 2018-10-21
-description: An introduction to React's architecture — Core, Reconciler, and Renderer — and the first steps toward building a custom renderer using react-reconciler.
+originalUrl: https://blog.atulr.com/react-custom-renderer-1
+description: An introduction to React's architecture  -  Core, Reconciler, and Renderer  -  and the first steps toward building a custom renderer using react-reconciler.
 ---
 
 This is a 3-part series. Prior familiarity with React APIs and JSX is recommended but not required.
@@ -36,7 +37,7 @@ It excludes the diffing algorithm and platform-specific code.
 
 The reconciler implements the diffing algorithm determining which elements require updates during state changes. It's shared across multiple platform renderers.
 
-**Stack Reconciler:** Powers React 15 and earlier — maintains an internal tree of component instances processed synchronously in a single pass.
+**Stack Reconciler:** Powers React 15 and earlier  -  maintains an internal tree of component instances processed synchronously in a single pass.
 
 **Fiber Reconciler:** Default since React 16:
 - Interruptible work chunking
@@ -250,7 +251,7 @@ module.exports = CustomRenderer
 
 The `isAsync` parameter controls fiber node mode. Currently all released renderers operate in synchronous mode.
 
-Running `yarn start` will produce errors about unimplemented HostConfig methods — which we cover in Part 2.
+Running `yarn start` will produce errors about unimplemented HostConfig methods  -  which we cover in Part 2.
 
 ---
 

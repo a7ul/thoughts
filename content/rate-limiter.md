@@ -1,6 +1,7 @@
 ---
 title: An alternative approach to building a simple API Rate limiter using NodeJS and Redis
 date: 2019-01-15
+originalUrl: https://blog.atulr.com/rate-limiter
 description: An alternative Redis-based approach to API rate limiting that avoids common algorithms and uses atomic transactions for correctness.
 ---
 

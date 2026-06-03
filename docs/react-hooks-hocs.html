@@ -35,8 +35,8 @@
 </header>
 <p>This is a brief post on a pattern I recently needed. I had to abstract some functionality for use across multiple React components and chose to implement it using React hooks. However, the codebase contained many legacy class components requiring the same functionality, presenting a dilemma:</p>
 <ol>
-<li>Rewrite all components to functional components — not ideal</li>
-<li>Duplicate logic in both hooks and HOC formats — against DRY principles</li>
+<li>Rewrite all components to functional components  -  not ideal</li>
+<li>Duplicate logic in both hooks and HOC formats  -  against DRY principles</li>
 </ol>
 <p>The solution: write the logic as a hook and wrap it in an HOC for class component compatibility.</p>
 <h2>Example Implementation</h2>
@@ -94,6 +94,7 @@ export default withCountry(MyComponent)
 <p>This technique enables using the same hook with class components through an HOC pattern, maintaining code consistency across mixed component architectures.</p>
 
 </article>
+<div class="original-post-note">This post was ported over from Atul's old blog. <a href="https://blog.atulr.com/react-hooks-hocs" target="_blank" rel="noopener noreferrer">Read the original here.</a></div>
 <div class="giscus-wrap">
 <script src="https://giscus.app/client.js"
   data-repo="a7ul/thoughts"

@@ -28,6 +28,7 @@ export function parseFrontmatter(
       description: (d.description as string) || "",
       tags: Array.isArray(d.tags) ? (d.tags as string[]) : undefined,
       draft: d.draft === true,
+      originalUrl: (d.originalUrl as string) || undefined,
     },
     content: parsed.content,
   };

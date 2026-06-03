@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Part 3/3 - Beginners guide to Custom React Renderers. How to build your own renderer from scratch?</title>
-<meta name="description" content="Completing the custom React renderer by implementing the update phase — prepareUpdate, commitUpdate, commitTextUpdate, and all the mutation methods.">
+<meta name="description" content="Completing the custom React renderer by implementing the update phase  -  prepareUpdate, commitUpdate, commitTextUpdate, and all the mutation methods.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Caveat:wght@400;500;600;700&display=swap">
@@ -85,7 +85,7 @@ CustomRenderer.render(&lt;App /&gt;, document.getElementById(&#39;root&#39;))
     return element;
   }
 </code></pre>
-<p>This triggers errors about missing <code>prepareUpdate</code> and <code>commitTextUpdate</code> methods — which we implement next.</p>
+<p>This triggers errors about missing <code>prepareUpdate</code> and <code>commitTextUpdate</code> methods  -  which we implement next.</p>
 <h2>Key Update Methods</h2>
 <h3>prepareUpdate</h3>
 <pre><code class="language-javascript">function prepareUpdate(
@@ -99,7 +99,7 @@ CustomRenderer.render(&lt;App /&gt;, document.getElementById(&#39;root&#39;))
   return { /* update payload */ }
 }
 </code></pre>
-<p>Called during the <strong>render phase</strong> to signal whether updates are needed. No DOM changes should occur here — those belong in the commit phase. Returns a payload object indicating what needs to change.</p>
+<p>Called during the <strong>render phase</strong> to signal whether updates are needed. No DOM changes should occur here  -  those belong in the commit phase. Returns a payload object indicating what needs to change.</p>
 <pre><code class="language-javascript">prepareUpdate: function (
   instance,
   type,
@@ -292,6 +292,7 @@ CustomRenderer.render(&lt;App /&gt;, document.getElementById(&#39;root&#39;))
 <p>The complete source code is available on <a href="https://github.com/a7ul/blog-custom-renderer" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
 
 </article>
+<div class="original-post-note">This post was ported over from Atul's old blog. <a href="https://blog.atulr.com/react-custom-renderer-3" target="_blank" rel="noopener noreferrer">Read the original here.</a></div>
 <div class="giscus-wrap">
 <script src="https://giscus.app/client.js"
   data-repo="a7ul/thoughts"

@@ -1,6 +1,7 @@
 ---
 title: NodeGUI v0.2.0
 date: 2019-09-22
+originalUrl: https://medium.com/nodegui/nodegui-v0-2-0-a8521fecfe1b
 description: NodeGUI v0.2.0 brings a new CMake build system, native plugin support, and several component additions.
 ---
 

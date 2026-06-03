@@ -50,7 +50,7 @@
 <ol>
 <li><p><strong>Terminal hell:</strong> To run all of those services, we would need to open up multiple terminal tabs/windows and then run them separately. This becomes harder to manage as the number of services grow.</p>
 </li>
-<li><p><strong>Incompatible dependencies</strong>: If our services depend on different node versions, we need to manually switch node versions before running each one. Similarly, multiple database servers need to be running on different ports — all manual and cumbersome.</p>
+<li><p><strong>Incompatible dependencies</strong>: If our services depend on different node versions, we need to manually switch node versions before running each one. Similarly, multiple database servers need to be running on different ports  -  all manual and cumbersome.</p>
 </li>
 <li><p><strong>Fresh setup</strong>: Setting up all services on a new machine requires tracking all dependencies and their versions. This leads to the popular &quot;Works on my machine&quot; problem.</p>
 </li>
@@ -135,11 +135,11 @@ services:
 <p>Open <code>http://localhost:7000</code> to test it out.</p>
 <p><strong>docker-compose fields in detail:</strong></p>
 <ul>
-<li><code>build:</code> — Path to the Dockerfile folder (or the Dockerfile itself)</li>
-<li><code>command:</code> — Command to run when the container starts</li>
-<li><code>environment:</code> — Environment variables to set</li>
-<li><code>ports:</code> — Mapping of container port to host port</li>
-<li><code>working_dir:</code> — Path inside the container to run the command from</li>
+<li><code>build:</code>  -  Path to the Dockerfile folder (or the Dockerfile itself)</li>
+<li><code>command:</code>  -  Command to run when the container starts</li>
+<li><code>environment:</code>  -  Environment variables to set</li>
+<li><code>ports:</code>  -  Mapping of container port to host port</li>
+<li><code>working_dir:</code>  -  Path inside the container to run the command from</li>
 </ul>
 <h3>Making it efficient for development</h3>
 <p>Right now you can&#39;t edit source code without rebuilding the container. To fix this, we use <strong>volumes</strong> to mount our local source directly into the container.</p>
@@ -270,6 +270,7 @@ services:
 </blockquote>
 
 </article>
+<div class="original-post-note">This post was ported over from Atul's old blog. <a href="https://blog.atulr.com/docker-local-environment" target="_blank" rel="noopener noreferrer">Read the original here.</a></div>
 <div class="giscus-wrap">
 <script src="https://giscus.app/client.js"
   data-repo="a7ul/thoughts"

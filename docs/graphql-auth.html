@@ -36,9 +36,9 @@
 <p>GraphQL is a powerful tool for building strongly typed, self-documenting applications. A key strength is that the server provides a single endpoint exposing all data in a graph structure that clients can request. However, this requires controlling who (authentication) can access and interact with what parts (authorization) of the exposed data.</p>
 <p>This article designs a GraphQL security approach with three core characteristics:</p>
 <ol>
-<li><strong>Declarative</strong> — Access control rules are defined in the schema itself, making them easier to maintain and understand</li>
-<li><strong>Flexible Role-Based Access Control</strong> — Different user types access different graph parts based on their role</li>
-<li><strong>Deny-First with Explicit Authorization</strong> — Following least privilege principles, all access is denied unless explicitly authorized</li>
+<li><strong>Declarative</strong>  -  Access control rules are defined in the schema itself, making them easier to maintain and understand</li>
+<li><strong>Flexible Role-Based Access Control</strong>  -  Different user types access different graph parts based on their role</li>
+<li><strong>Deny-First with Explicit Authorization</strong>  -  Following least privilege principles, all access is denied unless explicitly authorized</li>
 </ol>
 <h2>Authentication</h2>
 <p>Authentication determines if a user is logged in and establishes their identity. In GraphQL servers, requests flow through several layers:</p>
@@ -432,9 +432,9 @@ type AccessToken @auth(permissions: [&quot;self:anyone&quot;]) {
 <h2>Summary</h2>
 <p>The <code>@auth</code> schema directive enables secure GraphQL schema design with these characteristics:</p>
 <ul>
-<li><strong>Declarative</strong> — The schema documents authorization rules and serves as the source of truth</li>
-<li><strong>Flexible</strong> — Role + type/field-level permissions enable RBAC without sacrificing developer experience</li>
-<li><strong>Deny-first</strong> — Follows least privilege by denying unauthorized access, preventing accidental exposure</li>
+<li><strong>Declarative</strong>  -  The schema documents authorization rules and serves as the source of truth</li>
+<li><strong>Flexible</strong>  -  Role + type/field-level permissions enable RBAC without sacrificing developer experience</li>
+<li><strong>Deny-first</strong>  -  Follows least privilege by denying unauthorized access, preventing accidental exposure</li>
 </ul>
 <p>Complete working code is available at the <a href="https://github.com/a7ul/blog-graphql-auth-example" target="_blank" rel="noopener noreferrer">blog-graphql-auth-example</a> repository under tags: <code>field-auth</code>, <code>type-auth</code>, and <code>deny-by-default</code>.</p>
 <h2>References</h2>
@@ -444,6 +444,7 @@ type AccessToken @auth(permissions: [&quot;self:anyone&quot;]) {
 </ul>
 
 </article>
+<div class="original-post-note">This post was ported over from Atul's old blog. <a href="https://blog.atulr.com/graphql-auth" target="_blank" rel="noopener noreferrer">Read the original here.</a></div>
 <div class="giscus-wrap">
 <script src="https://giscus.app/client.js"
   data-repo="a7ul/thoughts"

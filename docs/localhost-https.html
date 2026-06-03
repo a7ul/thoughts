@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HTTPS certificate generation explained! Now setup HTTPS for local development environment (without sudo)</title>
-<meta name="description" content="How to generate self-signed SSL certificates and set up HTTPS for local development without requiring sudo — covering the full CSR, Root CA, and domain cert flow.">
+<meta name="description" content="How to generate self-signed SSL certificates and set up HTTPS for local development without requiring sudo  -  covering the full CSR, Root CA, and domain cert flow.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Caveat:wght@400;500;600;700&display=swap">
@@ -38,9 +38,9 @@
 <h2>Overview</h2>
 <p>The process involves three steps:</p>
 <ol>
-<li><strong>Certificate Signing Request (CSR)</strong> — Generate a private/public key pair and a CSR containing domain information</li>
-<li><strong>Root CA Certificate</strong> — Create a self-signed Certificate Authority</li>
-<li><strong>Domain Certificate</strong> — Use the CA to sign the CSR and produce a domain-specific certificate</li>
+<li><strong>Certificate Signing Request (CSR)</strong>  -  Generate a private/public key pair and a CSR containing domain information</li>
+<li><strong>Root CA Certificate</strong>  -  Create a self-signed Certificate Authority</li>
+<li><strong>Domain Certificate</strong>  -  Use the CA to sign the CSR and produce a domain-specific certificate</li>
 </ol>
 <h2>Step 1: Generate a Root CA</h2>
 <p>A Certificate Authority (CA) is used to sign your development certificates. The browser trusts your CA, and therefore trusts anything signed by it.</p>
@@ -50,9 +50,9 @@ openssl genrsa -des3 -out rootCA.key 4096
 # Generate root CA certificate (valid 3650 days = 10 years)
 openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 3650 -out rootCA.pem
 </code></pre>
-<p>When prompted, fill in the fields (Country, Organization, etc.) — these are only for your local CA and don&#39;t need to match anything real.</p>
+<p>When prompted, fill in the fields (Country, Organization, etc.)  -  these are only for your local CA and don&#39;t need to match anything real.</p>
 <h2>Step 2: Generate a Server Certificate</h2>
-<pre><code class="language-bash"># Generate server private key (no passphrase — important for servers)
+<pre><code class="language-bash"># Generate server private key (no passphrase  -  important for servers)
 openssl genrsa -out myserver.key 2048
 
 # Generate a Certificate Signing Request
@@ -60,7 +60,7 @@ openssl req -new -key myserver.key -out myserver.csr
 </code></pre>
 <p>When filling in the CSR details, set <code>Common Name</code> to <code>localhost</code> (or your local domain).</p>
 <h2>Step 3: Sign the Certificate with your CA</h2>
-<pre><code class="language-bash"># Sign the CSR with the root CA — valid 500 days
+<pre><code class="language-bash"># Sign the CSR with the root CA  -  valid 500 days
 openssl x509 -req \
   -in myserver.csr \
   -CA rootCA.pem \
@@ -72,8 +72,8 @@ openssl x509 -req \
 </code></pre>
 <p>Now you have:</p>
 <ul>
-<li><code>rootCA.key</code> + <code>rootCA.pem</code> — your local CA (keep the key safe)</li>
-<li><code>myserver.key</code> + <code>myserver.crt</code> — your server certificate and key</li>
+<li><code>rootCA.key</code> + <code>rootCA.pem</code>  -  your local CA (keep the key safe)</li>
+<li><code>myserver.key</code> + <code>myserver.crt</code>  -  your server certificate and key</li>
 </ul>
 <h2>Using Certificates in Node.js</h2>
 <pre><code class="language-javascript">const https = require(&#39;https&#39;)
@@ -109,12 +109,13 @@ http-server -S -C myserver.crt -K myserver.key -p 8443
 <li>Click <code>Import</code> and select <code>rootCA.pem</code></li>
 <li>Check &quot;Trust this CA to identify websites&quot;</li>
 </ol>
-<p>After importing, restart your browser and reload your local HTTPS site — no more security warnings.</p>
+<p>After importing, restart your browser and reload your local HTTPS site  -  no more security warnings.</p>
 <blockquote>
 <p><strong>Important:</strong> These certificates are for development only. Self-signed certificates won&#39;t be trusted by your users&#39; browsers in production. Use a proper CA (like Let&#39;s Encrypt) for production.</p>
 </blockquote>
 
 </article>
+<div class="original-post-note">This post was ported over from Atul's old blog. <a href="https://blog.atulr.com/localhost-https" target="_blank" rel="noopener noreferrer">Read the original here.</a></div>
 <div class="giscus-wrap">
 <script src="https://giscus.app/client.js"
   data-repo="a7ul/thoughts"

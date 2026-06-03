@@ -31,5 +31,6 @@ export function renderPostFile(post: Post): string {
     description: post.frontmatter.description || "",
     htmlContent: post.htmlContent,
     outputPath: post.outputPath,
+    originalUrl: post.frontmatter.originalUrl || "",
   });
 }

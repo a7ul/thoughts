@@ -307,6 +307,17 @@ figure.dwg figcaption {
   .toc-sidebar a.toc-h3 { padding-left: 1.5rem; font-size: 0.75rem; }
 }
 
+/* ── Original post note ─────────────────────────────── */
+.original-post-note {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-light);
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+.original-post-note a { color: var(--text-muted); }
+.original-post-note a:hover { color: var(--text); }
+
 /* ── Comments ───────────────────────────────────────── */
 .giscus-wrap { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-light); }
 

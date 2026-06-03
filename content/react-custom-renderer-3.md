@@ -1,7 +1,8 @@
 ---
 title: "Part 3/3 - Beginners guide to Custom React Renderers. How to build your own renderer from scratch?"
 date: 2019-01-08
-description: Completing the custom React renderer by implementing the update phase — prepareUpdate, commitUpdate, commitTextUpdate, and all the mutation methods.
+originalUrl: https://blog.atulr.com/react-custom-renderer-3
+description: Completing the custom React renderer by implementing the update phase  -  prepareUpdate, commitUpdate, commitTextUpdate, and all the mutation methods.
 ---
 
 This is the final part of a 3-part series. Be sure to read [Part 1](/react-custom-renderer-1.html) and [Part 2](/react-custom-renderer-2.html) before proceeding.
@@ -67,7 +68,7 @@ createInstance: function(
   }
 ```
 
-This triggers errors about missing `prepareUpdate` and `commitTextUpdate` methods — which we implement next.
+This triggers errors about missing `prepareUpdate` and `commitTextUpdate` methods  -  which we implement next.
 
 ## Key Update Methods
 
@@ -86,7 +87,7 @@ function prepareUpdate(
 }
 ```
 
-Called during the **render phase** to signal whether updates are needed. No DOM changes should occur here — those belong in the commit phase. Returns a payload object indicating what needs to change.
+Called during the **render phase** to signal whether updates are needed. No DOM changes should occur here  -  those belong in the commit phase. Returns a payload object indicating what needs to change.
 
 ```javascript
 prepareUpdate: function (
