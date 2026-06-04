@@ -1,5 +1,6 @@
 import { parseArgs } from "@std/cli/parse-args";
 import { resolve, join, dirname } from "@std/path";
+import { copy } from "@std/fs";
 import { discoverFiles } from "./src/discover.ts";
 import { buildPost, renderPostFile } from "./src/post.ts";
 import { buildHomePage } from "./src/home.ts";
@@ -57,6 +58,12 @@ async function main() {
   await Deno.writeTextFile(join(outputDir, "index.html"), buildHomePage(posts));
   await Deno.writeTextFile(join(outputDir, "style.css"), CSS);
   await Deno.writeTextFile(join(outputDir, "CNAME"), "blog.a7ul.com");
+
+  const diagramsSrc = join(inputDir, "_diagrams");
+  const diagramsDst = join(outputDir, "_diagrams");
+  try {
+    await copy(diagramsSrc, diagramsDst, { overwrite: true });
+  } catch { /* no _diagrams dir */ }
 
   console.log(`\nBuilt ${posts.length} post(s) → ${outputDir}`);
 }

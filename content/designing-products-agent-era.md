@@ -6,9 +6,9 @@ keywords: agents, ai, product, design, ux, delegation
 slug: designing-products-agent-era
 ---
 
-<a href="https://www.filed.com/" target="_blank" rel="noopener noreferrer"><img src="https://cdn.prod.website-files.com/67bc8a6a92703c872d12b060/682a2d561ea4f0f0fc58ae8a_filed%20favicon.png" alt="Filed" style="width:40px;height:40px;display:block;margin-bottom:1.5rem"></a>
-
 I am Atul, cofounder at [Filed](https://www.filed.com/). We build products for tax professionals in the US, and I lead the product team. Over the last two years we've had some learnings that have fundamentally changed how I think about building software.
+
+<figure style="margin:2rem 0 2.5rem;text-align:center"><a href="https://www.filed.com/" target="_blank" rel="noopener noreferrer"><img src="./_diagrams/filed-wordmark.png" alt="Filed." style="width:140px;height:auto;display:inline-block;filter:invert(1)"></a></figure>
 
 We started [Filed](https://www.filed.com/) to automate data entry for tax professionals. I vividly remember a jaw-dropping moment when my co-founder [Leroy](https://www.linkedin.com/in/leroykerry/) and I visited a small two-person firm in Colorado, about two years ago. I couldn't believe that firms were still manually keying in so much data. It felt like an obvious problem to solve. So we solved it - and over the next two tax seasons we built solutions that provided real, measurable value by automating away a significant chunk of that work.
 
