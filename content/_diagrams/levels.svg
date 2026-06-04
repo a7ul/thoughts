@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 160" style="max-width:100%;display:block;margin:0 auto">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#888"/>
+    </marker>
+  </defs>
+
+  <circle cx="75" cy="80" r="65" fill="#ffd8a8" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="75" y="66" text-anchor="middle" font-size="12" font-family="Georgia, serif" fill="#92400e">Level 1</text>
+  <text x="75" y="83" text-anchor="middle" font-size="12" font-family="Georgia, serif" fill="#92400e">Physical goods</text>
+  <text x="75" y="100" text-anchor="middle" font-size="12" font-family="Georgia, serif" fill="#92400e">and services</text>
+
+  <line x1="142" y1="80" x2="162" y2="80" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <circle cx="230" cy="80" r="65" fill="#a5d8ff" stroke="#4a9eed" stroke-width="1.5"/>
+  <text x="230" y="66" text-anchor="middle" font-size="12" font-family="Georgia, serif" fill="#1d4ed8">Level 2</text>
+  <text x="230" y="83" text-anchor="middle" font-size="12" font-family="Georgia, serif" fill="#1d4ed8">Digital</text>
+  <text x="230" y="100" text-anchor="middle" font-size="12" font-family="Georgia, serif" fill="#1d4ed8">transformation</text>
+
+  <line x1="297" y1="80" x2="317" y2="80" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <circle cx="385" cy="80" r="65" fill="#d0bfff" stroke="#8b5cf6" stroke-width="1.5"/>
+  <text x="385" y="66" text-anchor="middle" font-size="12" font-family="Georgia, serif" fill="#5b21b6">Level 3</text>
+  <text x="385" y="83" text-anchor="middle" font-size="12" font-family="Georgia, serif" fill="#5b21b6">Agentic</text>
+  <text x="385" y="100" text-anchor="middle" font-size="12" font-family="Georgia, serif" fill="#5b21b6">delegation</text>
+</svg>

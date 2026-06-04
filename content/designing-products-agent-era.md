@@ -6,7 +6,7 @@ keywords: agents, ai, product, design, ux, delegation
 slug: designing-products-agent-era
 ---
 
-I'm Atul, one of the co-founders of Filed. We build products for tax professionals in the US, and I lead the product team. Over the last two years we've had some learnings that have fundamentally changed how I think about building software.
+I am Atul, cofounder at Filed. We build products for tax professionals in the US, and I lead the product team. Over the last two years we've had some learnings that have fundamentally changed how I think about building software.
 
 We started Filed to automate data entry for tax professionals. I vividly remember a jaw-dropping moment when my co-founder Leroy and I visited a small two-person firm in Colorado, about two years ago. I couldn't believe that firms were still manually keying in so much data. It felt like an obvious problem to solve. So we solved it — and over the next two tax seasons we built solutions that provided real, measurable value by automating away a significant chunk of that work.
 
@@ -19,6 +19,8 @@ I strongly believe this is not how software should be built in the AI era.
 ## Moving atoms to bits was step one. This is step two.
 
 To understand what's actually changed, it helps to zoom out and look at how companies have provided value to customers over time.
+
+@figure(_diagrams/levels.svg, "Three eras of value creation — Physical, Digital, Agentic")
 
 **Level 1 — Physical goods and services.** Before software, companies had a physical presence. You wanted to open a bank account, you walked into a branch. A person sat across from you, took your details, filed the paperwork, and opened the account. The value was real, but it was slow, location-dependent, and expensive to scale. Every interaction required a human on both sides of the table. Information moved via paper — forms, folders, filing cabinets.
 
@@ -72,7 +74,9 @@ The best strategy is to build a boat that rises with the tide. Use the models. L
 
 ## Adding a chatbot won't get you there either
 
-The next instinct most product teams reach for is: add a chatbot. Put a chat interface on top of the product, let users ask questions, have the AI respond. Ship it. Job done.
+The next instinct we usually reach for is: add a chatbot. Put a chat interface on top of the product, let users ask questions, have the AI respond. Ship it. Job done.
+
+@figure(_diagrams/chatbot-example-gitbook.png, "GitBook's AI assistant — this is a great feature and adds real value. But I classify this as a product that works in Level 2.")
 
 It's not done.
 
@@ -155,3 +159,11 @@ That's a completely different product. A different interface, a different onboar
 At Filed, this is what we're building towards. We're not a tool tax professionals use to do their work faster. We're a platform they use to delegate their work — and step in when their judgement is needed. The software is less like a desk and more like a team.
 
 All AI-native products need to make this shift. Stop designing for the user who comes in to do the task. Start designing for the supervisor who checks in, teaches, and stays informed. The interface follows from that. So does everything else.
+
+---
+
+**TLDR — when designing the interface for your AI-native product, think:**
+
+*If you were to delegate this task to someone you trust and you are only allowed to communicate using this interface — how should the interface look so you can explain it well? How would you correct them when they did something wrong?*
+
+Every product decision in the agent era flows from that question.
