@@ -160,7 +160,7 @@ That's a completely different product. A different interface, a different onboar
 
 At Filed, this is what we're building towards. We're not a tool tax professionals use to do their work faster. We're a platform they use to delegate their work - and step in when their judgement is needed. The software is less like a desk and more like a team.
 
-One small signal of how seriously we take this: we don't measure weekly active users. We measure weekly active sessions. A session, for us, is a task completed - by either a human or an AI agent. If the agent did the work while the user was sleeping, that counts. That's the metric that reflects what we're actually building.
+One small signal of how seriously we take this: **we don't measure weekly active users. We measure weekly active sessions.** A session, for us, is a task completed - by either a human or an AI agent. If the agent did the work while the user was sleeping, that counts. That's the metric that reflects what we're actually building.
 
 All AI-native products need to make this shift. Stop designing for the user who comes in to do the task. Start designing for the supervisor who checks in, teaches, and stays informed. The interface follows from that. So does everything else.
 
