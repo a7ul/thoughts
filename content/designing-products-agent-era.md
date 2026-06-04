@@ -1,5 +1,5 @@
 ---
-title: Designing products in the agent era
+title: Rethinking products in the agent era
 date: 2026-06-04T00:00:00.000Z
 description: We spent 10-15 years designing apps for humans to do the work. Now agents can do the work. Here's how product thinking needs to shift.
 keywords: agents, ai, product, design, ux, delegation
