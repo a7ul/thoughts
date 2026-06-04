@@ -162,7 +162,7 @@ All AI-native products need to make this shift. Stop designing for the user who 
 
 ---
 
-**TLDR - when designing the interface for your AI-native product, think:**
+**If there is one key takeaway from this post, it is this:**
 
 *If you were to delegate this task to someone you trust and you are only allowed to communicate using this interface - how should the interface look so you can explain it well? How would you correct them when they did something wrong?*
 
