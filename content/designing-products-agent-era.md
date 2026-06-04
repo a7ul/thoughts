@@ -104,6 +104,8 @@ Take ecommerce. Today you open the app, search, filter, scroll, compare, and eve
 
 Or take airline booking. You go in and describe what you need - dates, destination, preferred times, how many stops you'll tolerate. The agent finds the options that fit. It ranks them. You confirm the one you want. You weren't scrolling through 200 results. You were reviewing a recommendation from something that already knew your preferences. That's the supervisor relationship in practice.
 
+@figure(_diagrams/filed-homepage.png, "Filed - built for delegation, not for doing.")
+
 _If you were to delegate this task to someone you trust, using this interface - how would you explain it to them? And how would you correct them if they got it wrong?_
 
 That question reframes everything. It's not "how does the user do the task?" It's "how does the user hand the task off?"
