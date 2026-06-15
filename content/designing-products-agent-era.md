@@ -101,7 +101,7 @@ It shows up everywhere:
 
 @figure(_diagrams/filed-binder.webp, "Filed - notice how an AI agent was the first 'user': it signed off the documents and drafted the review, while the human comes in next as the supervisor.")
 
-> **If you were to delegate this task to someone you trust and you are only allowed to communicate using this interface - how should the interface look so you can explain it well? How would you correct them when they did something wrong?**
+> **While designing your product features, think: if as a user I were to come to this product, how could I delegate this task to an agent? How should the interface look for that? And how can the user correct the AI when something goes wrong?**
 
 That question reframes everything. It's not "how does the user do the task?" It's "how does the user hand the task off?"
 
@@ -155,6 +155,6 @@ All AI-native products need to make this shift. Stop designing for the user who 
 
 **If there is one key takeaway from this post, it is this:**
 
-> **If you were to delegate this task to someone you trust and you are only allowed to communicate using this interface - how should the interface look so you can explain it well? How would you correct them when they did something wrong?**
+> **While designing your product features, think: if as a user I were to come to this product, how could I delegate this task to an agent? How should the interface look for that? And how can the user correct the AI when something goes wrong?**
 
 Every product decision in the agent era flows from that question.
