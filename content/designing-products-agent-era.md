@@ -99,7 +99,7 @@ It shows up everywhere:
 - **Ecommerce.** Instead of search → filter → scroll → compare, you tell the agent your size, budget, and brands. It brings a shortlist; you pick one and confirm.
 - **Airline booking.** You describe dates, destination, and how many stops you'll tolerate. The agent finds and ranks the options; you confirm one - reviewing a recommendation, not scrolling through 200 results.
 
-@figure(_diagrams/filed-homepage.png, "Filed - built for delegation, not for doing.")
+@figure(_diagrams/filed-binder.webp, "Filed - notice how an AI agent was the first 'user': it signed off the documents and drafted the review, while the human comes in next as the supervisor.")
 
 > **If you were to delegate this task to someone you trust and you are only allowed to communicate using this interface - how should the interface look so you can explain it well? How would you correct them when they did something wrong?**
 
