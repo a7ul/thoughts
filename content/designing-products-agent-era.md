@@ -1,5 +1,5 @@
 ---
-title: Rethinking products in the agent era
+title: Stop building for users. Build for supervisors.
 date: 2026-06-15T00:00:00.000Z
 description: We spent 10-15 years designing apps for humans to do the work. Now agents can do the work. Here's how product thinking needs to shift.
 keywords: agents, ai, product, design, ux, delegation
@@ -38,7 +38,7 @@ But notice - physical banking didn't disappear. Incumbents added Level 2 *on top
 
 Most companies today are still in Level 2 with AI features bolted on. But **if your users still have to come to the product and verify everything themselves, it's still Level 2** - the interface is still treating the user as the operator. The agentic era isn't about users coming to do the work. It's about delegation. **We can now delegate real work.**
 
-If your core product value still depends on bringing users to your interface to do most of the work, you are building a level 2 product. Let me explain.
+If your core product value still depends on bringing users to your interface to do most of the work, you are building a Level 2 product. Let me explain.
 
 Let's imagine what delegation looks like with the bank example again.
 
@@ -92,7 +92,7 @@ Take inspiration from the factory floor. There's a production line - repetitive 
 
 @figure(_diagrams/supervisor.svg, "The Level 3 mental model - you supervise a line of agents that runs without you, and step in only when judgement is needed.")
 
-That's the mental model for Level 3 products. The workers on the belt are agents now, handling the repetitive tasks your users used to come do themselves. The user's job shifts: **they set it up, taught the agent how they want things done, and step in when a decision requires their judgement.** The interface should feel less like a tool you operate and more like a team you manage.
+That's the mental model for Level 3 products. The workers on the belt are agents now, handling the repetitive tasks your users used to come do themselves. The user's job shifts: **they set it up, teach the agent how they want things done, and step in when a decision requires their judgement.** The interface should feel less like a tool you operate and more like a team you manage.
 
 It shows up everywhere:
 
