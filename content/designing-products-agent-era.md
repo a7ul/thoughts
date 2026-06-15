@@ -1,5 +1,5 @@
 ---
-title: Stop building for users. Build for supervisors.
+title: Stop building products for users. Build for supervisors.
 date: 2026-06-15T00:00:00.000Z
 description: We spent 10-15 years designing apps for humans to do the work. Now agents can do the work. Here's how product thinking needs to shift.
 keywords: agents, ai, product, design, ux, delegation
