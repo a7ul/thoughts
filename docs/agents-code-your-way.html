@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Using Jev to make your agents write the code and design the app the way you do: Moving beyond tests and lints</title>
+<meta name="description" content="Tests and lints tell you the code works. They don't tell you it's written the way your team writes code. Here's how we use a decision model to close that gap at Filed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Caveat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="./style.css">
+<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script>
+(function(){
+  var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  document.documentElement.setAttribute('data-theme',t);
+  var link=document.getElementById('hljs-theme');
+  if(link&&t==='dark')link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){hljs.highlightAll();});</script>
+</head>
+<body>
+<div id="img-overlay" class="img-overlay"><img id="img-overlay-img" src="" alt=""></div>
+<aside class="toc-sidebar" id="toc"></aside>
+<div class="container">
+<nav><a href="./index.html">← Home</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme"></button></nav>
+<article>
+<header>
+<h1>Using Jev to make your agents write the code and design the app the way you do: Moving beyond tests and lints</h1>
+<div class="post-meta">
+<span class="post-author">Atul</span> · <time datetime="2026-10-12">October 12, 2026</time>
+</div>
+</header>
+<p>I&#39;m going to be honest with you: your coding agent passes lint, passes tests, goes green in CI, and still writes code you would reject in review. Every single day. If you&#39;ve been told that a good enough test suite is all you need to let agents loose on your codebase, I&#39;m sorry, but someone sold you a slightly smaller version of the truth.</p>
+<p>Tests check what the code <em>does</em>. Lint checks a few things about how it <em>looks</em>. Nobody is checking whether it&#39;s written <em>the way we write things here</em>. Up until recently that job rested on a few senior devs, in review, saying &quot;...yeah, no&quot; to the same five mistakes over and over again.</p>
+<p>I&#39;m Atul, cofounder at <a href="https://www.filed.com/" target="_blank" rel="noopener noreferrer">Filed</a>. We build agents for tax professionals, and a lot of our code is now written by other agents. A while back I wrote about <a href="./scaling-agentic-development.html" target="_blank" rel="noopener noreferrer">how far you can push delegation to coding agents</a> and said the third leg of the stool was &quot;codifying your best practices and having an agentic reviewer check them&quot;. This post is about what that turned into once we actually built it, and all the ways the first versions didn&#39;t work.</p>
+<h2>Preface</h2>
+<p>This is not a &quot;tests are dead&quot; post. Tests and lints are still the first thing you reach for, and if a script can decide it, a script should decide it. Everything below is about the leftovers: the stuff that&#39;s obviously wrong to a human on your team and invisible to every tool you own.</p>
+<p>Also, a confession about the title. Jev, from TypeSafe, is the decision model that got me hooked on this idea, but what we actually run in production is Perplexity&#39;s decider (<code>pplx-decider</code>). Same kind of API, one big difference: the Perplexity decider can look at <strong>images</strong>, which turns out to be great for checking that UI follows your design rules (more on that below). So I&#39;m going to say &quot;Perplexity decider / Jev&quot; interchangeably in this post. Read it as &quot;a decision model&quot;.</p>
+<p>Here&#39;s what a decision model does: you give it some state and a list of yes-or-no questions, and it gives you back a probability per question. That&#39;s it. No essays. Hold onto that, it matters later.</p>
+<h2>The stuff that slips through is not exotic</h2>
+<p><em>It&#39;s boring. That&#39;s the problem.</em></p>
+<p>Here&#39;s the kind of thing that goes green through every pipeline we have:</p>
+<ul>
+<li>An <code>except Exception: return None</code> that turns a real failure into an empty screen and a very confused user.</li>
+<li>A tool registered on an agent twice, because the agent was already getting it from another toolset. Works fine. Tests pass. The model now sees the same tool twice and gets to guess which one you meant. Lovely.</li>
+<li>Shared code that grows another <code>if</code>/<code>else</code> branch every time a new case shows up, instead of that case getting its own module. Each branch looks harmless on its own. Ten of them later, the shared code is a pile of special cases nobody wants to touch.</li>
+<li>Every new frontend page, even after you&#39;ve written down your design guidelines and rules, coming out looking like a generic Claude-generated UI. Good at first glance. Clean, modern, nothing obviously wrong. It just doesn&#39;t look like <em>your</em> app. It lacks its soul.</li>
+</ul>
+<p>None of these break anything today. Every one of them makes the codebase a bit worse to work in tomorrow. And agents, being agents, will happily repeat the pattern the moment they see it in two places.</p>
+<figure class="dwg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 330" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="gap-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="3.5"/></filter>
+    <marker id="gap-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
+  </defs>
+  <g filter="url(#gap-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <circle cx="55" cy="120" r="14"/>
+    <rect x="38" y="134" width="34" height="34" rx="4"/>
+    <circle cx="49" cy="120" r="2" fill="currentColor"/><circle cx="61" cy="120" r="2" fill="currentColor"/>
+    <line x1="55" y1="106" x2="55" y2="96"/><circle cx="55" cy="93" r="3"/>
+    <line x1="45" y1="168" x2="45" y2="188"/><line x1="65" y1="168" x2="65" y2="188"/>
+    <path d="M150 60 L150 250" stroke-dasharray="2 9" stroke-width="3"/>
+    <path d="M270 60 L270 250" stroke-dasharray="2 9" stroke-width="3"/>
+    <path d="M95 150 C 180 140, 330 160, 440 150" marker-end="url(#gap-arr)"/>
+    <path d="M95 135 C 120 100, 140 95, 150 98" marker-end="url(#gap-arr)" stroke="#e5484d"/>
+    <path d="M95 165 C 180 200, 250 215, 268 210" marker-end="url(#gap-arr)" stroke="#e5484d"/>
+    <rect x="455" y="110" width="80" height="80" rx="6"/>
+    <path d="M560 150 C 585 150, 590 150, 600 150"/>
+    <circle cx="630" cy="105" r="13"/>
+    <line x1="630" y1="118" x2="630" y2="165"/><line x1="630" y1="130" x2="612" y2="148"/><line x1="630" y1="130" x2="648" y2="112"/>
+    <line x1="630" y1="165" x2="618" y2="192"/><line x1="630" y1="165" x2="642" y2="192"/>
+    <path d="M548 38 C 548 12, 678 12, 678 38 C 678 66, 610 66, 600 66 L 615 84 L 585 66 C 565 66, 548 62, 548 38 Z"/>
+  </g>
+  <g fill="currentColor" font-size="20">
+    <text x="55" y="215" text-anchor="middle">the agent</text>
+    <text x="150" y="48" text-anchor="middle">lint</text>
+    <text x="270" y="48" text-anchor="middle">tests</text>
+    <text x="155" y="95" fill="#e5484d" font-size="17">unused import</text>
+    <text x="210" y="238" fill="#e5484d" font-size="17">returns 500</text>
+    <text x="495" y="145" text-anchor="middle">main</text>
+    <text x="495" y="168" text-anchor="middle" font-size="16">(green ✓)</text>
+    <text x="613" y="36" text-anchor="middle" font-size="16">...that's not how</text>
+    <text x="613" y="52" text-anchor="middle" font-size="16">we do it here</text>
+    <text x="630" y="215" text-anchor="middle">senior devs, in review</text>
+  </g>
+  <g fill="#c2410c" font-size="17">
+    <text x="300" y="125">except: return None</text>
+    <text x="300" y="185">the same tool, registered twice</text>
+    <text x="300" y="275">if new_case: ... else: ...</text>
+    <text x="300" y="300">ALL CAPS BUTTONS</text>
+    <text x="300" y="322">three primary buttons</text>
+  </g>
+  <path d="M290 262 C 320 245, 360 210, 400 175" fill="none" stroke="#c2410c" stroke-width="1.5" stroke-dasharray="4 4" filter="url(#gap-rough)"/>
+</svg>
+<figcaption>Lint and tests catch what they were built to catch. Everything else walks straight past them into main.</figcaption>
+</figure>
+
+
+<h2>We tried writing it down. The agents skimmed it.</h2>
+<p>The obvious move is to write your conventions down. So we did. In <code>AGENTS.md</code>. In <code>CLAUDE.md</code>. In a best-practices doc. In skills. In review notes. Probably in a Notion page somewhere too.</p>
+<p>Here&#39;s what happens with that: the agent reads some of it, the context window eats the rest, and six months later you have four documents that disagree with each other about whether errors should bubble up. Prose drifts. Nobody tests prose. And a &quot;do / don&#39;t&quot; sentence buried in paragraph nine of a README is basically a suggestion.</p>
+<h2>&quot;Just ask an LLM to review the PR&quot; is a vibes machine</h2>
+<p><em>Ask it twice, get two reviews.</em></p>
+<p>The next obvious move is to throw the diff at a chat model and say &quot;review this against our standards&quot;. We tried this too. You get back a nicely formatted essay. It flags a variable name. It praises your error handling. It suggests adding a docstring to a one-line function. Run it again and it flags a <em>different</em> variable name.</p>
+<p>You cannot put a threshold on an essay. You cannot tell whether your instructions got better or worse. You cannot tell whether it actually looked at the thing you cared about, or just felt like commenting on something.</p>
+<p>What I actually wanted was much dumber: one question per rule, one number per question.</p>
+<h2>Enter Perplexity decider / Jev: it only answers yes or no</h2>
+<p>This is where a decision model earns its keep. You send it two things: a <code>state</code> (everything it needs to look at) and a set of named <code>questions</code>. It sends back one number per question. Let&#39;s walk through one review end to end: the rules, what gets sent to the Perplexity decider, and what comes back. (Imaginary online shop, made-up diff, illustrative numbers. The rule wording is our real wording.)</p>
+<h3>Step 1: the rules</h3>
+<p>It all starts with a <code>rules.yaml</code>. Each rule is one claim the model can answer yes or no to, plus what to do about it:</p>
+<pre><code class="language-yaml"># shop/docs/review/rules.yaml  (simplified: in reality these are split across folders, see below)
+
+- id: code.errors-bubble-up
+  applies: [&quot;**/*.py&quot;, &quot;**/*.ts&quot;]
+  mistake: The change catches an exception and then returns None, an empty list,
+    a default value or a fallback instead of letting the error raise
+  fix: Let the error raise; handle it only where the caller can act on it
+  reference: payments/retry.py
+  cases:
+    violating:
+      - file: orders/lookup.py
+        diff: |
+          +    except Exception:
+          +        return None
+    compliant:
+      - file: orders/lookup.py
+        diff: |
+          +    raise OrderNotFound(order_id)
+
+- id: code.identity-from-token
+  applies: [&quot;**/graphql/**&quot;]
+  mistake: A GraphQL field, mutation argument or input type accepts an account ID,
+    user ID or role from the caller
+  fix: Read the account and user from the auth token in the resolver
+  reference: graphql/resolvers/me.py
+  cases: ...
+
+- id: code.no-product-branches-in-shared-code
+  applies: [&quot;**/shared/**&quot;, &quot;orders/**&quot;]
+  mistake: The change adds an if-check or filter on a specific product, task type,
+    provider, surface or flavour inside shared or generic code
+  fix: Move the specific behaviour into that product&#39;s or provider&#39;s own module or class
+  reference: shipping/carriers/README.md
+  cases: ...
+
+- id: code.one-code-path
+  applies: [&quot;**/*.py&quot;, &quot;**/*.ts&quot;]
+  statement: The change keeps one code path, with no fallback, legacy,
+    compatibility or workflow.patched branches for old data or old callers
+  fix: Remove the old path and migrate its data or drain its runs
+  reference: docs/migrations.md
+  cases: ...
+</code></pre>
+<p>A rule is either a <code>mistake</code> (true when the change breaks it) or a <code>statement</code> (true when the change follows it). Never both. <code>fix</code> and <code>reference</code> are for the agent. <code>cases</code> are for testing the rule itself, which we&#39;ll get to.</p>
+<h3>Step 2: what gets sent to the Perplexity decider</h3>
+<p>The CLI finds the changed files, works out which rules apply to them, and turns each rule into a question. The question is the rule&#39;s own words, prefixed with where it applies:</p>
+<pre><code class="language-text">POST https://api.perplexity.ai/v1/decisions
+{
+  &quot;model&quot;: &quot;pplx-decider-v1.1-27b&quot;,
+  &quot;state&quot;: {
+    &quot;context&quot;:  &quot;Changes in a pull request to the codebase, with the author&#39;s
+                 summary. Each question is about these changes only. references
+                 holds existing files that show the codebase&#39;s established pattern
+                 for a rule; use them to judge whether the change reuses or
+                 duplicates what already exists.&quot;,
+    &quot;summary&quot;:  &quot;Add a &#39;create order&#39; mutation for the new checkout flow&quot;,
+    &quot;files&quot;: [
+      { &quot;repo&quot;: &quot;shop&quot;, &quot;file&quot;: &quot;orders/lookup.py&quot;,
+        &quot;diff&quot;: &quot;+    try:\n+        return repo.get(order_id)\n+    except Exception:\n+        return None&quot; },
+      { &quot;repo&quot;: &quot;shop&quot;, &quot;file&quot;: &quot;graphql/inputs/create_order.py&quot;,
+        &quot;diff&quot;: &quot;+    account_id: str\n+    items: list[OrderItem]&quot; },
+      { &quot;repo&quot;: &quot;shop&quot;, &quot;file&quot;: &quot;orders/update.py&quot;,
+        &quot;diff&quot;: &quot;+    if order.channel == Channel.WHOLESALE:\n+        notify_wholesale_team(order)&quot; }
+    ],
+    &quot;references&quot;: [
+      { &quot;repo&quot;: &quot;shop&quot;, &quot;file&quot;: &quot;payments/retry.py&quot;, &quot;content&quot;: &quot;...&quot; },
+      { &quot;repo&quot;: &quot;shop&quot;, &quot;file&quot;: &quot;graphql/resolvers/me.py&quot;, &quot;content&quot;: &quot;...&quot; },
+      { &quot;repo&quot;: &quot;shop&quot;, &quot;file&quot;: &quot;shipping/carriers/README.md&quot;, &quot;content&quot;: &quot;...&quot; }
+    ]
+  },
+  &quot;questions&quot;: {
+    &quot;q0&quot;: { &quot;type&quot;: &quot;noul&quot;, &quot;instructions&quot;: &quot;In the shop repository, for files matching
+            **/*.py, **/*.ts: The change catches an exception and then returns None, an
+            empty list, a default value or a fallback instead of letting the error raise&quot; },
+    &quot;q1&quot;: { &quot;type&quot;: &quot;noul&quot;, &quot;instructions&quot;: &quot;In the shop repository, for files matching
+            **/graphql/**: A GraphQL field, mutation argument or input type accepts an
+            account ID, user ID or role from the caller&quot; },
+    &quot;q2&quot;: { &quot;type&quot;: &quot;noul&quot;, &quot;instructions&quot;: &quot;In the shop repository, for files matching
+            **/shared/**, orders/**: The change adds an if-check or filter on a specific
+            product, task type, provider, surface or flavour inside shared or generic code&quot; },
+    &quot;q3&quot;: { &quot;type&quot;: &quot;noul&quot;, &quot;instructions&quot;: &quot;In the shop repository, for files matching
+            **/*.py, **/*.ts: The change keeps one code path, with no fallback, legacy,
+            compatibility or workflow.patched branches for old data or old callers&quot; }
+  }
+}
+</code></pre>
+<p>That&#39;s the whole prompt. No &quot;you are a senior engineer&quot;, no rubric, no &quot;think step by step&quot;. Just the change, the files that show the right pattern, and four claims.</p>
+<h3>Step 3: what comes back</h3>
+<pre><code class="language-text">{
+  &quot;answers&quot;: {
+    &quot;q0&quot;: { &quot;noul&quot;: 0.96 },
+    &quot;q1&quot;: { &quot;noul&quot;: 0.93 },
+    &quot;q2&quot;: { &quot;noul&quot;: 0.88 },
+    &quot;q3&quot;: { &quot;noul&quot;: 0.94 }
+  },
+  &quot;usage&quot;: { &quot;input_tokens&quot;: 9412 }
+}
+</code></pre>
+<p>Each number is the probability that the claim is true. For the three <code>mistake</code> rules, a high number is bad news. For the one <code>statement</code> rule, a high number is good news. So before showing anything to anyone, the CLI flips the mistakes (<code>1 - p</code>), so that every result reads the same way: the chance the change <em>follows</em> the rule.</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Kind</th>
+<th>Raw answer</th>
+<th>Compliance</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>errors-bubble-up</td>
+<td>mistake</td>
+<td>0.96</td>
+<td>4%</td>
+<td>hint</td>
+</tr>
+<tr>
+<td>identity-from-token</td>
+<td>mistake</td>
+<td>0.93</td>
+<td>7%</td>
+<td>hint</td>
+</tr>
+<tr>
+<td>no-product-branches-in-shared-code</td>
+<td>mistake</td>
+<td>0.88</td>
+<td>12%</td>
+<td>hint</td>
+</tr>
+<tr>
+<td>one-code-path</td>
+<td>statement</td>
+<td>0.94</td>
+<td>94%</td>
+<td>quiet</td>
+</tr>
+</tbody></table>
+<p>Anything under 80% becomes a hint, sorted worst first, with the rule&#39;s <code>fix</code> and <code>reference</code> attached. Everything else stays quiet. And here&#39;s what the agent actually gets back in its terminal:</p>
+<pre><code class="language-text">filed review: 3 hints (1 calls, 9412 input tokens)
+  4%  code.errors-bubble-up  shop/orders/lookup.py
+      fix: Let the error raise; handle it only where the caller can act on it
+      see: shop/payments/retry.py
+  7%  code.identity-from-token  shop/graphql/inputs/create_order.py
+      fix: Read the account and user from the auth token in the resolver
+      see: shop/graphql/resolvers/me.py
+ 12%  code.no-product-branches-in-shared-code  shop/orders/update.py
+      fix: Move the specific behaviour into that product&#39;s or provider&#39;s own module or class
+      see: shop/shipping/carriers/README.md
+compliance 1/4 rules at 80% or above
+</code></pre>
+<p>Because it&#39;s a number and not a paragraph, a bunch of things suddenly become possible:</p>
+<ul>
+<li>You can <strong>threshold</strong> it. Under 80% is a hint, everything else stays quiet.</li>
+<li>You can <strong>compare</strong> it. Same rule, same diff, different wording: which one separates good from bad better?</li>
+<li>You can <strong>test</strong> it. More on that in a minute, because it&#39;s the part that made the whole thing work.</li>
+</ul>
+<h2>Rules live next to the code they judge</h2>
+<p>In step 1 I showed all four rules in one file to keep things simple. In reality, rules are not one giant flat file. They&#39;re <strong>nested</strong>, and they live next to the code they judge.</p>
+<p>Any folder that cares can have its own <code>docs/review/rules.yaml</code>. A rule applies to its folder and everything below it. So the general stuff sits at the top, and the specific stuff sits right beside the code it&#39;s about:</p>
+<pre><code class="language-text">shop/
+├── docs/review/rules.yaml                 errors bubble up, one code path      (everything)
+├── graphql/
+│   ├── docs/review/rules.yaml             identity comes from the token        (only GraphQL)
+│   └── inputs/create_order.py
+├── orders/
+│   ├── docs/review/rules.yaml             no N+1 queries on the order list     (only orders)
+│   └── update.py
+└── shipping/
+    ├── docs/review/rules.yaml             one module per carrier               (only shipping)
+    └── carriers/
+        ├── docs/review/rules.yaml         every carrier implements prepare()   (only carriers)
+        └── fedex.py
+</code></pre>
+<p>When the agent is about to change <code>shop/graphql/inputs/create_order.py</code>, the CLI walks up from that file and collects every <code>rules.yaml</code> on the way: the one in <code>shop/graphql/</code> and the one in <code>shop/</code>. It never sees the shipping rules or the carrier rules, because it isn&#39;t touching that code. If it later wanders into <code>shipping/carriers/fedex.py</code>, it asks again and gets a different, equally short list.</p>
+<p>This matters for three reasons:</p>
+<ul>
+<li><strong>The agent only reads what&#39;s relevant.</strong> A flat file of 200 rules is 200 rules the agent has to read, mostly ignore, and still be distracted by. A nested set gives it the five that apply to the folder it&#39;s in.</li>
+<li><strong>Rules live with their owners.</strong> The people who own the shipping code own the shipping rules, in the shipping folder. When the code moves or gets deleted, the rules go with it instead of rotting in a doc somewhere.</li>
+<li><strong>It keeps review cheap.</strong> Every rule that applies is one more question per review, and (as we&#39;ll see in the cost section) one more question makes the whole request more expensive. Scoping a rule to its folder is the cheapest optimisation there is.</li>
+</ul>
+<p>Ours are spread across about 27 of these files in six repositories right now, from repo-wide ones at the top down to a single folder of database code.</p>
+<p>The trick is that the <em>same file</em> has two readers.</p>
+<figure class="dwg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="two-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="11"/><feDisplacementMap in="SourceGraphic" scale="3.5"/></filter>
+    <marker id="two-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
+  </defs>
+  <g filter="url(#two-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <path d="M290 20 L370 20 L390 40 L390 125 L290 125 Z" fill="#ffd8a8" fill-opacity="0.35"/>
+    <path d="M370 20 L370 40 L390 40"/>
+    <line x1="303" y1="58" x2="370" y2="58" stroke-width="1.2"/><line x1="303" y1="72" x2="375" y2="72" stroke-width="1.2"/><line x1="303" y1="86" x2="360" y2="86" stroke-width="1.2"/><line x1="303" y1="100" x2="372" y2="100" stroke-width="1.2"/>
+    <path d="M290 110 C 220 140, 160 170, 130 200" marker-end="url(#two-arr)"/>
+    <path d="M390 110 C 460 140, 520 170, 545 195" marker-end="url(#two-arr)"/>
+    <circle cx="110" cy="225" r="13"/>
+    <rect x="93" y="238" width="34" height="34" rx="4"/>
+    <circle cx="104" cy="225" r="2" fill="currentColor"/><circle cx="116" cy="225" r="2" fill="currentColor"/>
+    <line x1="110" y1="211" x2="110" y2="201"/>
+    <rect x="510" y="205" width="90" height="60" rx="12" fill="#d0bfff" fill-opacity="0.35"/>
+  </g>
+  <g fill="currentColor" font-size="20">
+    <text x="340" y="148" text-anchor="middle">rules.yaml</text>
+    <text x="340" y="168" text-anchor="middle" font-size="16">(next to the code it judges)</text>
+    <text x="160" y="150" text-anchor="end" font-size="17">before writing:</text>
+    <text x="160" y="168" text-anchor="end" font-size="17">"avoid X, do Y, see Z"</text>
+    <text x="110" y="295" text-anchor="middle" font-size="18">the coding agent</text>
+    <text x="520" y="150" font-size="17">near the end:</text>
+    <text x="520" y="168" font-size="17">"did X happen?"</text>
+    <text x="555" y="240" text-anchor="middle">Jev</text>
+    <text x="555" y="290" text-anchor="middle" font-size="18">→ 0.13  (look here)</text>
+  </g>
+</svg>
+<figcaption>One file, two readers. The agent reads the rule before it writes. The decider judges the change against the exact same words afterwards.</figcaption>
+</figure>
+
+
+<h3>First, build your agent a CLI</h3>
+<p>None of this works if it lives in a doc the agent is supposed to remember to read. The agent needs a <em>tool</em> it can call. So you build a CLI.</p>
+<p>Ours is called <code>filed</code> (or <code>filed.exe</code>, for the poor souls on Windows). It&#39;s the one front door for everything an agent needs to build and verify a change in our codebase: start the local stack, sign into the app, take screenshots, record what was verified, and, the part this post is about, a command called <code>review</code>:</p>
+<pre><code class="language-text">filed review rules --files &lt;paths...&gt;    which rules apply to the files I&#39;m about to change?
+filed review run --summary &lt;pr.md&gt;       judge my changes against those rules
+filed review test [--rule &lt;id&gt;]          is each rule actually worded well enough to work?
+filed review dismiss &lt;rule&gt; &quot;&lt;reason&gt;&quot;   this hint is a false alarm, and here&#39;s why
+</code></pre>
+<p>This CLI is your <strong>harness</strong>. The agent doesn&#39;t need to know where the rules files live, how to pack a diff into a request, which model to call, or what to do when the provider is down. It runs one command and reads the output. And because it&#39;s a CLI, it works the same for Claude Code, Codex, a background agent, or a human at 2am.</p>
+<h3>What the agent actually sees: before code, code, after code</h3>
+<p>The whole thing is one loop the agent runs on its own, in three phases. The agent&#39;s instructions (<code>AGENTS.md</code>, in our case) say two things: always ask the CLI for the rules before you touch a file, and always run review before you call it done.</p>
+<p>The important bit is where the model actually gets called:</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>What the agent runs</th>
+<th>Perplexity decider / Jev calls</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Before code</td>
+<td><code>filed review rules --files ...</code></td>
+<td><strong>None.</strong> It just reads YAML.</td>
+</tr>
+<tr>
+<td>Code</td>
+<td>lint and tests</td>
+<td><strong>None.</strong></td>
+</tr>
+<tr>
+<td>After code (review)</td>
+<td><code>filed review run --summary ...</code></td>
+<td><strong>One call.</strong> All the rules, one request.</td>
+</tr>
+</tbody></table>
+<p>So the agent gets the rules for free, as often as it wants, and only pays for the model once, at the end.</p>
+<figure class="dwg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 340" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="loop-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="13"/><feDisplacementMap in="SourceGraphic" scale="3.5"/></filter>
+    <marker id="loop-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
+    <marker id="loop-arr-r" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="#e5484d" stroke-width="1.5"/></marker>
+  </defs>
+  <g filter="url(#loop-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <rect x="20" y="55" width="150" height="60" rx="10" fill="#a5d8ff" fill-opacity="0.3"/>
+    <path d="M172 85 C 195 85, 205 85, 228 85" marker-end="url(#loop-arr)"/>
+    <rect x="235" y="55" width="150" height="60" rx="10"/>
+    <path d="M270 55 C 255 20, 365 20, 350 55" marker-end="url(#loop-arr)"/>
+    <path d="M387 85 C 410 85, 420 85, 443 85" marker-end="url(#loop-arr)"/>
+    <rect x="450" y="55" width="160" height="60" rx="10" fill="#d0bfff" fill-opacity="0.35"/>
+    <path d="M530 117 C 530 140, 530 150, 530 168" marker-end="url(#loop-arr)"/>
+    <path d="M470 175 C 470 160, 590 160, 590 175 L 590 205 C 590 222, 470 222, 470 205 Z" fill="#ffd8a8" fill-opacity="0.35"/>
+    <path d="M465 200 C 380 240, 320 210, 310 122" marker-end="url(#loop-arr-r)" stroke="#e5484d"/>
+    <path d="M595 200 C 625 230, 630 250, 630 268" marker-end="url(#loop-arr)"/>
+    <rect x="585" y="275" width="85" height="45" rx="8" fill="#b2f2bb" fill-opacity="0.3"/>
+  </g>
+  <g fill="currentColor" font-size="18" text-anchor="middle">
+    <text x="95" y="28" font-size="17">1. before code</text>
+    <text x="95" y="46" font-size="15" fill="#30a46c">no model call</text>
+    <text x="95" y="82" font-size="16">filed review rules</text>
+    <text x="95" y="100" font-size="16">--files ...</text>
+    <text x="310" y="82">write the code</text>
+    <text x="310" y="100" font-size="15">(following the rules)</text>
+    <text x="310" y="18" font-size="15">2. code: lint + tests, every edit</text>
+    <text x="530" y="28" font-size="17">3. after code (review)</text>
+    <text x="530" y="46" font-size="15" fill="#8b5cf6">one decider call</text>
+    <text x="530" y="82" font-size="16">filed review run</text>
+    <text x="530" y="100" font-size="16">--summary pr.md</text>
+    <text x="530" y="196" font-size="17">hints</text>
+    <text x="360" y="265" font-size="17" fill="#e5484d">real problem? fix it, run again</text>
+    <text x="360" y="285" font-size="15" fill="#e5484d">(at most three rounds)</text>
+    <text x="627" y="303">PR</text>
+    <text x="470" y="300" font-size="15" text-anchor="end">false alarm? dismiss with a reason →</text>
+  </g>
+  <g fill="currentColor" font-size="15">
+    <text x="20" y="150">sees: "avoid X, do Y,</text>
+    <text x="20" y="168">see Z" for only the</text>
+    <text x="20" y="186">files it's about to touch</text>
+  </g>
+</svg>
+<figcaption>Before code: ask for the rules. Code: lint and tests on every edit. After code: review, then fix or dismiss each hint.</figcaption>
+</figure>
+
+
+<p><strong>1. Before code: the agent asks for the rules.</strong> This is the proactive half. Before editing anything, the agent runs the CLI with the files it&#39;s planning to change, and gets back something like this:</p>
+<pre><code class="language-text">$ filed review rules --files shop/orders/update.py shop/graphql/inputs/create_order.py
+
+code.errors-bubble-up  (docs/review/rules.yaml)
+  avoid: The change catches an exception and then returns None, an empty list,
+         a default value or a fallback instead of letting the error raise
+  do: Let the error raise; handle it only where the caller can act on it
+  see: payments/retry.py
+code.no-product-branches-in-shared-code  (docs/review/rules.yaml)
+  avoid: The change adds an if-check or filter on a specific product, task type,
+         provider, surface or flavour inside shared or generic code
+  do: Move the specific behaviour into that product&#39;s or provider&#39;s own module or class
+  see: shipping/carriers/README.md
+code.identity-from-token  (shop/graphql/docs/review/rules.yaml)
+  avoid: A GraphQL field, mutation argument or input type accepts an account ID,
+         user ID or role from the caller
+  do: Read the account and user from the auth token in the resolver
+  see: graphql/resolvers/me.py
+</code></pre>
+<p>Three rules, not three hundred. Only the ones whose <code>applies</code> match those two files, from every <code>rules.yaml</code> on their path. Each one says what to avoid, what to do instead, and which existing file shows the right way. That last bit matters more than it looks: &quot;see <code>payments/retry.py</code>&quot; gives the agent a real example in your codebase to copy, which beats any amount of prose about error handling.</p>
+<p><strong>There is no Perplexity decider / Jev call here.</strong> It&#39;s just the CLI reading YAML files off disk, so it costs nothing and takes milliseconds, so the agent runs it every time it moves to a new set of files. If it&#39;s halfway through a task and realises it also needs to touch the GraphQL layer, it asks again for those files.</p>
+<p><strong>2. Code: lint and tests, every edit.</strong> Nothing new here. This is the inner loop, it&#39;s fast, and it stays exactly as it was.</p>
+<p><strong>3. After code: the agent asks for a review.</strong> This is the reactive half. When the agent thinks it&#39;s done, it writes a short summary of the change and runs <code>filed review run</code>. <strong>This is the one place the model gets called: one Perplexity decider / Jev call</strong> with the whole change and every rule that applies to it, all asked at once. (Only a really big change gets split into a couple of calls to fit the request limits.) What comes back is a short list of hints, worst first:</p>
+<pre><code class="language-text">$ filed review run --summary pr.md
+
+filed review: 2 hints (1 calls, 48210 input tokens)
+  9%  code.identity-from-token  shop/graphql/inputs/create_order.py
+      fix: Read the account and user from the auth token in the resolver
+      see: shop/graphql/resolvers/me.py
+ 31%  code.no-product-branches-in-shared-code  shop/orders/update.py
+      fix: Move the specific behaviour into that product&#39;s or provider&#39;s own module or class
+      see: shop/shipping/carriers/README.md
+compliance 3/5 rules at 80% or above
+</code></pre>
+<p>Every hint has three parts, and each one is there so the agent can fix the problem without a human:</p>
+<ul>
+<li><strong>Which rule and which file.</strong> Not &quot;the PR has issues&quot;, but &quot;this rule, in this file&quot;.</li>
+<li><strong>The fix.</strong> The same &quot;do&quot; line it was shown before writing, so it&#39;s not learning anything new, just being reminded.</li>
+<li><strong>The reference.</strong> The file that shows the right pattern. The agent opens it, sees how the rest of the codebase does it, and copies that.</li>
+</ul>
+<p>Then the agent does one of two things with each hint. If it&#39;s a real problem, it fixes it and runs review again. If it&#39;s a false alarm, it records why with <code>filed review dismiss &lt;rule&gt; &quot;&lt;reason&gt;&quot;</code>, and that reason ends up in the PR for a human to sanity-check. After three rounds on the same change, it stops and hands over to a human, because at that point you&#39;re paying one model to argue with another.</p>
+<p>The nice thing about this split is that the same words show up at both ends. The agent was told &quot;avoid X, do Y, see Z&quot; before it wrote a line. If review flags X anyway, the hint says the exact same thing back. There&#39;s no new opinion to interpret, just a reminder of a rule it already agreed to.</p>
+<p>We also keep it on a diet. A file sees at most 15 of the repo-wide rules, and there&#39;s a test that fails if someone adds a rule that applies to <code>**/*</code> because they couldn&#39;t be bothered to scope it.</p>
+<h2>Your rules are wrong. Test them like code.</h2>
+<p><em>This is the part I didn&#39;t see coming.</em></p>
+<p>My first rules were terrible. Not wrong exactly, just useless. They read beautifully and the model couldn&#39;t tell a good change from a bad one with them.</p>
+<p>The best example: we had a PR that registered a tool twice (the one from the list above). My first rule said &quot;the change reuses existing helpers&quot;. It scored <strong>0.97 on the broken PR and 0.97 on the fix</strong>. Of course it did. Everything &quot;reuses existing helpers&quot; if you squint. The rule was describing a virtue, and the model was happy to agree that yes, this code is very virtuous.</p>
+<p>The version that worked named the actual mechanism: &quot;no tool is added to a toolset when the agent already gets it from another toolset&quot;. <strong>0.17 on the broken PR, 0.82 on the fix.</strong></p>
+<figure class="dwg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="mar-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="5"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+  </defs>
+  <g filter="url(#mar-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <line x1="60" y1="95" x2="620" y2="95"/>
+    <line x1="60" y1="87" x2="60" y2="103"/><line x1="620" y1="87" x2="620" y2="103"/>
+    <line x1="60" y1="225" x2="620" y2="225"/>
+    <line x1="60" y1="217" x2="60" y2="233"/><line x1="620" y1="217" x2="620" y2="233"/>
+    <g stroke="#e5484d" stroke-width="2.5">
+      <path d="M597 87 l12 12 M609 87 l-12 12"/>
+      <path d="M149 217 l12 12 M161 217 l-12 12"/>
+    </g>
+    <g stroke="#30a46c" stroke-width="2.5">
+      <circle cx="603" cy="70" r="7"/>
+      <circle cx="519" cy="225" r="7"/>
+    </g>
+    <path d="M603 103 C 603 125, 603 125, 603 125"/>
+    <path d="M155 250 C 155 268, 519 268, 519 250"/>
+  </g>
+  <g fill="currentColor" font-size="18">
+    <text x="60" y="125" text-anchor="middle">0</text><text x="620" y="125" text-anchor="middle">1</text>
+    <text x="60" y="255" text-anchor="middle">0</text><text x="620" y="255" text-anchor="middle">1</text>
+    <text x="40" y="30" font-size="21">"the change reuses existing helpers"</text>
+    <text x="40" y="52" font-size="17">0.97 before the fix, 0.97 after. margin ≈ 0 ✗</text>
+    <text x="470" y="143" font-size="16" text-anchor="end">both land here. useless →</text>
+    <text x="40" y="165" font-size="21">"no tool is added to a toolset when the agent</text>
+    <text x="40" y="187" font-size="21"> already gets it from another toolset"</text>
+    <text x="337" y="290" text-anchor="middle" font-size="18">0.17 before, 0.82 after. now it can tell them apart ✓</text>
+  </g>
+  <g font-size="16">
+    <text x="660" y="28" fill="#e5484d" text-anchor="end">✗ the broken PR</text>
+    <text x="660" y="46" fill="#30a46c" text-anchor="end">○ the fix</text>
+  </g>
+</svg>
+<figcaption>Same PR, same fix, two wordings. Only one of them is a rule. The other is a compliment.</figcaption>
+</figure>
+
+
+<p>So now every judged rule has to carry labelled cases: at least one diff (or screenshot) that breaks it and one that follows it. Here&#39;s what the cases look like for our &quot;no product branches in shared code&quot; rule (simplified, with made-up code from an imaginary online shop). The mistake is &quot;the change adds an if-check or filter on a specific product, task type, provider, surface or flavour inside shared or generic code&quot;:</p>
+<pre><code class="language-diff"># violating: orders/update.py
+ def update_order(order, status):
+     order.status = status
++    if order.channel == Channel.WHOLESALE:
++        notify_wholesale_team(order)
+     save(order)
+
+# violating: shared/shipping/dispatch.py
+ async def dispatch(carrier, parcels):
++    if carrier.name == &quot;fedex&quot;:
++        parcels = repack_for_fedex(parcels)
+     return await carrier.ship(parcels)
+
+# compliant: the same behaviour, moved into the carrier that owns it
+ class FedexCarrier(Carrier):
++    def prepare(self, parcels):
++        return sorted(parcels, key=lambda p: p.weight)
+
+ async def dispatch(carrier, parcels):
+-    return await carrier.ship(parcels)
++    return await carrier.ship(carrier.prepare(parcels))
+
+# compliant: a change to shared code that has nothing to do with any product
+ def update_order(order, status, notes):
+     order.status = status
++    order.notes = [*order.notes, *notes]
+     save(order)
+</code></pre>
+<p>Notice the compliant cases aren&#39;t just &quot;code that doesn&#39;t have the mistake&quot;. One of them is the <em>fix</em> for the violating case, and one is an innocent change to the very same shared file. That&#39;s what forces the rule to be about the if-check and not about &quot;someone touched shared code&quot;. That rule currently separates its cases by 0.96. <code>filed review test</code> scores each case on its own and computes a margin: the lowest compliant score minus the highest violating score. Under 0.5 and the rule fails. You reword it, keeping the meaning, until it passes. When it passes, the result gets written back into the YAML with a hash of the wording and the cases, so if someone edits a rule later without retesting it, the validator notices.</p>
+<p>Here&#39;s how far rewording moved some of ours:</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>First wording</th>
+<th>After tuning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>no product branches in shared code</td>
+<td>0.24</td>
+<td>0.92</td>
+</tr>
+<tr>
+<td>identity comes from the token, not the input</td>
+<td>0.45</td>
+<td>1.00</td>
+</tr>
+<tr>
+<td>instructions live in one place</td>
+<td>0.24</td>
+<td>0.82</td>
+</tr>
+<tr>
+<td>copy a tax professional would write</td>
+<td>0.16</td>
+<td>0.89</td>
+</tr>
+</tbody></table>
+<p>Two things fell out of this that I now believe pretty strongly:</p>
+<ol>
+<li><strong>Write the mistake, not the virtue.</strong> The model is much better at noticing that something is <em>there</em> than noticing that something is <em>missing</em>. &quot;The change catches an exception and returns None&quot; beats &quot;errors are handled properly&quot; every time. Almost every rule that tuned well ended up phrased as a mistake.</li>
+<li><strong>Your cases will overfit.</strong> You tune the wording until your three examples separate nicely, and then a real PR shows up that looks nothing like them. Every false alarm and every miss becomes a new case. The cases are the actual asset here. The wording is just the current best guess.</li>
+</ol>
+<h2>The UI side: it looks at screenshots</h2>
+<p><em>This is why we run the Perplexity decider and not plain Jev.</em></p>
+<p>Code is half the story. The other half is the agent building a page that technically works and looks like a ransom note. Three primary buttons fighting for attention. Every heading in ALL CAPS. A cute little icon next to every label, doing absolutely nothing. Copy that sounds like a developer wrote it, because a developer (well, an agent) did.</p>
+<p>You can&#39;t lint that. You can&#39;t really unit test it either. You can write a Playwright test that checks there&#39;s a button with the text &quot;Save&quot;, but not one that checks the page <em>feels</em> like the rest of your app. That was always a human squinting at a screenshot in review. And that human was, again, one of those same few senior devs.</p>
+<p>The Perplexity decider reads images, so design rules work exactly like code rules, except the state is screenshots instead of diffs:</p>
+<figure class="dwg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="des-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="9"/><feDisplacementMap in="SourceGraphic" scale="3.5"/></filter>
+    <marker id="des-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
+  </defs>
+  <g filter="url(#des-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <rect x="20" y="40" width="170" height="110" rx="6"/>
+    <line x1="20" y1="58" x2="190" y2="58"/>
+    <line x1="35" y1="75" x2="95" y2="75" stroke-width="3"/>
+    <rect x="105" y="68" width="18" height="10" fill="#e5484d" fill-opacity="0.6" stroke="#e5484d"/>
+    <rect x="127" y="68" width="18" height="10" fill="#e5484d" fill-opacity="0.6" stroke="#e5484d"/>
+    <rect x="149" y="68" width="18" height="10" fill="#e5484d" fill-opacity="0.6" stroke="#e5484d"/>
+    <line x1="35" y1="95" x2="175" y2="95" stroke-width="1.2"/><line x1="35" y1="110" x2="175" y2="110" stroke-width="1.2"/><line x1="35" y1="125" x2="175" y2="125" stroke-width="1.2"/>
+    <rect x="215" y="40" width="60" height="110" rx="10"/>
+    <line x1="225" y1="62" x2="255" y2="62" stroke-width="3"/>
+    <line x1="225" y1="80" x2="265" y2="80" stroke-width="1.2"/><line x1="225" y1="95" x2="265" y2="95" stroke-width="1.2"/><line x1="225" y1="110" x2="265" y2="110" stroke-width="1.2"/>
+    <path d="M285 95 C 305 95, 315 95, 332 95" marker-end="url(#des-arr)"/>
+    <rect x="340" y="60" width="115" height="70" rx="12" fill="#d0bfff" fill-opacity="0.35"/>
+    <path d="M462 95 C 475 95, 485 95, 495 95" marker-end="url(#des-arr)"/>
+    <path d="M60 190 C 60 175, 230 175, 230 190 L 230 230 C 230 245, 60 245, 60 230 Z" fill="#ffd8a8" fill-opacity="0.25"/>
+    <path d="M230 210 C 300 210, 360 170, 390 140" marker-end="url(#des-arr)" stroke-dasharray="5 5"/>
+  </g>
+  <g fill="currentColor" font-size="18">
+    <text x="105" y="30" text-anchor="middle">desktop 1440×900</text>
+    <text x="245" y="30" text-anchor="middle">phone</text>
+    <text x="397" y="92" text-anchor="middle" font-size="19">Perplexity</text>
+    <text x="397" y="112" text-anchor="middle" font-size="19">decider</text>
+    <text x="145" y="208" text-anchor="middle" font-size="17">design rules for the</text>
+    <text x="145" y="226" text-anchor="middle" font-size="17">files that changed</text>
+    <text x="505" y="70" font-size="17" fill="#e5484d">0.08 one primary action</text>
+    <text x="505" y="92" font-size="17">0.96 sentence case</text>
+    <text x="505" y="114" font-size="17">0.93 no decorative icons</text>
+    <text x="505" y="136" font-size="17">0.97 row actions on hover</text>
+    <text x="505" y="165" font-size="15" fill="#e5484d">← too many filled buttons. hint.</text>
+    <text x="340" y="285" text-anchor="middle" font-size="17">(numbers are compliance: 1 = follows the rule)</text>
+  </g>
+</svg>
+<figcaption>UI conformance: the changed page, captured at desktop and phone width, goes to the decider with one question per design rule. (Numbers here are illustrative.)</figcaption>
+</figure>
+
+
+<p>Review opens each changed page in a signed-in browser, captures it at desktop (1440x900) and phone (390x844) width, and sends both screenshots along with the design rules that apply to the files that changed:</p>
+<pre><code class="language-text">POST
+  state:      [ the PR summary + the page + the design guidance,
+                desktop.png,
+                phone.png ]
+  questions:  q0: &quot;Several filled, dark primary buttons appear side by side
+                   in the same area of the page&quot;
+              q1: &quot;List or table rows show their own visible Edit, Duplicate
+                   or Delete buttons&quot;
+              q2: &quot;Rows or cards carry extra colourful decorative symbols such as
+                   stars, dots or shapes that add no meaning&quot;
+-&gt;
+  answers:    q0: 0.92   &lt;- that&#39;s a hint
+              q1: 0.03
+              q2: 0.11
+</code></pre>
+<p>And a design rule lives in the same <code>rules.yaml</code>, with screenshots as its cases instead of diffs. This is the real one from our frontend repo:</p>
+<pre><code class="language-yaml">- id: design.one-primary-action
+  applies:
+    - apps/web/src/**/*.tsx
+    - packages/ui/src/**/*.tsx
+  mistake: Several filled, dark primary buttons appear side by side in the same area of the page
+  fix: Keep one primary action per area; make the others secondary or move them into a menu
+  reference: docs/design/README.md
+  cases:
+    violating:
+      - images: [cases/primary-buttons-routines.png]
+      - images: [cases/primary-buttons-clients.png]
+    compliant:
+      - images: [cases/clean-routines.png]
+      - images: [cases/clean-clients.png]
+      - images: [cases/clean-templates.png]
+  tested:
+    margin: 0.99
+</code></pre>
+<p>Where do the cases come from? Real local pages. We take a clean page, screenshot it, then break exactly one rule by injecting a bit of DOM or CSS and screenshot it again. Here&#39;s the actual pair behind that rule (cropped to the top of the page):</p>
+<figure class="dwg">
+<img src="data:image/webp;base64,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" alt="Compliant: one primary action, 'New routine task', top right." style="max-width:100%">
+<figcaption>Compliant: one primary action, 'New routine task', top right.</figcaption>
+</figure>
+
+
+<figure class="dwg">
+<img src="data:image/webp;base64,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" alt="Violating: same page, four extra filled buttons injected next to the title. Across all its cases, this rule separates with a margin of 0.99." style="max-width:100%">
+<figcaption>Violating: same page, four extra filled buttons injected next to the title. Across all its cases, this rule separates with a margin of 0.99.</figcaption>
+</figure>
+
+
+<p>The two screenshots differ in exactly one way, which is precisely what you want the model to notice. We have the same kind of pairs for ALL CAPS headings, Edit/Delete buttons sitting on every table row, decorative icons, a crowded bar of pills under the title, and boxed text buttons in headers. (Tip: look at every one of those broken screenshots with your own eyes. If the injection missed, you&#39;ve just labelled a clean page as broken and the rule will never pass.)</p>
+<p>The design rules tuned just as dramatically as the code ones:</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>First wording</th>
+<th>After tuning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>one primary action per page</td>
+<td>0.63</td>
+<td>0.99</td>
+</tr>
+<tr>
+<td>secondary actions show on hover</td>
+<td>0.57</td>
+<td>0.91</td>
+</tr>
+<tr>
+<td>header actions are icons, not text buttons</td>
+<td>0.64</td>
+<td>0.98</td>
+</tr>
+<tr>
+<td>no decorative icons</td>
+<td>0.13</td>
+<td>0.94</td>
+</tr>
+</tbody></table>
+<p>Same lesson as before: &quot;the page has a clear visual hierarchy&quot; is a compliment. &quot;Several filled, dark primary buttons appear side by side in the same area of the page&quot; is a rule.</p>
+<p>Anything you can <em>measure</em> (sizes, spacing, contrast) still goes to a plain old design-check script. The decider only gets the questions a script can&#39;t answer, the ones that used to need a pair of human eyes.</p>
+<h2>A hint is a pointer, not a verdict</h2>
+<pre><code class="language-text">filed review: 1 hints (1 calls, 125613 input tokens)
+ 13%  code.no-product-branches-in-shared-code  shop/agents/shared/assistant.py, ...
+      fix: Move the specific behaviour into that product&#39;s or provider&#39;s own module or class
+      see: shop/shipping/carriers/README.md
+compliance 4/5 rules at 80% or above
+</code></pre>
+<p>That one is based on a real hint (names changed to protect the guilty): a shared agent was quietly filtering its tools based on which product was calling it. The model gave it 13%, and it was right.</p>
+<p>But &quot;13%&quot; is not a measurement of anything. It&#39;s the model saying &quot;look here&quot;. Read every hint that way. Most are real. Some aren&#39;t. That&#39;s why dismissing with a written reason is a first-class part of the loop and not an embarrassing escape hatch.</p>
+<h2>What it costs, and how long you wait</h2>
+<p><em>Spoiler: way less than you think in dollars, more than you&#39;d like in seconds.</em></p>
+<p>Here are real numbers from our last batch of reviews on actual feature branches:</p>
+<table>
+<thead>
+<tr>
+<th>What was reviewed</th>
+<th>Rules asked</th>
+<th>Calls</th>
+<th>Input tokens</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>one page, design rules only</td>
+<td>5</td>
+<td>1</td>
+<td>15k</td>
+<td>$0.0003</td>
+</tr>
+<tr>
+<td>a small backend change</td>
+<td>5</td>
+<td>1</td>
+<td>126k</td>
+<td>$0.003</td>
+</tr>
+<tr>
+<td>a page plus its code</td>
+<td>10</td>
+<td>1</td>
+<td>203k</td>
+<td>$0.004</td>
+</tr>
+<tr>
+<td>a medium branch across two repos</td>
+<td>17</td>
+<td>1</td>
+<td>333k</td>
+<td>$0.007</td>
+</tr>
+<tr>
+<td>a branch plus two pages</td>
+<td>23</td>
+<td>3</td>
+<td>834k</td>
+<td>$0.02</td>
+</tr>
+<tr>
+<td>a big branch</td>
+<td>26</td>
+<td>1</td>
+<td>2.2M</td>
+<td>$0.04</td>
+</tr>
+</tbody></table>
+<p>Yes, you&#39;re reading that right. The biggest review in that table cost about four cents. The Perplexity decider (<code>pplx-decider-v1.1</code>) is listed at about $0.02 per million input tokens, and output is free, because the output is a handful of numbers. Jev is in the same ballpark at about $0.042 per million. For comparison, sending that same 2.2M-token review through a frontier chat model would cost dollars, not cents, and you&#39;d get an essay back. (Prices are from public listings as of October 2026; check before you budget.)</p>
+<p>So the money is not the problem. Latency and attention are. Still, the shape of the bill is worth understanding, because it&#39;s the same shape as the latency.</p>
+<p>The thing that surprised me: tokens don&#39;t scale with the size of your diff. They scale with <strong>the size of your diff times the number of questions</strong>. As far as we can tell from the usage numbers, the state gets counted once per question answered, so a big diff with 26 rules is 2.2M input tokens in a single call. Every rule you add to a widely-applied folder makes <em>every</em> review that touches that folder more expensive. That&#39;s the real reason we scope <code>applies</code> tightly and cap repo-wide rules at 15 per file. It&#39;s not about the bill so much as the wait, and the noise.</p>
+<p>Latency is fine for the end of a feature and terrible for the inner loop:</p>
+<ul>
+<li><strong>One question on one case</strong> comes back in about a second or two. <code>filed review test</code> on a single design rule with five screenshot cases takes six to eight seconds.</li>
+<li><strong>A full review</strong> of a real branch, around 1.7M tokens over two calls, took about a minute. Add screenshot capture time if pages are involved.</li>
+<li><strong>A bad day</strong> looks like a 504 from the provider after a minute of waiting. Two of our recorded runs ended exactly like that, and review reported &quot;did not run&quot; and got out of the way.</li>
+</ul>
+<p>So the rule of thumb is: lint and tests run on every edit, review runs near the end of a feature and once more after fixing its hints, and that&#39;s it. If a run would send more than 5M tokens, it refuses and tells you to narrow it down with a folder or a closer base branch.</p>
+<h2>Now the unglamorous bits</h2>
+<p>It wouldn&#39;t be fair to sell this as all upside, so here is what it actually costs:</p>
+<ul>
+<li><strong>It&#39;s cheap, but it&#39;s not free.</strong> A few cents a review is nothing until an agent decides to run it after every edit, on every branch, in a loop. Put a budget on it anyway.</li>
+<li><strong>It sends your code to a third party.</strong> Summary, diffs, reference files and screenshots go to the provider. That&#39;s fine for our code. It is <em>not</em> fine for anything near taxpayer data, so review never runs on fixtures or production payloads. Decide where that line is for you before you wire it up.</li>
+<li><strong>The provider will go down.</strong> Credits run out, keys expire, rate limits happen. When that happens review exits cleanly, prints &quot;review did not run&quot;, and the PR says so. A flaky reviewer that blocks merges is worse than no reviewer.</li>
+<li><strong>The plumbing is not free.</strong> Six repos, diffs with three levels of context, splitting files and questions so every request fits under the limits, PNG size checks for screenshots. None of it is hard. All of it is code you now own.</li>
+<li><strong>It doesn&#39;t replace your judgement.</strong> It replaces the <em>repetition</em> of your judgement. The first time you see a new kind of mistake, that&#39;s still you. The job is to make sure it&#39;s the last time you have to say it out loud.</li>
+</ul>
+<h2>Where does a rule go?</h2>
+<p>Most of the value turned out to be in deciding where <em>not</em> to put a rule. We use a simple ladder, top step first:</p>
+<figure class="dwg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 270" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="lad-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+  </defs>
+  <g filter="url(#lad-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <path d="M40 250 L40 200 L200 200 L200 150 L360 150 L360 100 L520 100 L520 50 L660 50 L660 250"/>
+    <rect x="40" y="200" width="160" height="50" fill="#a5d8ff" fill-opacity="0.25" stroke="none"/>
+    <rect x="200" y="150" width="160" height="100" fill="#d0bfff" fill-opacity="0.25" stroke="none"/>
+    <rect x="360" y="100" width="160" height="150" fill="#ffd8a8" fill-opacity="0.3" stroke="none"/>
+    <rect x="520" y="50" width="140" height="200" fill="#b2f2bb" fill-opacity="0.3" stroke="none"/>
+    <line x1="40" y1="250" x2="660" y2="250"/>
+  </g>
+  <g fill="currentColor" font-size="19" text-anchor="middle">
+    <text x="120" y="230">guide for agents</text>
+    <text x="280" y="180">a Jev rule</text>
+    <text x="440" y="130">a lint or test</text>
+    <text x="590" y="82">make it</text>
+    <text x="590" y="102">impossible</text>
+    <text x="590" y="122">in code</text>
+    <text x="120" y="185" font-size="16">"agree the user journey first"</text>
+    <text x="280" y="135" font-size="16">"except: return None"</text>
+    <text x="440" y="85" font-size="16">"unused import"</text>
+    <text x="590" y="36" font-size="17">always try this one first ↓</text>
+  </g>
+</svg>
+<figcaption>Always try the top step first. A model is the second-to-last resort, not the first.</figcaption>
+</figure>
+
+
+<ol>
+<li><strong>Can code make the mistake impossible?</strong> Do that. A type, an API shape, a helper that&#39;s the only way in.</li>
+<li><strong>Can a lint or test catch it?</strong> Do that. The duplicate tool registration is now caught by a plain test. No model required.</li>
+<li><strong>Can a model judge it from a diff or a screenshot?</strong> Now it&#39;s a decider rule, with cases.</li>
+<li><strong>Otherwise</strong> it&#39;s a guide entry: shown to the agent before it writes, never judged.</li>
+</ol>
+<h2>So what now?</h2>
+<p>If you&#39;re running agents on a real codebase and you keep leaving the same review comments, you probably have rules. You just haven&#39;t written them in a form anything can check.</p>
+<p>Before you write one, ask yourself two questions:</p>
+<ol>
+<li><strong>Can a script decide this?</strong> If yes, stop reading this post and go write the lint rule or the test. It&#39;s cheaper, faster, and it&#39;ll never have a bad day.</li>
+<li><strong>Can you write it as one mistake that names the mechanism, with a diff that breaks it and a diff that doesn&#39;t?</strong> If you can&#39;t, it isn&#39;t a rule yet. It&#39;s a vibe. Vibes are fine in a guide for the agent, but no model is going to enforce them for you.</li>
+</ol>
+<p>If you can answer both, put it next to the code, test the wording until the model can actually tell the cases apart, and let the agent read it before it writes. That&#39;s the closest I&#39;ve found to cloning the voice of your senior devs that says &quot;...that&#39;s not how we do it here&quot;, and making it show up on every PR without them.</p>
+
+</article>
+
+<div class="giscus-wrap">
+<script src="https://giscus.app/client.js"
+  data-repo="a7ul/thoughts"
+  data-repo-id="R_kgDORp7Weg"
+  data-category="General"
+  data-category-id="DIC_kwDORp7Wes4C4pUS"
+  data-mapping="title"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="light"
+  data-lang="en"
+  crossorigin="anonymous"
+  async>
+</script>
+</div>
+</div>
+<script>
+(function(){
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    localStorage.setItem('theme',t);
+    var link=document.getElementById('hljs-theme');
+    if(link)link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/'+(t==='dark'?'github-dark':'github')+'.min.css';
+    var btn=document.getElementById('theme-toggle');
+    if(btn)btn.textContent=t==='dark'?'☀':'☾';
+    var gf=document.querySelector('iframe.giscus-frame');
+    if(gf)gf.contentWindow.postMessage({giscus:{setConfig:{theme:t==='dark'?'dark_dimmed':'light'}}}, 'https://giscus.app');
+  }
+  function buildToc(){
+    var toc=document.getElementById('toc');
+    if(!toc)return;
+    var headings=Array.from(document.querySelectorAll('article h2,article h3'));
+    if(headings.length<2)return;
+    var title=document.createElement('div');
+    title.className='toc-title';
+    title.textContent='On this page';
+    toc.appendChild(title);
+    var ul=document.createElement('ul');
+    headings.forEach(function(h,i){
+      if(!h.id)h.id=(h.textContent||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'h'+i;
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href='#'+h.id;
+      a.textContent=h.textContent;
+      a.className=h.tagName==='H3'?'toc-h3':'toc-h2';
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var link=toc.querySelector('a[href="#'+e.target.id+'"]');
+        if(link){
+          if(e.isIntersecting){
+            toc.querySelectorAll('a').forEach(function(a){a.classList.remove('active');});
+            link.classList.add('active');
+          }
+        }
+      });
+    },{rootMargin:'-10% 0px -80% 0px'});
+    headings.forEach(function(h){obs.observe(h);});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var cur=document.documentElement.getAttribute('data-theme')||'light';
+    var btn=document.getElementById('theme-toggle');
+    if(btn){
+      btn.textContent=cur==='dark'?'☀':'☾';
+      btn.addEventListener('click',function(){
+        applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+      });
+    }
+    buildToc();
+    initLightbox();
+  });
+  function initLightbox(){
+    var overlay=document.getElementById('img-overlay');
+    var overlayImg=document.getElementById('img-overlay-img');
+    if(!overlay||!overlayImg)return;
+    document.querySelectorAll('article img').forEach(function(img){
+      img.style.cursor='zoom-in';
+      img.addEventListener('click',function(){
+        overlayImg.setAttribute('src',img.getAttribute('src')||'');
+        overlayImg.setAttribute('alt',img.getAttribute('alt')||'');
+        overlay.classList.add('open');
+        document.body.style.overflow='hidden';
+      });
+    });
+    function close(){overlay.classList.remove('open');document.body.style.overflow='';}
+    overlay.addEventListener('click',function(e){if(e.target===overlay)close();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  }
+})();
+</script>
+</body>
+</html>

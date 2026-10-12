@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 330" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="gap-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="3.5"/></filter>
+    <marker id="gap-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
+  </defs>
+  <g filter="url(#gap-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <circle cx="55" cy="120" r="14"/>
+    <rect x="38" y="134" width="34" height="34" rx="4"/>
+    <circle cx="49" cy="120" r="2" fill="currentColor"/><circle cx="61" cy="120" r="2" fill="currentColor"/>
+    <line x1="55" y1="106" x2="55" y2="96"/><circle cx="55" cy="93" r="3"/>
+    <line x1="45" y1="168" x2="45" y2="188"/><line x1="65" y1="168" x2="65" y2="188"/>
+    <path d="M150 60 L150 250" stroke-dasharray="2 9" stroke-width="3"/>
+    <path d="M270 60 L270 250" stroke-dasharray="2 9" stroke-width="3"/>
+    <path d="M95 150 C 180 140, 330 160, 440 150" marker-end="url(#gap-arr)"/>
+    <path d="M95 135 C 120 100, 140 95, 150 98" marker-end="url(#gap-arr)" stroke="#e5484d"/>
+    <path d="M95 165 C 180 200, 250 215, 268 210" marker-end="url(#gap-arr)" stroke="#e5484d"/>
+    <rect x="455" y="110" width="80" height="80" rx="6"/>
+    <path d="M560 150 C 585 150, 590 150, 600 150"/>
+    <circle cx="630" cy="105" r="13"/>
+    <line x1="630" y1="118" x2="630" y2="165"/><line x1="630" y1="130" x2="612" y2="148"/><line x1="630" y1="130" x2="648" y2="112"/>
+    <line x1="630" y1="165" x2="618" y2="192"/><line x1="630" y1="165" x2="642" y2="192"/>
+    <path d="M548 38 C 548 12, 678 12, 678 38 C 678 66, 610 66, 600 66 L 615 84 L 585 66 C 565 66, 548 62, 548 38 Z"/>
+  </g>
+  <g fill="currentColor" font-size="20">
+    <text x="55" y="215" text-anchor="middle">the agent</text>
+    <text x="150" y="48" text-anchor="middle">lint</text>
+    <text x="270" y="48" text-anchor="middle">tests</text>
+    <text x="155" y="95" fill="#e5484d" font-size="17">unused import</text>
+    <text x="210" y="238" fill="#e5484d" font-size="17">returns 500</text>
+    <text x="495" y="145" text-anchor="middle">main</text>
+    <text x="495" y="168" text-anchor="middle" font-size="16">(green ✓)</text>
+    <text x="613" y="36" text-anchor="middle" font-size="16">...that's not how</text>
+    <text x="613" y="52" text-anchor="middle" font-size="16">we do it here</text>
+    <text x="630" y="215" text-anchor="middle">senior devs, in review</text>
+  </g>
+  <g fill="#c2410c" font-size="17">
+    <text x="300" y="125">except: return None</text>
+    <text x="300" y="185">the same tool, registered twice</text>
+    <text x="300" y="275">if new_case: ... else: ...</text>
+    <text x="300" y="300">ALL CAPS BUTTONS</text>
+    <text x="300" y="322">three primary buttons</text>
+  </g>
+  <path d="M290 262 C 320 245, 360 210, 400 175" fill="none" stroke="#c2410c" stroke-width="1.5" stroke-dasharray="4 4" filter="url(#gap-rough)"/>
+</svg>

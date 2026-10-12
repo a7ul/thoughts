@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 340" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="loop-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="13"/><feDisplacementMap in="SourceGraphic" scale="3.5"/></filter>
+    <marker id="loop-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
+    <marker id="loop-arr-r" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="#e5484d" stroke-width="1.5"/></marker>
+  </defs>
+  <g filter="url(#loop-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <rect x="20" y="55" width="150" height="60" rx="10" fill="#a5d8ff" fill-opacity="0.3"/>
+    <path d="M172 85 C 195 85, 205 85, 228 85" marker-end="url(#loop-arr)"/>
+    <rect x="235" y="55" width="150" height="60" rx="10"/>
+    <path d="M270 55 C 255 20, 365 20, 350 55" marker-end="url(#loop-arr)"/>
+    <path d="M387 85 C 410 85, 420 85, 443 85" marker-end="url(#loop-arr)"/>
+    <rect x="450" y="55" width="160" height="60" rx="10" fill="#d0bfff" fill-opacity="0.35"/>
+    <path d="M530 117 C 530 140, 530 150, 530 168" marker-end="url(#loop-arr)"/>
+    <path d="M470 175 C 470 160, 590 160, 590 175 L 590 205 C 590 222, 470 222, 470 205 Z" fill="#ffd8a8" fill-opacity="0.35"/>
+    <path d="M465 200 C 380 240, 320 210, 310 122" marker-end="url(#loop-arr-r)" stroke="#e5484d"/>
+    <path d="M595 200 C 625 230, 630 250, 630 268" marker-end="url(#loop-arr)"/>
+    <rect x="585" y="275" width="85" height="45" rx="8" fill="#b2f2bb" fill-opacity="0.3"/>
+  </g>
+  <g fill="currentColor" font-size="18" text-anchor="middle">
+    <text x="95" y="28" font-size="17">1. before code</text>
+    <text x="95" y="46" font-size="15" fill="#30a46c">no model call</text>
+    <text x="95" y="82" font-size="16">filed review rules</text>
+    <text x="95" y="100" font-size="16">--files ...</text>
+    <text x="310" y="82">write the code</text>
+    <text x="310" y="100" font-size="15">(following the rules)</text>
+    <text x="310" y="18" font-size="15">2. code: lint + tests, every edit</text>
+    <text x="530" y="28" font-size="17">3. after code (review)</text>
+    <text x="530" y="46" font-size="15" fill="#8b5cf6">one decider call</text>
+    <text x="530" y="82" font-size="16">filed review run</text>
+    <text x="530" y="100" font-size="16">--summary pr.md</text>
+    <text x="530" y="196" font-size="17">hints</text>
+    <text x="360" y="265" font-size="17" fill="#e5484d">real problem? fix it, run again</text>
+    <text x="360" y="285" font-size="15" fill="#e5484d">(at most three rounds)</text>
+    <text x="627" y="303">PR</text>
+    <text x="470" y="300" font-size="15" text-anchor="end">false alarm? dismiss with a reason →</text>
+  </g>
+  <g fill="currentColor" font-size="15">
+    <text x="20" y="150">sees: "avoid X, do Y,</text>
+    <text x="20" y="168">see Z" for only the</text>
+    <text x="20" y="186">files it's about to touch</text>
+  </g>
+</svg>

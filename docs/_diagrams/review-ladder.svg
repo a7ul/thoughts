@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 270" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="lad-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+  </defs>
+  <g filter="url(#lad-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <path d="M40 250 L40 200 L200 200 L200 150 L360 150 L360 100 L520 100 L520 50 L660 50 L660 250"/>
+    <rect x="40" y="200" width="160" height="50" fill="#a5d8ff" fill-opacity="0.25" stroke="none"/>
+    <rect x="200" y="150" width="160" height="100" fill="#d0bfff" fill-opacity="0.25" stroke="none"/>
+    <rect x="360" y="100" width="160" height="150" fill="#ffd8a8" fill-opacity="0.3" stroke="none"/>
+    <rect x="520" y="50" width="140" height="200" fill="#b2f2bb" fill-opacity="0.3" stroke="none"/>
+    <line x1="40" y1="250" x2="660" y2="250"/>
+  </g>
+  <g fill="currentColor" font-size="19" text-anchor="middle">
+    <text x="120" y="230">guide for agents</text>
+    <text x="280" y="180">a Jev rule</text>
+    <text x="440" y="130">a lint or test</text>
+    <text x="590" y="82">make it</text>
+    <text x="590" y="102">impossible</text>
+    <text x="590" y="122">in code</text>
+    <text x="120" y="185" font-size="16">"agree the user journey first"</text>
+    <text x="280" y="135" font-size="16">"except: return None"</text>
+    <text x="440" y="85" font-size="16">"unused import"</text>
+    <text x="590" y="36" font-size="17">always try this one first ↓</text>
+  </g>
+</svg>
