@@ -53,11 +53,21 @@ What I actually wanted was much dumber: one question per rule, one number per qu
 
 ## Enter Perplexity decider / Jev: it only answers yes or no
 
-This is where a decision model earns its keep. You send it two things: a `state` (everything it needs to look at) and a set of named `questions`. It sends back one number per question. Let's walk through one review end to end: the rules, what gets sent to the Perplexity decider, and what comes back. (Imaginary online shop, made-up diff, illustrative numbers. The rule wording is our real wording.)
+This is where a decision model earns its keep. You send it two things: a `state` (everything it needs to look at) and a set of named `questions`. It sends back one number per question.
 
-### Step 1: the rules
+But a model on its own isn't a system. You need something the agent can actually call, rules for it to read, and a loop that ties it together. So let's build it up, step by step: the CLI, the rules, what gets sent to the Perplexity decider, what comes back, and the loop the agent runs.
 
-It all starts with a `rules.yaml`. Each rule is one claim the model can answer yes or no to, plus what to do about it:
+### Step 1: build your agent a CLI
+
+Remember the agents skimming our docs? That's the problem this step solves. Anything the agent is supposed to *remember* to read, it eventually won't. Anything it can *call*, it will, every time, because calling a tool is what agents are good at.
+
+So before anything else, you need a CLI. I'll come to exactly what goes inside it in step 5, but you need it first, because every other step is something the agent does by running it.
+
+Ours is called `filed` (or `filed.exe`, for the poor souls on Windows). It's the one front door for everything an agent needs to build and verify a change in our codebase: start the local stack, sign into the app, take screenshots, record what was verified. This CLI is your **harness**. For this post, the part we care about is one command inside it: `review`.
+
+### Step 2: write the rules
+
+Next, the rules. These live in `rules.yaml` files. Each rule is one claim the model can answer yes or no to, plus what to do about it. (From here on the examples use an imaginary online shop, made-up diffs and illustrative numbers. The rule wording is our real wording.)
 
 ```yaml
 # shop/docs/review/rules.yaml  (simplified: in reality these are split across folders, see below)
@@ -106,7 +116,43 @@ It all starts with a `rules.yaml`. Each rule is one claim the model can answer y
 
 A rule is either a `mistake` (true when the change breaks it) or a `statement` (true when the change follows it). Never both. `fix` and `reference` are for the agent. `cases` are for testing the rule itself, which we'll get to.
 
-### Step 2: what gets sent to the Perplexity decider
+Above I showed all four rules in one file to keep things simple. In reality, rules are not one giant flat file. They're **nested**, and they live next to the code they judge.
+
+Any folder that cares can have its own `docs/review/rules.yaml`. A rule applies to its folder and everything below it. So the general stuff sits at the top, and the specific stuff sits right beside the code it's about:
+
+```text
+shop/
+├── docs/review/rules.yaml                 errors bubble up, one code path      (everything)
+├── graphql/
+│   ├── docs/review/rules.yaml             identity comes from the token        (only GraphQL)
+│   └── inputs/create_order.py
+├── orders/
+│   ├── docs/review/rules.yaml             no N+1 queries on the order list     (only orders)
+│   └── update.py
+└── shipping/
+    ├── docs/review/rules.yaml             one module per carrier               (only shipping)
+    └── carriers/
+        ├── docs/review/rules.yaml         every carrier implements prepare()   (only carriers)
+        └── fedex.py
+```
+
+When the agent is about to change `shop/graphql/inputs/create_order.py`, the CLI walks up from that file and collects every `rules.yaml` on the way: the one in `shop/graphql/` and the one in `shop/`. It never sees the shipping rules or the carrier rules, because it isn't touching that code. If it later wanders into `shipping/carriers/fedex.py`, it asks again and gets a different, equally short list.
+
+This matters for three reasons:
+
+- **The agent only reads what's relevant.** A flat file of 200 rules is 200 rules the agent has to read, mostly ignore, and still be distracted by. A nested set gives it the five that apply to the folder it's in.
+- **Rules live with their owners.** The people who own the shipping code own the shipping rules, in the shipping folder. When the code moves or gets deleted, the rules go with it instead of rotting in a doc somewhere.
+- **It keeps review fast and cheap.** Every rule that applies is one more question per review, and (as we'll see in the cost section) every extra question makes the whole request bigger. Scoping a rule to its folder is the cheapest optimisation there is.
+
+We also keep the repo-wide rules on a diet: at most 15 of them may apply to any one file, and a test fails if that number creeps up, which is usually someone scoping a rule to `**/*` because they couldn't be bothered to narrow it.
+
+Ours are spread across about 27 of these files in six repositories right now, from repo-wide ones at the top down to a single folder of database code.
+
+The trick is that the *same file* has two readers.
+
+@figure(_diagrams/review-two-readers.svg, "One file, two readers. The agent reads the rule before it writes. The decider judges the change against the exact same words afterwards.")
+
+### Step 3: what gets sent to the Perplexity decider
 
 The CLI finds the changed files, works out which rules apply to them, and turns each rule into a question. The question is the rule's own words, prefixed with where it applies:
 
@@ -154,7 +200,7 @@ POST https://api.perplexity.ai/v1/decisions
 
 That's the whole prompt. No "you are a senior engineer", no rubric, no "think step by step". Just the change, the files that show the right pattern, and four claims.
 
-### Step 3: what comes back
+### Step 4: what comes back
 
 ```text
 {
@@ -199,47 +245,9 @@ Because it's a number and not a paragraph, a bunch of things suddenly become pos
 - You can **compare** it. Same rule, same diff, different wording: which one separates good from bad better?
 - You can **test** it. More on that in a minute, because it's the part that made the whole thing work.
 
-## Rules live next to the code they judge
+### Step 5: the loop: before code, code, after code
 
-In step 1 I showed all four rules in one file to keep things simple. In reality, rules are not one giant flat file. They're **nested**, and they live next to the code they judge.
-
-Any folder that cares can have its own `docs/review/rules.yaml`. A rule applies to its folder and everything below it. So the general stuff sits at the top, and the specific stuff sits right beside the code it's about:
-
-```text
-shop/
-├── docs/review/rules.yaml                 errors bubble up, one code path      (everything)
-├── graphql/
-│   ├── docs/review/rules.yaml             identity comes from the token        (only GraphQL)
-│   └── inputs/create_order.py
-├── orders/
-│   ├── docs/review/rules.yaml             no N+1 queries on the order list     (only orders)
-│   └── update.py
-└── shipping/
-    ├── docs/review/rules.yaml             one module per carrier               (only shipping)
-    └── carriers/
-        ├── docs/review/rules.yaml         every carrier implements prepare()   (only carriers)
-        └── fedex.py
-```
-
-When the agent is about to change `shop/graphql/inputs/create_order.py`, the CLI walks up from that file and collects every `rules.yaml` on the way: the one in `shop/graphql/` and the one in `shop/`. It never sees the shipping rules or the carrier rules, because it isn't touching that code. If it later wanders into `shipping/carriers/fedex.py`, it asks again and gets a different, equally short list.
-
-This matters for three reasons:
-
-- **The agent only reads what's relevant.** A flat file of 200 rules is 200 rules the agent has to read, mostly ignore, and still be distracted by. A nested set gives it the five that apply to the folder it's in.
-- **Rules live with their owners.** The people who own the shipping code own the shipping rules, in the shipping folder. When the code moves or gets deleted, the rules go with it instead of rotting in a doc somewhere.
-- **It keeps review cheap.** Every rule that applies is one more question per review, and (as we'll see in the cost section) one more question makes the whole request more expensive. Scoping a rule to its folder is the cheapest optimisation there is.
-
-Ours are spread across about 27 of these files in six repositories right now, from repo-wide ones at the top down to a single folder of database code.
-
-The trick is that the *same file* has two readers.
-
-@figure(_diagrams/review-two-readers.svg, "One file, two readers. The agent reads the rule before it writes. The decider judges the change against the exact same words afterwards.")
-
-### First, build your agent a CLI
-
-None of this works if it lives in a doc the agent is supposed to remember to read. The agent needs a *tool* it can call. So you build a CLI.
-
-Ours is called `filed` (or `filed.exe`, for the poor souls on Windows). It's the one front door for everything an agent needs to build and verify a change in our codebase: start the local stack, sign into the app, take screenshots, record what was verified, and, the part this post is about, a command called `review`:
+Now that you've seen the rules and the decider, here's what goes inside the CLI from step 1. The `review` command has four subcommands:
 
 ```text
 filed review rules --files <paths...>    which rules apply to the files I'm about to change?
@@ -248,9 +256,7 @@ filed review test [--rule <id>]          is each rule actually worded well enoug
 filed review dismiss <rule> "<reason>"   this hint is a false alarm, and here's why
 ```
 
-This CLI is your **harness**. The agent doesn't need to know where the rules files live, how to pack a diff into a request, which model to call, or what to do when the provider is down. It runs one command and reads the output. And because it's a CLI, it works the same for Claude Code, Codex, a background agent, or a human at 2am.
-
-### What the agent actually sees: before code, code, after code
+The agent doesn't need to know where the rules files live, how to pack a diff into a request, which model to call, or what to do when the provider is down. It runs one command and reads the output. And because it's a CLI, it works the same for Claude Code, Codex, a background agent, or a human at 2am.
 
 The whole thing is one loop the agent runs on its own, in three phases. The agent's instructions (`AGENTS.md`, in our case) say two things: always ask the CLI for the rules before you touch a file, and always run review before you call it done.
 
@@ -290,7 +296,7 @@ code.identity-from-token  (shop/graphql/docs/review/rules.yaml)
 
 Three rules, not three hundred. Only the ones whose `applies` match those two files, from every `rules.yaml` on their path. Each one says what to avoid, what to do instead, and which existing file shows the right way. That last bit matters more than it looks: "see `payments/retry.py`" gives the agent a real example in your codebase to copy, which beats any amount of prose about error handling.
 
-**There is no Perplexity decider / Jev call here.** It's just the CLI reading YAML files off disk, so it costs nothing and takes milliseconds, so the agent runs it every time it moves to a new set of files. If it's halfway through a task and realises it also needs to touch the GraphQL layer, it asks again for those files.
+**There is no Perplexity decider / Jev call here.** It's just the CLI reading YAML files off disk, so it costs nothing and takes milliseconds. The agent runs it every time it moves to a new set of files. If it's halfway through a task and realises it also needs to touch the GraphQL layer, it asks again for those files.
 
 **2. Code: lint and tests, every edit.** Nothing new here. This is the inner loop, it's fast, and it stays exactly as it was.
 
@@ -318,8 +324,6 @@ Every hint has three parts, and each one is there so the agent can fix the probl
 Then the agent does one of two things with each hint. If it's a real problem, it fixes it and runs review again. If it's a false alarm, it records why with `filed review dismiss <rule> "<reason>"`, and that reason ends up in the PR for a human to sanity-check. After three rounds on the same change, it stops and hands over to a human, because at that point you're paying one model to argue with another.
 
 The nice thing about this split is that the same words show up at both ends. The agent was told "avoid X, do Y, see Z" before it wrote a line. If review flags X anyway, the hint says the exact same thing back. There's no new opinion to interpret, just a reminder of a rule it already agreed to.
-
-We also keep it on a diet. A file sees at most 15 of the repo-wide rules, and there's a test that fails if someone adds a rule that applies to `**/*` because they couldn't be bothered to scope it.
 
 ## Your rules are wrong. Test them like code.
 
@@ -365,13 +369,13 @@ So now every judged rule has to carry labelled cases: at least one diff (or scre
      save(order)
 ```
 
-Notice the compliant cases aren't just "code that doesn't have the mistake". One of them is the *fix* for the violating case, and one is an innocent change to the very same shared file. That's what forces the rule to be about the if-check and not about "someone touched shared code". That rule currently separates its cases by 0.96. `filed review test` scores each case on its own and computes a margin: the lowest compliant score minus the highest violating score. Under 0.5 and the rule fails. You reword it, keeping the meaning, until it passes. When it passes, the result gets written back into the YAML with a hash of the wording and the cases, so if someone edits a rule later without retesting it, the validator notices.
+Notice the compliant cases aren't just "code that doesn't have the mistake". One of them is the *fix* for the violating case, and one is an innocent change to the very same shared file. That's what forces the rule to be about the if-check and not about "someone touched shared code". `filed review test` scores each case on its own and computes a **margin**: the lowest compliant score minus the highest violating score. In plain words, how cleanly the rule separates good changes from bad ones. Under 0.5 and the rule fails. You reword it, keeping the meaning, until it passes. When it passes, the result gets written back into the YAML with a hash of the wording and the cases, so if someone edits a rule later without retesting it, the validator notices.
 
-Here's how far rewording moved some of ours:
+Here's how far rewording moved the margin on some of ours:
 
-| Rule | First wording | After tuning |
+| Rule | Margin, first wording | Margin, after tuning |
 |---|---|---|
-| no product branches in shared code | 0.24 | 0.92 |
+| no product branches in shared code | 0.24 | 0.96 |
 | identity comes from the token, not the input | 0.45 | 1.00 |
 | instructions live in one place | 0.24 | 0.82 |
 | copy a tax professional would write | 0.16 | 0.89 |
@@ -385,7 +389,7 @@ Two things fell out of this that I now believe pretty strongly:
 
 *This is why we run the Perplexity decider and not plain Jev.*
 
-Code is half the story. The other half is the agent building a page that technically works and looks like a ransom note. Three primary buttons fighting for attention. Every heading in ALL CAPS. A cute little icon next to every label, doing absolutely nothing. Copy that sounds like a developer wrote it, because a developer (well, an agent) did.
+Code is half the story. The other half is that generic AI-generated UI from the top of this post: a page that works, looks fine at first glance, and doesn't look like *your* app. Look closer and it's always the same handful of tells. Three primary buttons fighting for attention. Every heading in ALL CAPS. A cute little icon next to every label, doing absolutely nothing. Copy that sounds like a developer wrote it, because a developer (well, an agent) did.
 
 You can't lint that. You can't really unit test it either. You can write a Playwright test that checks there's a button with the text "Save", but not one that checks the page *feels* like the rest of your app. That was always a human squinting at a screenshot in review. And that human was, again, one of those same few senior devs.
 
@@ -444,9 +448,9 @@ The two screenshots differ in exactly one way, which is precisely what you want 
 
 The design rules tuned just as dramatically as the code ones:
 
-| Rule | First wording | After tuning |
+| Rule | Margin, first wording | Margin, after tuning |
 |---|---|---|
-| one primary action per page | 0.63 | 0.99 |
+| one primary action per area | 0.63 | 0.99 |
 | secondary actions show on hover | 0.57 | 0.91 |
 | header actions are icons, not text buttons | 0.64 | 0.98 |
 | no decorative icons | 0.13 | 0.94 |
@@ -500,7 +504,7 @@ So the rule of thumb is: lint and tests run on every edit, review runs near the 
 
 ## Now the unglamorous bits
 
-It wouldn't be fair to sell this as all upside, so here is what it actually costs:
+It wouldn't be fair to sell this as all upside, so here's the fine print:
 
 - **It's cheap, but it's not free.** A few cents a review is nothing until an agent decides to run it after every edit, on every branch, in a loop. Put a budget on it anyway.
 - **It sends your code to a third party.** Summary, diffs, reference files and screenshots go to the provider. That's fine for our code. It is *not* fine for anything near taxpayer data, so review never runs on fixtures or production payloads. Decide where that line is for you before you wire it up.
