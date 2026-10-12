@@ -510,7 +510,7 @@ It wouldn't be fair to sell this as all upside, so here is what it actually cost
 
 ## Where does a rule go?
 
-Most of the value turned out to be in deciding where *not* to put a rule. We use a simple ladder, top step first:
+Most of the value turned out to be in deciding where *not* to put a rule. We use a simple ladder, top step first. (This idea, fix each problem at the strongest layer that can hold it and treat prose as the last resort, comes straight from [poteto's talk](https://x.com/poteto/status/2102050467505430555/video/1). Watch it.)
 
 @figure(_diagrams/review-ladder.svg, "Always try the top step first. A model is the second-to-last resort, not the first.")
 
@@ -529,3 +529,16 @@ Before you write one, ask yourself two questions:
 2. **Can you write it as one mistake that names the mechanism, with a diff that breaks it and a diff that doesn't?** If you can't, it isn't a rule yet. It's a vibe. Vibes are fine in a guide for the agent, but no model is going to enforce them for you.
 
 If you can answer both, put it next to the code, test the wording until the model can actually tell the cases apart, and let the agent read it before it writes. That's the closest I've found to cloning the voice of your senior devs that says "...that's not how we do it here", and making it show up on every PR without them.
+
+---
+
+## Credits
+
+A lot of how our harness works was shaped by other people's thinking. In particular:
+
+- [poteto's talk](https://x.com/poteto/status/2102050467505430555/video/1) on building trust in agent work in layers, fixing each problem at the strongest layer that can hold it, and treating the codebase as the agent's memory. The "where does a rule go" ladder above is our version of that idea.
+- [poteto's verification skill example](https://github.com/poteto/verification-skill-example), for the idea of a scoped, per-feature map an agent reads instead of exploring, and [why not a wiki](https://github.com/poteto/verification-skill-example#why-not-a-wiki): pay for context once, load nothing by default.
+- Cursor's [pstack](https://github.com/cursor/plugins/tree/main/pstack) plugin, especially [correct](https://github.com/cursor/plugins/blob/main/pstack/skills/correct/SKILL.md) (prose is the last resort; prefer architecture, then types or a lint, then a test), [verify and ship](https://github.com/cursor/plugins/blob/main/pstack/docs/guide/06-verify-and-ship.md) (prove it on the real app, build one CLI instead of throwaway scripts, the author doesn't judge its own change), [make it yours](https://github.com/cursor/plugins/blob/main/pstack/docs/guide/09-make-it-yours.md) (add a check only after a failure repeats) and the [code-quality lens](https://github.com/cursor/plugins/blob/main/pstack/skills/interrogate/references/code-quality-review.md).
+- This [interview](https://www.youtube.com/watch?v=MN9dGgmLyso), which goes deeper on the same ideas.
+- [Chris Kiehl's](https://chriskiehl.com/article/event-sourcing-is-hard) writing, for showing that a technical post can be honest about the downsides and still be fun to read.
+- TypeSafe, for [Jev](https://docs.litellm.ai/blog/typesafe_jev), and Perplexity, for the decider that made the screenshot half of this possible.

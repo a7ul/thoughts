@@ -779,7 +779,7 @@ compliance 4/5 rules at 80% or above
 <li><strong>It doesn&#39;t replace your judgement.</strong> It replaces the <em>repetition</em> of your judgement. The first time you see a new kind of mistake, that&#39;s still you. The job is to make sure it&#39;s the last time you have to say it out loud.</li>
 </ul>
 <h2>Where does a rule go?</h2>
-<p>Most of the value turned out to be in deciding where <em>not</em> to put a rule. We use a simple ladder, top step first:</p>
+<p>Most of the value turned out to be in deciding where <em>not</em> to put a rule. We use a simple ladder, top step first. (This idea, fix each problem at the strongest layer that can hold it and treat prose as the last resort, comes straight from <a href="https://x.com/poteto/status/2102050467505430555/video/1" target="_blank" rel="noopener noreferrer">poteto's talk</a>. Watch it.)</p>
 <figure class="dwg">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 270" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
   <defs>
@@ -824,6 +824,17 @@ compliance 4/5 rules at 80% or above
 <li><strong>Can you write it as one mistake that names the mechanism, with a diff that breaks it and a diff that doesn&#39;t?</strong> If you can&#39;t, it isn&#39;t a rule yet. It&#39;s a vibe. Vibes are fine in a guide for the agent, but no model is going to enforce them for you.</li>
 </ol>
 <p>If you can answer both, put it next to the code, test the wording until the model can actually tell the cases apart, and let the agent read it before it writes. That&#39;s the closest I&#39;ve found to cloning the voice of your senior devs that says &quot;...that&#39;s not how we do it here&quot;, and making it show up on every PR without them.</p>
+<hr>
+<h2>Credits</h2>
+<p>A lot of how our harness works was shaped by other people&#39;s thinking. In particular:</p>
+<ul>
+<li><a href="https://x.com/poteto/status/2102050467505430555/video/1" target="_blank" rel="noopener noreferrer">poteto's talk</a> on building trust in agent work in layers, fixing each problem at the strongest layer that can hold it, and treating the codebase as the agent&#39;s memory. The &quot;where does a rule go&quot; ladder above is our version of that idea.</li>
+<li><a href="https://github.com/poteto/verification-skill-example" target="_blank" rel="noopener noreferrer">poteto's verification skill example</a>, for the idea of a scoped, per-feature map an agent reads instead of exploring, and <a href="https://github.com/poteto/verification-skill-example#why-not-a-wiki" target="_blank" rel="noopener noreferrer">why not a wiki</a>: pay for context once, load nothing by default.</li>
+<li>Cursor&#39;s <a href="https://github.com/cursor/plugins/tree/main/pstack" target="_blank" rel="noopener noreferrer">pstack</a> plugin, especially <a href="https://github.com/cursor/plugins/blob/main/pstack/skills/correct/SKILL.md" target="_blank" rel="noopener noreferrer">correct</a> (prose is the last resort; prefer architecture, then types or a lint, then a test), <a href="https://github.com/cursor/plugins/blob/main/pstack/docs/guide/06-verify-and-ship.md" target="_blank" rel="noopener noreferrer">verify and ship</a> (prove it on the real app, build one CLI instead of throwaway scripts, the author doesn&#39;t judge its own change), <a href="https://github.com/cursor/plugins/blob/main/pstack/docs/guide/09-make-it-yours.md" target="_blank" rel="noopener noreferrer">make it yours</a> (add a check only after a failure repeats) and the <a href="https://github.com/cursor/plugins/blob/main/pstack/skills/interrogate/references/code-quality-review.md" target="_blank" rel="noopener noreferrer">code-quality lens</a>.</li>
+<li>This <a href="https://www.youtube.com/watch?v=MN9dGgmLyso" target="_blank" rel="noopener noreferrer">interview</a>, which goes deeper on the same ideas.</li>
+<li><a href="https://chriskiehl.com/article/event-sourcing-is-hard" target="_blank" rel="noopener noreferrer">Chris Kiehl's</a> writing, for showing that a technical post can be honest about the downsides and still be fun to read.</li>
+<li>TypeSafe, for <a href="https://docs.litellm.ai/blog/typesafe_jev" target="_blank" rel="noopener noreferrer">Jev</a>, and Perplexity, for the decider that made the screenshot half of this possible.</li>
+</ul>
 
 </article>
 
