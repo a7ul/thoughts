@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build the system that builds the product: new tools demand that we think bigger</title>
+<meta name="description" content="Breaking assumptions to find novel ideas has always been what engineering is all about. Now it is the job.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Caveat:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="./style.css">
+<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script>
+(function(){
+  var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  document.documentElement.setAttribute('data-theme',t);
+  var link=document.getElementById('hljs-theme');
+  if(link&&t==='dark')link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){hljs.highlightAll();});</script>
+</head>
+<body>
+<div id="img-overlay" class="img-overlay"><img id="img-overlay-img" src="" alt=""></div>
+<aside class="toc-sidebar" id="toc"></aside>
+<div class="container">
+<nav><a href="./index.html">← Home</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme"></button></nav>
+<article>
+<header>
+<h1>Build the system that builds the product: new tools demand that we think bigger</h1>
+<div class="post-meta">
+<span class="post-author">Atul</span> · <time datetime="2026-11-16">November 16, 2026</time>
+</div>
+</header>
+<p>Here&#39;s my slightly controversial take: the software engineering best practices and playbook are now holding your company back. Specs, handoffs, sprint planning, the PM to designer to dev relay race. All of it was built for a world where writing code was more expensive than deciding what to build. It isn&#39;t anymore. Agents can now write, fix and maintain the code.</p>
+<p>But wait. If agents are now building everything, why shouldn&#39;t they decide what to build too? They can read every support ticket, every feature request, every error and every analytics dashboard. Surely they can turn all of that into a roadmap? And if they can, why do we even need engineers? Why are companies still hiring them?</p>
+<p>Back when everyone got around by horse and cart, if you&#39;d asked people what they wanted, you&#39;d have heard &quot;faster horses&quot;. Or &quot;faster carts&quot;. Or &quot;a more comfortable seat on my cart, please&quot;. Nobody would have said &quot;cars&quot;.</p>
+<p>The real feedback was never &quot;I want a faster horse&quot;. It was &quot;I want to get places faster&quot;. And the answer to that wasn&#39;t a better horse. It was a completely new way of getting around. That answer only shows up if someone breaks the traditional rules and thinks about the problem differently.</p>
+<figure class="dwg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="hor-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="21"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+    <marker id="hor-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
+    <marker id="hor-arr-g" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="#30a46c" stroke-width="1.5"/></marker>
+  </defs>
+  <g filter="url(#hor-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <!-- speech bubbles: what people ask for -->
+    <path d="M30 30 L230 30 Q240 30 240 40 L240 80 Q240 90 230 90 L90 90 L70 108 L74 90 L40 90 Q30 90 30 80 L30 40 Q30 30 40 30 Z" fill="#ffd8a8" fill-opacity="0.35"/>
+    <path d="M30 125 L230 125 Q240 125 240 135 L240 175 Q240 185 230 185 L90 185 L70 203 L74 185 L40 185 Q30 185 30 175 L30 135 Q30 125 40 125 Z" fill="#ffd8a8" fill-opacity="0.35"/>
+    <!-- the real need -->
+    <rect x="290" y="95" width="150" height="70" rx="12" fill="#d0bfff" fill-opacity="0.35"/>
+    <path d="M242 62 C 265 75, 275 95, 288 115" marker-end="url(#hor-arr)"/>
+    <path d="M242 155 C 262 150, 272 145, 288 140" marker-end="url(#hor-arr)"/>
+    <!-- answers -->
+    <rect x="500" y="40" width="160" height="60" rx="10" stroke-dasharray="6 6"/>
+    <rect x="500" y="170" width="160" height="70" rx="10" fill="#b2f2bb" fill-opacity="0.35"/>
+    <path d="M442 115 C 465 100, 480 85, 498 75" marker-end="url(#hor-arr)" stroke-dasharray="5 5"/>
+    <path d="M442 145 C 465 165, 480 185, 498 200" marker-end="url(#hor-arr-g)" stroke="#30a46c"/>
+  </g>
+  <g fill="currentColor" font-size="20" text-anchor="middle">
+    <text x="135" y="66">"faster horses"</text>
+    <text x="135" y="161">"faster carts"</text>
+    <text x="135" y="232" font-size="16">what people ask for</text>
+    <text x="365" y="126">"I want to get</text>
+    <text x="365" y="148">places faster"</text>
+    <text x="365" y="190" font-size="16">the real feedback</text>
+    <text x="580" y="76">a better horse</text>
+    <text x="580" y="124" font-size="16">(within the rules)</text>
+    <text x="580" y="202">cars</text>
+    <text x="580" y="224" font-size="16">a new way to get around</text>
+    <text x="580" y="270" font-size="16" fill="#30a46c">only if someone breaks</text>
+    <text x="580" y="288" font-size="16" fill="#30a46c">an assumption</text>
+  </g>
+</svg>
+<figcaption>People ask for a better version of what they already have. The real feedback is the need underneath it.</figcaption>
+</figure>
+
+
+<p>Agents are trained on a huge number of ideas, and they&#39;re brilliant at giving you the average of all of them, and sometimes even novel ideas, as long as they stay within the rules of the game. Ask an agent what to build next from your feedback and you&#39;ll get a very well-reasoned faster horse.</p>
+<figure class="dwg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 290" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="avg-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="23"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+  </defs>
+  <g filter="url(#avg-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <!-- axis -->
+    <line x1="40" y1="230" x2="640" y2="230"/>
+    <!-- bell curve of ideas -->
+    <path d="M60 228 C 160 226, 210 210, 260 150 C 300 95, 320 60, 340 60 C 360 60, 380 95, 420 150 C 470 210, 520 226, 620 228" fill="#a5d8ff" fill-opacity="0.3"/>
+    <!-- "rules of the game" box around the middle -->
+    <rect x="200" y="40" width="280" height="190" rx="8" stroke-dasharray="7 6"/>
+    <!-- agent markers -->
+    <circle cx="340" cy="95" r="9" fill="#d0bfff" fill-opacity="0.7"/>
+    <path d="M165 112 C 230 112, 290 100, 328 96" stroke-width="1.3"/>
+    <circle cx="430" cy="185" r="8" fill="#d0bfff" fill-opacity="0.7"/>
+    <!-- human marker outside -->
+    <circle cx="600" cy="205" r="10" fill="#b2f2bb" fill-opacity="0.8"/>
+  </g>
+  <g fill="currentColor" font-size="18" text-anchor="middle">
+    <text x="340" y="28" font-size="17">the rules of the game</text>
+    <text x="110" y="100" font-size="16">the average:</text>
+    <text x="110" y="118" font-size="16">a well-reasoned</text>
+    <text x="110" y="136" font-size="16">faster horse</text>
+    <text x="435" y="212" font-size="15">sometimes novel,</text>
+    <text x="435" y="226" font-size="15">but still inside</text>
+    <text x="600" y="180" font-size="17" fill="#30a46c">cars</text>
+    <text x="600" y="255" font-size="15" fill="#30a46c">breaking an assumption</text>
+    <text x="600" y="272" font-size="15" fill="#30a46c">(the engineer's job)</text>
+    <text x="110" y="255" font-size="15">ideas agents were trained on</text>
+  </g>
+  <g font-size="15" text-anchor="middle">
+    <text x="340" y="282" fill="#8b5cf6">where agents land</text>
+  </g>
+</svg>
+<figcaption>Agents land in the middle of everything they've seen, sometimes somewhere novel, but always inside the rules of the game.</figcaption>
+</figure>
+
+
+<p>That&#39;s the whole tension in one line: <strong>product feedback != product roadmap.</strong> Product feedback is what you collect. The roadmap is what you build to address it.</p>
+<p>A feature request is the trickiest kind of feedback, because it looks like a roadmap item. It isn&#39;t. A feature request is a customer describing a problem in the shape of a solution they can imagine. &quot;Faster horses&quot; <em>was</em> a feature request. If you build feature requests one by one, you get a product that&#39;s the sum of everyone&#39;s guesses: a bit better at everything, and different at nothing. Your job is to look past the request to the problem underneath it, and then come up with the answer they couldn&#39;t have asked for.</p>
+<figure class="dwg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 280" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="fbr-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="25"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+    <marker id="fbr-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
+    <marker id="fbr-arr-r" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="#e5484d" stroke-width="1.5"/></marker>
+    <marker id="fbr-arr-g" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="#30a46c" stroke-width="1.5"/></marker>
+  </defs>
+  <g filter="url(#fbr-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <!-- feedback pile -->
+    <rect x="20" y="40" width="130" height="34" rx="6" fill="#ffd8a8" fill-opacity="0.35"/>
+    <rect x="30" y="84" width="130" height="34" rx="6" fill="#ffd8a8" fill-opacity="0.35"/>
+    <rect x="20" y="128" width="130" height="34" rx="6" fill="#ffd8a8" fill-opacity="0.35"/>
+    <rect x="30" y="172" width="130" height="34" rx="6" fill="#ffd8a8" fill-opacity="0.35"/>
+    <!-- path 1: build requests one by one -->
+    <path d="M165 70 C 260 40, 330 40, 420 55" marker-end="url(#fbr-arr-r)" stroke="#e5484d"/>
+    <rect x="425" y="22" width="235" height="86" rx="10"/>
+    <!-- path 2: look at the problem underneath -->
+    <path d="M165 175 C 210 185, 230 190, 258 190" marker-end="url(#fbr-arr)"/>
+    <rect x="262" y="160" width="140" height="62" rx="10" fill="#d0bfff" fill-opacity="0.35"/>
+    <path d="M404 190 C 420 190, 425 190, 438 190" marker-end="url(#fbr-arr-g)" stroke="#30a46c"/>
+    <rect x="442" y="155" width="218" height="72" rx="10" fill="#b2f2bb" fill-opacity="0.35"/>
+  </g>
+  <g fill="currentColor" font-size="16" text-anchor="middle">
+    <text x="85" y="22" font-size="17">product feedback</text>
+    <text x="85" y="62">support tickets</text>
+    <text x="95" y="106">feature requests</text>
+    <text x="85" y="150">errors</text>
+    <text x="95" y="194">analytics</text>
+    <text x="290" y="34" font-size="16" fill="#e5484d">build each request as asked</text>
+    <text x="542" y="55" font-size="18">the sum of everyone's guesses</text>
+    <text x="542" y="77" font-size="15">a bit better at everything,</text>
+    <text x="542" y="92" font-size="15">different at nothing</text>
+    <text x="332" y="186" font-size="17">the problem</text>
+    <text x="332" y="206" font-size="17">underneath</text>
+    <text x="551" y="186" font-size="18">the roadmap</text>
+    <text x="551" y="208" font-size="15">the answer nobody asked for</text>
+    <text x="340" y="262" font-size="18">product feedback != product roadmap</text>
+  </g>
+</svg>
+<figcaption>Build every request as asked and you get the sum of everyone's guesses. Look at the problem underneath and you get a roadmap.</figcaption>
+</figure>
+
+
+<p>Think about the features you actually love in the products you use. They&#39;re almost never the obvious ones. They&#39;re the ones that delighted you because they were unusually good, or because they did something differently from everyone else.</p>
+<p>So the split looks like this:</p>
+<ul>
+<li><strong>New products and new features</strong>: if you want to stand out, you have to challenge and break the traditional rules to address the feedback you got. That&#39;s an engineer&#39;s job: deciding which assumptions and rules to willingly break, so something magical can come out. Breaking assumptions to find novel ideas has always been what engineering is all about. Now it <em>is</em> the job.</li>
+<li><strong>Product maintenance, bug fixes and minor feature updates</strong>: this is the opposite. Here you <em>want</em> to stay within the rules you&#39;ve already set, and improve on them. This is where agents shine, and this should no longer be done by a human. It&#39;s a complete waste of an engineer&#39;s time and skills.</li>
+</ul>
+<p>Break the rules when you&#39;re deciding what to build. Follow them, relentlessly, when you&#39;re maintaining what you&#39;ve built.</p>
+<figure class="dwg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="spl-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="27"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+  </defs>
+  <g filter="url(#spl-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <!-- left: engineer -->
+    <rect x="20" y="50" width="305" height="230" rx="14" fill="#b2f2bb" fill-opacity="0.25"/>
+    <!-- rule box broken open -->
+    <path d="M70 140 L150 140 L150 210 L70 210 Z" stroke-dasharray="7 6"/>
+    <path d="M150 165 C 180 150, 210 130, 250 120"/>
+    <circle cx="262" cy="116" r="11" fill="#b2f2bb" fill-opacity="0.9"/>
+    <!-- right: agents -->
+    <rect x="355" y="50" width="305" height="230" rx="14" fill="#d0bfff" fill-opacity="0.25"/>
+    <rect x="405" y="125" width="205" height="95" rx="6" stroke-dasharray="7 6"/>
+    <circle cx="450" cy="160" r="7" fill="#d0bfff" fill-opacity="0.9"/>
+    <circle cx="500" cy="185" r="7" fill="#d0bfff" fill-opacity="0.9"/>
+    <circle cx="555" cy="155" r="7" fill="#d0bfff" fill-opacity="0.9"/>
+    <circle cx="575" cy="198" r="7" fill="#d0bfff" fill-opacity="0.9"/>
+  </g>
+  <g fill="currentColor" font-size="20" text-anchor="middle">
+    <text x="172" y="30">engineers</text>
+    <text x="507" y="30">agents</text>
+    <text x="172" y="82" font-size="17">new products and new features</text>
+    <text x="172" y="102" font-size="16" fill="#30a46c">break the assumptions</text>
+    <text x="110" y="180" font-size="15">the rules</text>
+    <text x="255" y="150" font-size="15">something</text>
+    <text x="255" y="166" font-size="15">magical</text>
+    <text x="172" y="255" font-size="16">decide which rules to break</text>
+    <text x="507" y="82" font-size="17">maintenance, bugs, minor updates</text>
+    <text x="507" y="102" font-size="16" fill="#8b5cf6">follow the rules, relentlessly</text>
+    <text x="507" y="243" font-size="15">the rules you already set</text>
+    <text x="507" y="265" font-size="16">no human needed</text>
+  </g>
+</svg>
+<figcaption>Engineers decide which assumptions to break. Agents follow the rules you've already set.</figcaption>
+</figure>
+
+
+<p>So how do you actually do this in practice? How do you hand the maintenance to agents, trust what they ship, and keep your engineers on the decisions that matter? That&#39;s what the rest of this post is about. My <a href="./agents-code-your-way.html" target="_blank" rel="noopener noreferrer">last post</a> covered one piece of it: making agents write code the way our team does. This one is the bigger picture: what the job of an engineer is turning into, and why we need to let go of traditional practices and start thinking way bigger.</p>
+<h2>Everyone is already a PM, a designer and a dev</h2>
+<p><em>It&#39;s cheaper to ship and fix than to wait.</em></p>
+<p>Look at what engineers actually do day to day now. Every engineer on my team, and every engineer I&#39;ve spoken to at the startups around us, is basically acting as a PM, a designer and a dev at the same time.</p>
+<p>Nobody planned this. It just happened, because the maths changed. Asking a designer to design something and waiting for it to come back now feels painfully slow. Writing a spec, getting it reviewed, scheduling it into a sprint: also slow. Meanwhile the agent can build three versions of the thing before lunch.</p>
+<p>So people do the obvious thing. They experiment. It&#39;s much cheaper to try something than to debate it. It&#39;s much cheaper to ship and then fix than to get it perfect up front.</p>
+<p>That&#39;s great for speed. But if you stop there, you end up with a team of very fast people producing a lot of code that nobody is quite sure about. Speed alone isn&#39;t the point. The point is what you do with it.</p>
+<figure class="dwg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 320" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="rel-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="29"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+    <marker id="rel-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
+  </defs>
+  <g filter="url(#rel-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <!-- before: relay race -->
+    <rect x="20" y="45" width="100" height="50" rx="10" fill="#ffd8a8" fill-opacity="0.35"/>
+    <path d="M122 70 C 140 70, 150 70, 168 70" marker-end="url(#rel-arr)"/>
+    <rect x="172" y="45" width="100" height="50" rx="10" fill="#ffd8a8" fill-opacity="0.35"/>
+    <path d="M274 70 C 292 70, 302 70, 320 70" marker-end="url(#rel-arr)"/>
+    <rect x="324" y="45" width="100" height="50" rx="10" fill="#ffd8a8" fill-opacity="0.35"/>
+    <path d="M426 70 C 444 70, 454 70, 472 70" marker-end="url(#rel-arr)"/>
+    <rect x="476" y="45" width="100" height="50" rx="10" fill="#ffd8a8" fill-opacity="0.35"/>
+    <path d="M578 70 C 600 70, 610 70, 628 70" marker-end="url(#rel-arr)"/>
+    <line x1="20" y1="150" x2="660" y2="150" stroke-dasharray="4 8" stroke-width="1.2"/>
+    <!-- after: one engineer, loops -->
+    <rect x="40" y="195" width="170" height="60" rx="12" fill="#b2f2bb" fill-opacity="0.35"/>
+    <path d="M212 225 C 260 225, 280 225, 318 225" marker-end="url(#rel-arr)"/>
+    <rect x="322" y="195" width="120" height="60" rx="12" fill="#d0bfff" fill-opacity="0.35"/>
+    <path d="M444 225 C 490 225, 510 225, 548 225" marker-end="url(#rel-arr)"/>
+    <rect x="552" y="200" width="90" height="50" rx="10"/>
+    <path d="M600 252 C 600 290, 125 290, 125 258" marker-end="url(#rel-arr)"/>
+  </g>
+  <g fill="currentColor" font-size="18" text-anchor="middle">
+    <text x="20" y="28" text-anchor="start" font-size="17">before: the relay race</text>
+    <text x="70" y="76">PM</text>
+    <text x="222" y="76">designer</text>
+    <text x="374" y="76">dev</text>
+    <text x="526" y="76">QA</text>
+    <text x="645" y="76" font-size="16">ship</text>
+    <text x="340" y="125" font-size="16" fill="#e5484d">every arrow is a wait</text>
+    <text x="20" y="180" text-anchor="start" font-size="17">now: one engineer, many tries</text>
+    <text x="125" y="222">PM + designer</text>
+    <text x="125" y="242">+ dev</text>
+    <text x="382" y="230">agents</text>
+    <text x="597" y="230">ship</text>
+    <text x="360" y="310" font-size="16" fill="#30a46c">learn, fix, try again</text>
+  </g>
+</svg>
+<figcaption>The old relay race, where every handoff is a wait, versus one engineer and their agents trying, shipping and fixing.</figcaption>
+</figure>
+
+
+<h2>Build the system that builds the product</h2>
+<p><em>The harness is the job now.</em></p>
+<p>Here&#39;s the shift I think we need to make. We are on a journey to build systems that ensure the code we generate is of the highest quality, and at the same time behaves and builds our systems the right way.</p>
+<p>Read that again, because it&#39;s a different job from the one most of us trained for. The job is no longer &quot;build the product&quot;. The job is <strong>build the system that builds the product</strong>.</p>
+<p>In practice that system is a harness: everything an agent needs so that when it does the work, it does it correctly, to the quality we need, completely autonomously. And not just the first build. The harness also has to cover everything that happens after:</p>
+<ul>
+<li><strong>Maintaining</strong> what&#39;s already shipped.</li>
+<li><strong>Keeping things updated</strong>, so nothing quietly rots.</li>
+<li><strong>Monitoring</strong> how it behaves in production.</li>
+<li><strong>Suggesting improvements</strong> nobody asked for yet.</li>
+</ul>
+<p>I won&#39;t pretend this is free. A proper harness takes weeks of dedicated work before it feels like it&#39;s doing anything. But it pays for itself, because the first version of a product is a tiny fraction of the changes it will ever need. The large amount of work that comes in <em>after</em> you ship (bug fixes, flow fixes, small tweaks, follow-up features) is exactly the work a good harness eats.</p>
+<figure class="dwg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 320" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="ice-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="31"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+  </defs>
+  <g filter="url(#ice-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <!-- waterline -->
+    <path d="M20 95 C 80 88, 120 102, 180 95 C 240 88, 280 102, 340 95 C 400 88, 440 102, 500 95 C 560 88, 600 102, 660 95" stroke="#4dabf7"/>
+    <!-- tip -->
+    <path d="M300 95 L330 40 L355 55 L380 95" fill="#b2f2bb" fill-opacity="0.45"/>
+    <!-- below water -->
+    <path d="M300 95 L220 150 L180 230 L240 300 L440 300 L500 220 L460 140 L380 95" fill="#a5d8ff" fill-opacity="0.3"/>
+  </g>
+  <g fill="currentColor" font-size="18" text-anchor="middle">
+    <text x="470" y="55" font-size="18">the first version</text>
+    <text x="470" y="74" font-size="15">the fun part, and the smallest</text>
+    <text x="340" y="150">bug fixes</text>
+    <text x="300" y="185">flow fixes</text>
+    <text x="390" y="200">small tweaks</text>
+    <text x="320" y="230">follow-up features</text>
+    <text x="345" y="262">keeping things updated</text>
+    <text x="345" y="288" font-size="15">everything after you ship</text>
+    <text x="110" y="175" font-size="17" fill="#8b5cf6">this is the work</text>
+    <text x="110" y="195" font-size="17" fill="#8b5cf6">the harness eats</text>
+  </g>
+</svg>
+<figcaption>The first version is the tip. Everything after you ship is the bulk of the work, and that's what the harness is for.</figcaption>
+</figure>
+
+
+<p>A good example of this is <a href="https://github.com/filedcom/opentax" target="_blank" rel="noopener noreferrer">opentax</a>, which is open source.</p>
+<h2>What the harness actually does</h2>
+<p><em>From first build to fixing bugs while you sleep.</em></p>
+<p>So what does &quot;the system that builds the product&quot; look like in practice? Let&#39;s walk through it, step by step.</p>
+<figure class="dwg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 360" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="hl-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="33"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+    <marker id="hl-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
+    <marker id="hl-arr-g" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="#30a46c" stroke-width="1.5"/></marker>
+  </defs>
+  <g filter="url(#hl-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <!-- 1 engineer builds v1 -->
+    <rect x="20" y="40" width="150" height="60" rx="10" fill="#b2f2bb" fill-opacity="0.35"/>
+    <path d="M172 70 C 200 70, 215 70, 243 70" marker-end="url(#hl-arr)"/>
+    <!-- production -->
+    <rect x="248" y="40" width="160" height="60" rx="10"/>
+    <path d="M410 70 C 440 70, 455 70, 483 70" marker-end="url(#hl-arr)"/>
+    <!-- 2 agents listen -->
+    <rect x="488" y="25" width="172" height="95" rx="10" fill="#a5d8ff" fill-opacity="0.3"/>
+    <!-- branch down: bug -->
+    <path d="M540 122 C 520 160, 470 185, 430 200" marker-end="url(#hl-arr)"/>
+    <rect x="270" y="175" width="155" height="60" rx="10" fill="#d0bfff" fill-opacity="0.35"/>
+    <!-- branch down: feature idea -->
+    <path d="M620 122 C 625 160, 625 190, 620 210" marker-end="url(#hl-arr)"/>
+    <rect x="555" y="215" width="110" height="70" rx="10" fill="#ffd8a8" fill-opacity="0.35"/>
+    <!-- 4 harness reviews -->
+    <path d="M268 205 C 240 205, 225 205, 198 205" marker-end="url(#hl-arr)"/>
+    <rect x="20" y="175" width="175" height="60" rx="10" fill="#d0bfff" fill-opacity="0.35"/>
+    <!-- approved: back to production -->
+    <path d="M110 173 C 140 140, 260 140, 300 103" marker-end="url(#hl-arr-g)" stroke="#30a46c"/>
+    <!-- feature to engineer -->
+    <path d="M555 270 C 380 330, 110 320, 90 238" marker-end="url(#hl-arr)" stroke-dasharray="6 5"/>
+  </g>
+  <g fill="currentColor" font-size="17" text-anchor="middle">
+        <text x="95" y="67">1. engineer builds</text>
+    <text x="95" y="87">the first version</text>
+    <text x="328" y="76">production</text>
+    <text x="574" y="18" font-size="15">2. agents listen</text>
+    <text x="574" y="54" font-size="16">monitoring</text>
+    <text x="574" y="76" font-size="16">errors</text>
+    <text x="574" y="98" font-size="16">analytics</text>
+    <text x="462" y="160" font-size="15">a bug</text>
+    <text x="348" y="202">3. agent</text>
+    <text x="348" y="222">fixes it</text>
+    <text x="645" y="165" font-size="15">a new idea</text>
+    <text x="610" y="245" font-size="16">engineer</text>
+    <text x="610" y="265" font-size="16">decides</text>
+    <text x="107" y="202">4. harness</text>
+    <text x="107" y="222">reviews</text>
+    <text x="150" y="128" font-size="16" fill="#30a46c">approved, ships</text>
+    <text x="330" y="336" font-size="16">engineer builds it, the harness reviews it</text>
+  </g>
+</svg>
+<figcaption>An engineer builds the first version. Agents listen to production, fix bugs, and the harness approves. New ideas go back to the engineer.</figcaption>
+</figure>
+
+
+<h3>Step 1: an engineer builds the first version, through the harness</h3>
+<p>The first version of a product is the most fun part. It&#39;s also the part where building through agents shrinks the timeline the most. Something that used to be a quarter is now a few weeks.</p>
+<p>But notice who drives it: a dev. Not &quot;the agents, unsupervised&quot;. The first build of a product, or any major change to how a feature works, goes through a dev. I&#39;ll come back to why in a minute, because it&#39;s the whole reason the rest of this works.</p>
+<p>Once it&#39;s shipped, the job changes. Now it&#39;s about modifying the same harness so that maintenance is predictable and stays up to the quality bar.</p>
+<h3>Step 2: agents listen</h3>
+<p>For any of this to work, product engineers have to let their agents <em>listen</em>. That means giving them access to:</p>
+<ul>
+<li><strong>Monitoring</strong>, so they see how the system behaves in production.</li>
+<li><strong>Errors</strong>, checked periodically, not only when someone remembers to look.</li>
+<li><strong>Analytics</strong>, so they can see what users actually do.</li>
+</ul>
+<p>An agent that can only read your codebase can only fix what you tell it about. An agent that can read your errors and your analytics can discover new bugs, and new avenues, on its own.</p>
+<h3>Step 3: bugs get fixed automatically</h3>
+<p>When an agent finds a bug, it fixes it. It goes through the harness like any other change: rules, tests, review, verification. Nobody has to triage it, assign it, or remember it exists.</p>
+<h3>Step 4: features are the product engineer&#39;s call</h3>
+<p>Feature requests and feature discovery are different. The agents can surface them, but the product engineer gets to choose. Which features get built, in what order, and which ones don&#39;t get built at all, is a human decision. Remember the faster horses.</p>
+<h3>Step 5: the harness reviews, and approves</h3>
+<p>Any follow-up feature that doesn&#39;t change the architecture goes through automatically, once the harness you built has reviewed and approved it. This is where the review loop from my <a href="./agents-code-your-way.html" target="_blank" rel="noopener noreferrer">last post</a> comes in: rules that live next to the code, checked by a decision model, with a score instead of an essay. That&#39;s what makes &quot;approved by the harness&quot; mean something. Without it, auto-approve is just a polite word for &quot;nobody looked&quot;.</p>
+<h2>What about code taste?</h2>
+<p><em>You already don&#39;t read every line.</em></p>
+<p>This is the first objection I always get. &quot;If agents write everything and the harness approves it, who cares about code quality? Who has taste?&quot;</p>
+<p>The harness does. That&#39;s literally what it&#39;s for. You build the harness to make sure your agents build things the way you need them built. If anything, this gives you <em>more</em> uniformity across the platform than a team of humans ever did, because every change is held to the same rules, every time, by something that doesn&#39;t get tired on a Friday afternoon.</p>
+<p>What it does mean is that you&#39;re not looking at the exact code anymore. And I know that feels uncomfortable. But honestly, this is not something new.</p>
+<p>When you work on a team of engineers, you&#39;re already doing this. You probably don&#39;t know every line of code your peers have written. You do know how the feature works. You know what it does, where it lives, how it connects to everything else, and what will break if you change it. That&#39;s the knowledge you should build on.</p>
+<p>So here&#39;s the move: <strong>let the agents find the best architecture, and have them teach that architecture to you.</strong> You don&#39;t need to have typed it to understand it. You need to know how it works in general, well enough to make good decisions about it.</p>
+<figure class="dwg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 280" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="tst-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="35"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+    <marker id="tst-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
+  </defs>
+  <g filter="url(#tst-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <!-- left: team -->
+    <rect x="20" y="40" width="300" height="200" rx="14" fill="#ffd8a8" fill-opacity="0.2"/>
+    <rect x="45" y="70" width="70" height="90" rx="6"/>
+    <rect x="135" y="70" width="70" height="90" rx="6"/>
+    <rect x="225" y="70" width="70" height="90" rx="6" fill="#ffd8a8" fill-opacity="0.4"/>
+    <line x1="55" y1="90" x2="105" y2="90" stroke-width="1.2"/><line x1="55" y1="105" x2="95" y2="105" stroke-width="1.2"/><line x1="55" y1="120" x2="100" y2="120" stroke-width="1.2"/><line x1="55" y1="135" x2="90" y2="135" stroke-width="1.2"/>
+    <line x1="145" y1="90" x2="195" y2="90" stroke-width="1.2"/><line x1="145" y1="105" x2="185" y2="105" stroke-width="1.2"/><line x1="145" y1="120" x2="190" y2="120" stroke-width="1.2"/><line x1="145" y1="135" x2="180" y2="135" stroke-width="1.2"/>
+    <line x1="235" y1="90" x2="285" y2="90" stroke-width="1.2"/><line x1="235" y1="105" x2="275" y2="105" stroke-width="1.2"/><line x1="235" y1="120" x2="280" y2="120" stroke-width="1.2"/><line x1="235" y1="135" x2="270" y2="135" stroke-width="1.2"/>
+    <!-- right: agents -->
+    <rect x="360" y="40" width="300" height="200" rx="14" fill="#d0bfff" fill-opacity="0.2"/>
+    <rect x="385" y="70" width="70" height="90" rx="6" stroke-dasharray="5 5"/>
+    <rect x="475" y="70" width="70" height="90" rx="6" stroke-dasharray="5 5"/>
+    <rect x="565" y="70" width="70" height="90" rx="6" stroke-dasharray="5 5"/>
+    <path d="M510 200 C 510 185, 510 175, 510 165" marker-end="url(#tst-arr)"/>
+  </g>
+  <g fill="currentColor" font-size="18" text-anchor="middle">
+    <text x="170" y="28">a team of engineers</text>
+    <text x="510" y="28">agents + the harness</text>
+    <text x="80" y="180" font-size="15">peer's code</text>
+    <text x="170" y="180" font-size="15">peer's code</text>
+    <text x="260" y="180" font-size="15">your code</text>
+    <text x="170" y="215" font-size="16">you know how it works,</text>
+    <text x="170" y="233" font-size="16">not every line</text>
+    <text x="510" y="220" font-size="16">the harness holds the taste</text>
+    <text x="510" y="270" font-size="16" fill="#8b5cf6">same deal: know how it works, let them teach you</text>
+  </g>
+</svg>
+<figcaption>You never read every line your teammates wrote. You knew how it worked. Same deal with agents.</figcaption>
+</figure>
+
+
+<p>And that&#39;s exactly why the first build of a product, and any major change to a feature, goes through a dev. That&#39;s the moment the dev learns how it works. Everything after that, the bug fixes and the follow-ups that don&#39;t touch the architecture, can flow through the harness without them.</p>
+<h2>What you get: bandwidth</h2>
+<p><em>This is the bit that actually matters.</em></p>
+<p>So what does all of this buy you? Bandwidth.</p>
+<p>Bandwidth to experiment with more new features. Bandwidth to try wild, crazy ideas that would never have survived a planning meeting. Bandwidth to think bigger.</p>
+<figure class="dwg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 250" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="bw-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="37"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+  </defs>
+  <g filter="url(#bw-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <!-- before week -->
+    <rect x="140" y="45" width="370" height="50" fill="#ffd8a8" fill-opacity="0.4"/>
+    <rect x="510" y="45" width="140" height="50" fill="#b2f2bb" fill-opacity="0.4"/>
+    <!-- after week -->
+    <rect x="140" y="145" width="90" height="50" fill="#ffd8a8" fill-opacity="0.4"/>
+    <rect x="230" y="145" width="420" height="50" fill="#b2f2bb" fill-opacity="0.4"/>
+  </g>
+  <g fill="currentColor" font-size="18">
+    <text x="20" y="76">a week, before</text>
+    <text x="20" y="176">a week, with</text>
+    <text x="20" y="194">a harness</text>
+    <text x="325" y="76" text-anchor="middle">maintenance, bugs, small fixes</text>
+    <text x="580" y="76" text-anchor="middle" font-size="16">new stuff</text>
+    <text x="185" y="168" text-anchor="middle" font-size="15">steering</text>
+    <text x="185" y="184" text-anchor="middle" font-size="15">the harness</text>
+    <text x="440" y="168" text-anchor="middle">new systems, wild ideas,</text>
+    <text x="440" y="188" text-anchor="middle">animations, performance, polish</text>
+    <text x="340" y="235" text-anchor="middle" font-size="15">(illustrative, not measured)</text>
+  </g>
+</svg>
+<figcaption>Hand the maintenance to the harness and the week flips. (Illustrative.)</figcaption>
+</figure>
+
+
+<p>A few things that change once the harness is carrying the maintenance load:</p>
+<ul>
+<li><strong>You can build entire systems</strong> that previously had to be planned for months, because they used to eat a lot of engineering time. Now they&#39;re a few weeks of a dev and their agents.</li>
+<li><strong>You can focus on experience.</strong> The product no longer has to look bad. The small details, like animations and performance, that you&#39;d typically push to a tech debt queue (where they&#39;d live forever), now actually ship.</li>
+</ul>
+<p>That second one is the one I&#39;m most excited about. For years &quot;we&#39;ll polish it later&quot; was a lie everyone agreed to tell. It doesn&#39;t have to be anymore.</p>
+<h2>Decisions stay with the human</h2>
+<p><em>The agents do the work. You decide what the work is.</em></p>
+<p>For this to work, the decision making has to stay with the product engineers. The feature requests, the roadmap, the context about the business and the customer: all of that sits with a human.</p>
+<p>Which means the engineering role itself has changed. It&#39;s now <strong>product engineering</strong>. It&#39;s about learning to think in terms of product, being close to users, and building features that align with the business. It&#39;s a mix of design, engineering and product management, all at once.</p>
+<p>Zoom out and this is a bigger shift than it looks. For a long time we built teams out of specialised roles: designers, frontend devs, backend devs, QA, PMs. Those roles were necessary at the time, because one person simply couldn&#39;t do all of it at the quality and speed required. Now we&#39;re moving towards <strong>more general roles for humans, and specialised agents</strong> to do the specialised work. The human holds the whole picture. The agents go deep.</p>
+<figure class="dwg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 290" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="rol-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="39"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+    <marker id="rol-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
+  </defs>
+  <g filter="url(#rol-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <!-- before: specialist humans -->
+    <circle cx="50" cy="80" r="16" fill="#ffd8a8" fill-opacity="0.5"/>
+    <circle cx="50" cy="135" r="16" fill="#ffd8a8" fill-opacity="0.5"/>
+    <circle cx="50" cy="190" r="16" fill="#ffd8a8" fill-opacity="0.5"/>
+    <circle cx="50" cy="245" r="16" fill="#ffd8a8" fill-opacity="0.5"/>
+    <path d="M250 160 C 290 160, 310 160, 345 160" marker-end="url(#rol-arr)"/>
+    <!-- after: one generalist human -->
+    <circle cx="420" cy="160" r="24" fill="#b2f2bb" fill-opacity="0.6"/>
+    <line x1="446" y1="150" x2="560" y2="75"/>
+    <line x1="446" y1="155" x2="560" y2="125"/>
+    <line x1="446" y1="165" x2="560" y2="180"/>
+    <line x1="446" y1="170" x2="560" y2="235"/>
+    <rect x="565" y="60" width="100" height="32" rx="8" fill="#d0bfff" fill-opacity="0.35"/>
+    <rect x="565" y="110" width="100" height="32" rx="8" fill="#d0bfff" fill-opacity="0.35"/>
+    <rect x="565" y="165" width="100" height="32" rx="8" fill="#d0bfff" fill-opacity="0.35"/>
+    <rect x="565" y="220" width="100" height="32" rx="8" fill="#d0bfff" fill-opacity="0.35"/>
+  </g>
+  <g fill="currentColor" font-size="18">
+    <text x="20" y="40" font-size="17">specialist humans</text>
+    <text x="80" y="86">PM</text>
+    <text x="80" y="141">designer</text>
+    <text x="80" y="196">frontend / backend dev</text>
+    <text x="80" y="251">QA</text>
+    <text x="420" y="40" text-anchor="middle" font-size="17">a generalist human</text>
+    <text x="420" y="205" text-anchor="middle" font-size="16">holds the whole picture</text>
+    <text x="420" y="223" text-anchor="middle" font-size="16">and makes the decisions</text>
+    <text x="615" y="40" text-anchor="middle" font-size="17">specialist agents</text>
+    <text x="615" y="81" text-anchor="middle" font-size="15">design</text>
+    <text x="615" y="131" text-anchor="middle" font-size="15">code</text>
+    <text x="615" y="186" text-anchor="middle" font-size="15">review</text>
+    <text x="615" y="241" text-anchor="middle" font-size="15">maintenance</text>
+  </g>
+</svg>
+<figcaption>From specialist humans to a generalist human with specialist agents.</figcaption>
+</figure>
+
+
+<p>This is where the startup industry is today. I believe that within one or two years, the incumbents will be there too.</p>
+<h2>Now the unglamorous bits</h2>
+<p>It wouldn&#39;t be fair to sell this as all upside, so here&#39;s the fine print:</p>
+<ul>
+<li><strong>The idea is new.</strong> We&#39;ve tried it on a few projects inside Filed so far, and the results have been spectacular. But we&#39;re still building out the full harness for all of our products, so more learnings will come in due course.</li>
+<li><strong>The harness is a real upfront cost.</strong> Weeks of dedicated work before it pays off. If you&#39;re not willing to invest that, you&#39;ll end up with fast agents and nothing holding them to your standard.</li>
+<li><strong>You won&#39;t read most of the code.</strong> That&#39;s the trade. If your harness is weak, that&#39;s a problem you won&#39;t see until it bites you. The harness has to be good enough to deserve your trust, and you have to keep testing whether it still is.</li>
+<li><strong>The harness needs maintaining too.</strong> Rules go stale, monitoring gets noisy, and agents will happily repeat a bad pattern the moment it appears in two places. Building the system that builds the product also means looking after that system.</li>
+<li><strong>It doesn&#39;t replace your judgement.</strong> Decisions about what to build, and any change to the architecture, still go through a human. The harness repeats your judgement. It doesn&#39;t invent it.</li>
+</ul>
+<h2>So what now?</h2>
+<p>If you&#39;re an engineer, the question to ask yourself is no longer &quot;how fast can I build this?&quot;. It&#39;s &quot;what would I need to build so that this, and everything after it, builds itself to the standard I care about?&quot;.</p>
+<p>Build that. Ship the first version through it. Learn how it works. Then let the harness carry the follow-ups, and spend the time you get back on the things that never used to fit in a roadmap.</p>
+<p>We have the tools and the time now to build really great experiences. And the world is just getting better and better.</p>
+
+</article>
+
+<div class="giscus-wrap">
+<script src="https://giscus.app/client.js"
+  data-repo="a7ul/thoughts"
+  data-repo-id="R_kgDORp7Weg"
+  data-category="General"
+  data-category-id="DIC_kwDORp7Wes4C4pUS"
+  data-mapping="title"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="light"
+  data-lang="en"
+  crossorigin="anonymous"
+  async>
+</script>
+</div>
+</div>
+<script>
+(function(){
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    localStorage.setItem('theme',t);
+    var link=document.getElementById('hljs-theme');
+    if(link)link.href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/'+(t==='dark'?'github-dark':'github')+'.min.css';
+    var btn=document.getElementById('theme-toggle');
+    if(btn)btn.textContent=t==='dark'?'☀':'☾';
+    var gf=document.querySelector('iframe.giscus-frame');
+    if(gf)gf.contentWindow.postMessage({giscus:{setConfig:{theme:t==='dark'?'dark_dimmed':'light'}}}, 'https://giscus.app');
+  }
+  function buildToc(){
+    var toc=document.getElementById('toc');
+    if(!toc)return;
+    var headings=Array.from(document.querySelectorAll('article h2,article h3'));
+    if(headings.length<2)return;
+    var title=document.createElement('div');
+    title.className='toc-title';
+    title.textContent='On this page';
+    toc.appendChild(title);
+    var ul=document.createElement('ul');
+    headings.forEach(function(h,i){
+      if(!h.id)h.id=(h.textContent||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'h'+i;
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href='#'+h.id;
+      a.textContent=h.textContent;
+      a.className=h.tagName==='H3'?'toc-h3':'toc-h2';
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    toc.appendChild(ul);
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var link=toc.querySelector('a[href="#'+e.target.id+'"]');
+        if(link){
+          if(e.isIntersecting){
+            toc.querySelectorAll('a').forEach(function(a){a.classList.remove('active');});
+            link.classList.add('active');
+          }
+        }
+      });
+    },{rootMargin:'-10% 0px -80% 0px'});
+    headings.forEach(function(h){obs.observe(h);});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    var cur=document.documentElement.getAttribute('data-theme')||'light';
+    var btn=document.getElementById('theme-toggle');
+    if(btn){
+      btn.textContent=cur==='dark'?'☀':'☾';
+      btn.addEventListener('click',function(){
+        applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+      });
+    }
+    buildToc();
+    initLightbox();
+  });
+  function initLightbox(){
+    var overlay=document.getElementById('img-overlay');
+    var overlayImg=document.getElementById('img-overlay-img');
+    if(!overlay||!overlayImg)return;
+    document.querySelectorAll('article img').forEach(function(img){
+      img.style.cursor='zoom-in';
+      img.addEventListener('click',function(){
+        overlayImg.setAttribute('src',img.getAttribute('src')||'');
+        overlayImg.setAttribute('alt',img.getAttribute('alt')||'');
+        overlay.classList.add('open');
+        document.body.style.overflow='hidden';
+      });
+    });
+    function close(){overlay.classList.remove('open');document.body.style.overflow='';}
+    overlay.addEventListener('click',function(e){if(e.target===overlay)close();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  }
+})();
+</script>
+</body>
+</html>

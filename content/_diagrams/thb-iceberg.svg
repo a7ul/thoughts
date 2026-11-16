@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 320" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="ice-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="31"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+  </defs>
+  <g filter="url(#ice-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <!-- waterline -->
+    <path d="M20 95 C 80 88, 120 102, 180 95 C 240 88, 280 102, 340 95 C 400 88, 440 102, 500 95 C 560 88, 600 102, 660 95" stroke="#4dabf7"/>
+    <!-- tip -->
+    <path d="M300 95 L330 40 L355 55 L380 95" fill="#b2f2bb" fill-opacity="0.45"/>
+    <!-- below water -->
+    <path d="M300 95 L220 150 L180 230 L240 300 L440 300 L500 220 L460 140 L380 95" fill="#a5d8ff" fill-opacity="0.3"/>
+  </g>
+  <g fill="currentColor" font-size="18" text-anchor="middle">
+    <text x="470" y="55" font-size="18">the first version</text>
+    <text x="470" y="74" font-size="15">the fun part, and the smallest</text>
+    <text x="340" y="150">bug fixes</text>
+    <text x="300" y="185">flow fixes</text>
+    <text x="390" y="200">small tweaks</text>
+    <text x="320" y="230">follow-up features</text>
+    <text x="345" y="262">keeping things updated</text>
+    <text x="345" y="288" font-size="15">everything after you ship</text>
+    <text x="110" y="175" font-size="17" fill="#8b5cf6">this is the work</text>
+    <text x="110" y="195" font-size="17" fill="#8b5cf6">the harness eats</text>
+  </g>
+</svg>

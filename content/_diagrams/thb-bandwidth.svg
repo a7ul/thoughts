@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 250" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="bw-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="37"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+  </defs>
+  <g filter="url(#bw-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <!-- before week -->
+    <rect x="140" y="45" width="370" height="50" fill="#ffd8a8" fill-opacity="0.4"/>
+    <rect x="510" y="45" width="140" height="50" fill="#b2f2bb" fill-opacity="0.4"/>
+    <!-- after week -->
+    <rect x="140" y="145" width="90" height="50" fill="#ffd8a8" fill-opacity="0.4"/>
+    <rect x="230" y="145" width="420" height="50" fill="#b2f2bb" fill-opacity="0.4"/>
+  </g>
+  <g fill="currentColor" font-size="18">
+    <text x="20" y="76">a week, before</text>
+    <text x="20" y="176">a week, with</text>
+    <text x="20" y="194">a harness</text>
+    <text x="325" y="76" text-anchor="middle">maintenance, bugs, small fixes</text>
+    <text x="580" y="76" text-anchor="middle" font-size="16">new stuff</text>
+    <text x="185" y="168" text-anchor="middle" font-size="15">steering</text>
+    <text x="185" y="184" text-anchor="middle" font-size="15">the harness</text>
+    <text x="440" y="168" text-anchor="middle">new systems, wild ideas,</text>
+    <text x="440" y="188" text-anchor="middle">animations, performance, polish</text>
+    <text x="340" y="235" text-anchor="middle" font-size="15">(illustrative, not measured)</text>
+  </g>
+</svg>

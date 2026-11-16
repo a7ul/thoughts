@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="hor-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="21"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+    <marker id="hor-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
+    <marker id="hor-arr-g" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="#30a46c" stroke-width="1.5"/></marker>
+  </defs>
+  <g filter="url(#hor-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <!-- speech bubbles: what people ask for -->
+    <path d="M30 30 L230 30 Q240 30 240 40 L240 80 Q240 90 230 90 L90 90 L70 108 L74 90 L40 90 Q30 90 30 80 L30 40 Q30 30 40 30 Z" fill="#ffd8a8" fill-opacity="0.35"/>
+    <path d="M30 125 L230 125 Q240 125 240 135 L240 175 Q240 185 230 185 L90 185 L70 203 L74 185 L40 185 Q30 185 30 175 L30 135 Q30 125 40 125 Z" fill="#ffd8a8" fill-opacity="0.35"/>
+    <!-- the real need -->
+    <rect x="290" y="95" width="150" height="70" rx="12" fill="#d0bfff" fill-opacity="0.35"/>
+    <path d="M242 62 C 265 75, 275 95, 288 115" marker-end="url(#hor-arr)"/>
+    <path d="M242 155 C 262 150, 272 145, 288 140" marker-end="url(#hor-arr)"/>
+    <!-- answers -->
+    <rect x="500" y="40" width="160" height="60" rx="10" stroke-dasharray="6 6"/>
+    <rect x="500" y="170" width="160" height="70" rx="10" fill="#b2f2bb" fill-opacity="0.35"/>
+    <path d="M442 115 C 465 100, 480 85, 498 75" marker-end="url(#hor-arr)" stroke-dasharray="5 5"/>
+    <path d="M442 145 C 465 165, 480 185, 498 200" marker-end="url(#hor-arr-g)" stroke="#30a46c"/>
+  </g>
+  <g fill="currentColor" font-size="20" text-anchor="middle">
+    <text x="135" y="66">"faster horses"</text>
+    <text x="135" y="161">"faster carts"</text>
+    <text x="135" y="232" font-size="16">what people ask for</text>
+    <text x="365" y="126">"I want to get</text>
+    <text x="365" y="148">places faster"</text>
+    <text x="365" y="190" font-size="16">the real feedback</text>
+    <text x="580" y="76">a better horse</text>
+    <text x="580" y="124" font-size="16">(within the rules)</text>
+    <text x="580" y="202">cars</text>
+    <text x="580" y="224" font-size="16">a new way to get around</text>
+    <text x="580" y="270" font-size="16" fill="#30a46c">only if someone breaks</text>
+    <text x="580" y="288" font-size="16" fill="#30a46c">an assumption</text>
+  </g>
+</svg>

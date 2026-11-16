@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="spl-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="27"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+  </defs>
+  <g filter="url(#spl-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <!-- left: engineer -->
+    <rect x="20" y="50" width="305" height="230" rx="14" fill="#b2f2bb" fill-opacity="0.25"/>
+    <!-- rule box broken open -->
+    <path d="M70 140 L150 140 L150 210 L70 210 Z" stroke-dasharray="7 6"/>
+    <path d="M150 165 C 180 150, 210 130, 250 120"/>
+    <circle cx="262" cy="116" r="11" fill="#b2f2bb" fill-opacity="0.9"/>
+    <!-- right: agents -->
+    <rect x="355" y="50" width="305" height="230" rx="14" fill="#d0bfff" fill-opacity="0.25"/>
+    <rect x="405" y="125" width="205" height="95" rx="6" stroke-dasharray="7 6"/>
+    <circle cx="450" cy="160" r="7" fill="#d0bfff" fill-opacity="0.9"/>
+    <circle cx="500" cy="185" r="7" fill="#d0bfff" fill-opacity="0.9"/>
+    <circle cx="555" cy="155" r="7" fill="#d0bfff" fill-opacity="0.9"/>
+    <circle cx="575" cy="198" r="7" fill="#d0bfff" fill-opacity="0.9"/>
+  </g>
+  <g fill="currentColor" font-size="20" text-anchor="middle">
+    <text x="172" y="30">engineers</text>
+    <text x="507" y="30">agents</text>
+    <text x="172" y="82" font-size="17">new products and new features</text>
+    <text x="172" y="102" font-size="16" fill="#30a46c">break the assumptions</text>
+    <text x="110" y="180" font-size="15">the rules</text>
+    <text x="255" y="150" font-size="15">something</text>
+    <text x="255" y="166" font-size="15">magical</text>
+    <text x="172" y="255" font-size="16">decide which rules to break</text>
+    <text x="507" y="82" font-size="17">maintenance, bugs, minor updates</text>
+    <text x="507" y="102" font-size="16" fill="#8b5cf6">follow the rules, relentlessly</text>
+    <text x="507" y="243" font-size="15">the rules you already set</text>
+    <text x="507" y="265" font-size="16">no human needed</text>
+  </g>
+</svg>
