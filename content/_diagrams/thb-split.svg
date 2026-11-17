@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" viewBox="0 0 680 300" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
   <defs>
-    <filter id="spl-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="27"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+    <filter id="spl-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="27"/><feDisplacementMap in="SourceGraphic" scale="3"/><feGaussianBlur stdDeviation="0.4"/></filter>
   </defs>
   <g filter="url(#spl-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
     <!-- left: engineer -->

@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 290" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" viewBox="0 0 680 290" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
   <defs>
-    <filter id="rol-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="39"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+    <filter id="rol-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="39"/><feDisplacementMap in="SourceGraphic" scale="3"/><feGaussianBlur stdDeviation="0.4"/></filter>
     <marker id="rol-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
   </defs>
   <g filter="url(#rol-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
