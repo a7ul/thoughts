@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 290" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+  <defs>
+    <filter id="avg-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="23"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+  </defs>
+  <g filter="url(#avg-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <!-- axis -->
+    <line x1="40" y1="230" x2="640" y2="230"/>
+    <!-- bell curve of ideas -->
+    <path d="M60 228 C 160 226, 210 210, 260 150 C 300 95, 320 60, 340 60 C 360 60, 380 95, 420 150 C 470 210, 520 226, 620 228" fill="#a5d8ff" fill-opacity="0.3"/>
+    <!-- "rules of the game" box around the middle -->
+    <rect x="200" y="40" width="280" height="190" rx="8" stroke-dasharray="7 6"/>
+    <!-- agent markers -->
+    <circle cx="340" cy="95" r="9" fill="#d0bfff" fill-opacity="0.7"/>
+    <path d="M165 112 C 230 112, 290 100, 328 96" stroke-width="1.3"/>
+    <circle cx="430" cy="185" r="8" fill="#d0bfff" fill-opacity="0.7"/>
+    <!-- human marker outside -->
+    <circle cx="600" cy="205" r="10" fill="#b2f2bb" fill-opacity="0.8"/>
+  </g>
+  <g fill="currentColor" font-size="18" text-anchor="middle">
+    <text x="340" y="28" font-size="17">the rules of the game</text>
+    <text x="110" y="100" font-size="16">the average:</text>
+    <text x="110" y="118" font-size="16">a well-reasoned</text>
+    <text x="110" y="136" font-size="16">faster horse</text>
+    <text x="435" y="212" font-size="15">sometimes novel,</text>
+    <text x="435" y="226" font-size="15">but still inside</text>
+    <text x="600" y="180" font-size="17" fill="#30a46c">cars</text>
+    <text x="600" y="255" font-size="15" fill="#30a46c">breaking an assumption</text>
+    <text x="600" y="272" font-size="15" fill="#30a46c">(the engineer's job)</text>
+    <text x="110" y="255" font-size="15">ideas agents were trained on</text>
+  </g>
+  <g font-size="15" text-anchor="middle">
+    <text x="340" y="282" fill="#8b5cf6">where agents land</text>
+  </g>
+</svg>
