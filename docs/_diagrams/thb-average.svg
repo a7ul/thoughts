@@ -1,8 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" viewBox="0 0 680 290" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+<svg xmlns="http://www.w3.org/2000/svg" text-rendering="geometricPrecision" viewBox="0 0 680 290" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Geist, system-ui, -apple-system, sans-serif">
   <defs>
-    <filter id="avg-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="23"/><feDisplacementMap in="SourceGraphic" scale="3"/><feGaussianBlur stdDeviation="0.4"/></filter>
   </defs>
-  <g filter="url(#avg-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+  <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
     <!-- axis -->
     <line x1="40" y1="230" x2="640" y2="230"/>
     <!-- bell curve of ideas -->
@@ -16,19 +15,19 @@
     <!-- human marker outside -->
     <circle cx="600" cy="205" r="10" fill="#b2f2bb" fill-opacity="0.8"/>
   </g>
-  <g fill="currentColor" font-size="18" text-anchor="middle">
-    <text x="340" y="28" font-size="17">the rules of the game</text>
-    <text x="110" y="100" font-size="16">the average:</text>
-    <text x="110" y="118" font-size="16">a well-reasoned</text>
-    <text x="110" y="136" font-size="16">faster horse</text>
-    <text x="435" y="212" font-size="15">sometimes novel,</text>
-    <text x="435" y="226" font-size="15">but still inside</text>
-    <text x="600" y="180" font-size="17" fill="#30a46c">cars</text>
-    <text x="600" y="255" font-size="15" fill="#30a46c">breaking an assumption</text>
-    <text x="600" y="272" font-size="15" fill="#30a46c">(the engineer's job)</text>
-    <text x="110" y="255" font-size="15">ideas agents were trained on</text>
+  <g fill="currentColor" font-size="13.3" text-anchor="middle">
+    <text x="340" y="28" font-size="12.6">the rules of the game</text>
+    <text x="110" y="100" font-size="11.8">the average:</text>
+    <text x="110" y="118" font-size="11.8">a well-reasoned</text>
+    <text x="110" y="136" font-size="11.8">faster horse</text>
+    <text x="435" y="212" font-size="11.1">sometimes novel,</text>
+    <text x="435" y="226" font-size="11.1">but still inside</text>
+    <text x="600" y="180" font-size="12.6" fill="#30a46c">cars</text>
+    <text x="600" y="255" font-size="11.1" fill="#30a46c">breaking an assumption</text>
+    <text x="600" y="272" font-size="11.1" fill="#30a46c">(the engineer's job)</text>
+    <text x="110" y="255" font-size="11.1">ideas agents were trained on</text>
   </g>
-  <g font-size="15" text-anchor="middle">
+  <g font-size="11.1" text-anchor="middle">
     <text x="340" y="282" fill="#8b5cf6">where agents land</text>
   </g>
 </svg>

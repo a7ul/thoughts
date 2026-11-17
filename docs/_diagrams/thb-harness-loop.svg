@@ -1,10 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" viewBox="0 0 680 360" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+<svg xmlns="http://www.w3.org/2000/svg" text-rendering="geometricPrecision" viewBox="0 0 680 360" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Geist, system-ui, -apple-system, sans-serif">
   <defs>
-    <filter id="hl-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="33"/><feDisplacementMap in="SourceGraphic" scale="3"/><feGaussianBlur stdDeviation="0.4"/></filter>
     <marker id="hl-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
     <marker id="hl-arr-g" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="#30a46c" stroke-width="1.5"/></marker>
   </defs>
-  <g filter="url(#hl-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+  <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
     <!-- 1 engineer builds v1 -->
     <rect x="20" y="40" width="150" height="60" rx="10" fill="#b2f2bb" fill-opacity="0.35"/>
     <path d="M172 70 C 200 70, 215 70, 243 70" marker-end="url(#hl-arr)"/>
@@ -27,23 +26,23 @@
     <!-- feature to engineer -->
     <path d="M555 270 C 380 330, 110 320, 90 238" marker-end="url(#hl-arr)" stroke-dasharray="6 5"/>
   </g>
-  <g fill="currentColor" font-size="17" text-anchor="middle">
+  <g fill="currentColor" font-size="12.6" text-anchor="middle">
         <text x="95" y="67">1. engineer builds</text>
     <text x="95" y="87">the first version</text>
     <text x="328" y="76">production</text>
-    <text x="574" y="18" font-size="15">2. agents listen</text>
-    <text x="574" y="54" font-size="16">monitoring</text>
-    <text x="574" y="76" font-size="16">errors</text>
-    <text x="574" y="98" font-size="16">analytics</text>
-    <text x="462" y="160" font-size="15">a bug</text>
+    <text x="574" y="18" font-size="11.1">2. agents listen</text>
+    <text x="574" y="54" font-size="11.8">monitoring</text>
+    <text x="574" y="76" font-size="11.8">errors</text>
+    <text x="574" y="98" font-size="11.8">analytics</text>
+    <text x="462" y="160" font-size="11.1">a bug</text>
     <text x="348" y="202">3. agent</text>
     <text x="348" y="222">fixes it</text>
-    <text x="645" y="165" font-size="15">a new idea</text>
-    <text x="610" y="245" font-size="16">engineer</text>
-    <text x="610" y="265" font-size="16">decides</text>
+    <text x="645" y="165" font-size="11.1">a new idea</text>
+    <text x="610" y="245" font-size="11.8">engineer</text>
+    <text x="610" y="265" font-size="11.8">decides</text>
     <text x="107" y="202">4. harness</text>
     <text x="107" y="222">reviews</text>
-    <text x="150" y="128" font-size="16" fill="#30a46c">approved, ships</text>
-    <text x="330" y="336" font-size="16">engineer builds it, the harness reviews it</text>
+    <text x="150" y="128" font-size="11.8" fill="#30a46c">approved, ships</text>
+    <text x="330" y="336" font-size="11.8">engineer builds it, the harness reviews it</text>
   </g>
 </svg>

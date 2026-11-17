@@ -1,9 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" viewBox="0 0 680 320" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+<svg xmlns="http://www.w3.org/2000/svg" text-rendering="geometricPrecision" viewBox="0 0 680 320" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Geist, system-ui, -apple-system, sans-serif">
   <defs>
-    <filter id="rel-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="29"/><feDisplacementMap in="SourceGraphic" scale="3"/><feGaussianBlur stdDeviation="0.4"/></filter>
     <marker id="rel-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
   </defs>
-  <g filter="url(#rel-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+  <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
     <!-- before: relay race -->
     <rect x="20" y="45" width="100" height="50" rx="10" fill="#ffd8a8" fill-opacity="0.35"/>
     <path d="M122 70 C 140 70, 150 70, 168 70" marker-end="url(#rel-arr)"/>
@@ -22,19 +21,19 @@
     <rect x="552" y="200" width="90" height="50" rx="10"/>
     <path d="M600 252 C 600 290, 125 290, 125 258" marker-end="url(#rel-arr)"/>
   </g>
-  <g fill="currentColor" font-size="18" text-anchor="middle">
-    <text x="20" y="28" text-anchor="start" font-size="17">before: the relay race</text>
+  <g fill="currentColor" font-size="13.3" text-anchor="middle">
+    <text x="20" y="28" text-anchor="start" font-size="12.6">before: the relay race</text>
     <text x="70" y="76">PM</text>
     <text x="222" y="76">designer</text>
     <text x="374" y="76">dev</text>
     <text x="526" y="76">QA</text>
-    <text x="645" y="76" font-size="16">ship</text>
-    <text x="340" y="125" font-size="16" fill="#e5484d">every arrow is a wait</text>
-    <text x="20" y="180" text-anchor="start" font-size="17">now: one engineer, many tries</text>
+    <text x="645" y="76" font-size="11.8">ship</text>
+    <text x="340" y="125" font-size="11.8" fill="#e5484d">every arrow is a wait</text>
+    <text x="20" y="180" text-anchor="start" font-size="12.6">now: one engineer, many tries</text>
     <text x="125" y="222">PM + designer</text>
     <text x="125" y="242">+ dev</text>
     <text x="382" y="230">agents</text>
     <text x="597" y="230">ship</text>
-    <text x="360" y="310" font-size="16" fill="#30a46c">learn, fix, try again</text>
+    <text x="360" y="310" font-size="11.8" fill="#30a46c">learn, fix, try again</text>
   </g>
 </svg>

@@ -1,10 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 340" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Caveat, 'Comic Sans MS', cursive">
+<svg xmlns="http://www.w3.org/2000/svg" text-rendering="geometricPrecision" viewBox="0 0 680 340" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Geist, system-ui, -apple-system, sans-serif">
   <defs>
-    <filter id="loop-rough"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="13"/><feDisplacementMap in="SourceGraphic" scale="3.5"/></filter>
     <marker id="loop-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
     <marker id="loop-arr-r" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="#e5484d" stroke-width="1.5"/></marker>
   </defs>
-  <g filter="url(#loop-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+  <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
     <rect x="20" y="55" width="150" height="60" rx="10" fill="#a5d8ff" fill-opacity="0.3"/>
     <path d="M172 85 C 195 85, 205 85, 228 85" marker-end="url(#loop-arr)"/>
     <rect x="235" y="55" width="150" height="60" rx="10"/>
@@ -17,25 +16,25 @@
     <path d="M595 200 C 625 230, 630 250, 630 268" marker-end="url(#loop-arr)"/>
     <rect x="585" y="275" width="85" height="45" rx="8" fill="#b2f2bb" fill-opacity="0.3"/>
   </g>
-  <g fill="currentColor" font-size="18" text-anchor="middle">
-    <text x="95" y="28" font-size="17">1. before code</text>
-    <text x="95" y="46" font-size="15" fill="#30a46c">no model call</text>
-    <text x="95" y="82" font-size="16">filed review rules</text>
-    <text x="95" y="100" font-size="16">--files ...</text>
+  <g fill="currentColor" font-size="13.3" text-anchor="middle">
+    <text x="95" y="28" font-size="12.6">1. before code</text>
+    <text x="95" y="46" font-size="11.1" fill="#30a46c">no model call</text>
+    <text x="95" y="82" font-size="11.8">filed review rules</text>
+    <text x="95" y="100" font-size="11.8">--files ...</text>
     <text x="310" y="82">write the code</text>
-    <text x="310" y="100" font-size="15">(following the rules)</text>
-    <text x="310" y="18" font-size="15">2. code: lint + tests, every edit</text>
-    <text x="530" y="28" font-size="17">3. after code (review)</text>
-    <text x="530" y="46" font-size="15" fill="#8b5cf6">one decider call</text>
-    <text x="530" y="82" font-size="16">filed review run</text>
-    <text x="530" y="100" font-size="16">--summary pr.md</text>
-    <text x="530" y="196" font-size="17">hints</text>
-    <text x="360" y="265" font-size="17" fill="#e5484d">real problem? fix it, run again</text>
-    <text x="360" y="285" font-size="15" fill="#e5484d">(at most three rounds)</text>
+    <text x="310" y="100" font-size="11.1">(following the rules)</text>
+    <text x="310" y="18" font-size="11.1">2. code: lint + tests, every edit</text>
+    <text x="530" y="28" font-size="12.6">3. after code (review)</text>
+    <text x="530" y="46" font-size="11.1" fill="#8b5cf6">one decider call</text>
+    <text x="530" y="82" font-size="11.8">filed review run</text>
+    <text x="530" y="100" font-size="11.8">--summary pr.md</text>
+    <text x="530" y="196" font-size="12.6">hints</text>
+    <text x="360" y="265" font-size="12.6" fill="#e5484d">real problem? fix it, run again</text>
+    <text x="360" y="285" font-size="11.1" fill="#e5484d">(at most three rounds)</text>
     <text x="627" y="303">PR</text>
-    <text x="470" y="300" font-size="15" text-anchor="end">false alarm? dismiss with a reason →</text>
+    <text x="570" y="318" font-size="11.1" text-anchor="end">false alarm? dismiss with a reason →</text>
   </g>
-  <g fill="currentColor" font-size="15">
+  <g fill="currentColor" font-size="11.1">
     <text x="20" y="150">sees: "avoid X, do Y,</text>
     <text x="20" y="168">see Z" for only the</text>
     <text x="20" y="186">files it's about to touch</text>
