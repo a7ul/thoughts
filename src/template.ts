@@ -220,6 +220,11 @@ export const CSS = `
   --text: #111;
   --text-secondary: #444;
   --text-muted: #777;
+  --dwg-bg: #f5f2ec;
+  --dwg-card: #fffdf9;
+  --dwg-accent: #f2c08d;
+  --dwg-ink: #1d1c1a;
+  --dwg-muted: #74706a;
   --border: #e0e0e0;
   --border-light: #eee;
   --code-bg: #f6f8fa;
@@ -236,6 +241,11 @@ export const CSS = `
   --text: #e8e8e8;
   --text-secondary: #aaa;
   --text-muted: #888;
+  --dwg-bg: #1c1b19;
+  --dwg-card: #262522;
+  --dwg-accent: #b9773d;
+  --dwg-ink: #ece8e1;
+  --dwg-muted: #a39e96;
   --border: #2a2a2a;
   --border-light: #222;
   --code-bg: #161b22;

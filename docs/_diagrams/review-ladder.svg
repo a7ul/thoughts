@@ -1,24 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" text-rendering="geometricPrecision" viewBox="0 0 680 270" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Geist, system-ui, -apple-system, sans-serif">
-  <defs>
-  </defs>
-  <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-    <path d="M40 250 L40 200 L200 200 L200 150 L360 150 L360 100 L520 100 L520 50 L660 50 L660 250"/>
-    <rect x="40" y="200" width="160" height="50" fill="#a5d8ff" fill-opacity="0.25" stroke="none"/>
-    <rect x="200" y="150" width="160" height="100" fill="#d0bfff" fill-opacity="0.25" stroke="none"/>
-    <rect x="360" y="100" width="160" height="150" fill="#ffd8a8" fill-opacity="0.3" stroke="none"/>
-    <rect x="520" y="50" width="140" height="200" fill="#b2f2bb" fill-opacity="0.3" stroke="none"/>
-    <line x1="40" y1="250" x2="660" y2="250"/>
-  </g>
-  <g fill="currentColor" font-size="14.1" text-anchor="middle">
-    <text x="120" y="230">guide for agents</text>
-    <text x="280" y="180">a Jev rule</text>
-    <text x="440" y="130">a lint or test</text>
-    <text x="590" y="82">make it</text>
-    <text x="590" y="102">impossible</text>
-    <text x="590" y="122">in code</text>
-    <text x="120" y="185" font-size="11.8">"agree the user journey first"</text>
-    <text x="280" y="135" font-size="11.8">"except: return None"</text>
-    <text x="440" y="85" font-size="11.8">"unused import"</text>
-    <text x="590" y="36" font-size="12.6">always try this one first ↓</text>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 280" style="max-width:100%;display:block;margin:0 auto" font-family="Geist, system-ui, -apple-system, sans-serif">
+  <rect x="0" y="0" width="680" height="280" rx="18" fill="var(--dwg-bg, #f5f2ec)"/>
+  <rect x="40" y="200" width="160" height="50" fill="var(--dwg-card, #fffdf9)"/>
+  <rect x="200" y="150" width="160" height="100" fill="var(--dwg-card, #fffdf9)"/>
+  <rect x="360" y="100" width="160" height="150" fill="var(--dwg-card, #fffdf9)"/>
+  <rect x="520" y="50" width="140" height="200" fill="var(--dwg-accent, #f2c08d)"/>
+  <path d="M40.0 250.0 C40.1 241.6 36.1 207.8 40.4 199.5 C44.8 191.2 57.5 200.0 66.1 200.2 C74.8 200.4 83.5 200.7 92.5 200.5 C101.6 200.3 111.4 199.3 120.5 199.2 C129.6 199.1 138.1 199.7 147.0 200.0 C155.8 200.3 164.6 200.8 173.6 200.8 C182.6 200.8 196.4 208.2 200.9 199.8 C205.4 191.5 196.2 159.0 200.6 150.5 C205.1 142.1 218.6 149.3 227.5 149.2 C236.4 149.0 245.5 149.3 254.1 149.5 C262.8 149.7 270.5 150.0 279.3 150.2 C288.2 150.4 298.3 150.8 307.3 150.8 C316.2 150.9 324.4 150.6 333.1 150.6 C341.7 150.6 354.7 159.3 359.2 150.8 C363.6 142.4 355.2 108.7 359.6 100.1 C364.1 91.5 377.2 99.2 386.0 99.2 C394.8 99.2 403.4 99.9 412.4 100.2 C421.5 100.4 431.0 100.6 440.1 100.6 C449.3 100.5 458.3 100.0 467.3 99.9 C476.3 99.7 485.1 99.5 494.0 99.5 C502.9 99.4 516.2 107.8 520.7 99.6 C525.2 91.3 516.3 58.0 520.8 49.8 C525.3 41.5 538.8 50.1 547.9 50.0 C556.9 49.9 565.8 49.2 575.2 49.2 C584.6 49.3 594.8 50.3 604.1 50.4 C613.4 50.5 621.9 49.8 631.2 49.8 C640.5 49.9 654.8 45.8 659.8 50.5 C664.7 55.2 660.8 68.5 660.9 77.8 C660.9 87.2 660.1 96.7 660.1 106.4 C660.0 116.2 660.5 126.8 660.5 136.5 C660.6 146.2 660.6 155.2 660.4 164.4 C660.1 173.7 659.3 182.8 659.2 192.1 C659.0 201.5 659.4 211.0 659.5 220.7 C659.7 230.3 659.9 245.1 660.0 250.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M30.0 250.0 C34.3 250.1 47.2 250.7 56.0 250.8 C64.9 250.9 74.0 250.8 83.1 250.7 C92.1 250.7 101.4 250.6 110.5 250.5 C119.5 250.4 128.6 250.4 137.4 250.4 C146.2 250.3 154.3 250.1 163.1 249.9 C171.8 249.7 181.0 249.1 189.8 249.2 C198.6 249.2 206.9 249.8 215.8 250.1 C224.8 250.4 234.3 250.8 243.4 250.9 C252.4 250.9 261.3 250.7 270.2 250.6 C279.1 250.5 287.7 250.4 296.6 250.1 C305.6 249.9 315.1 249.2 323.9 249.2 C332.7 249.1 340.4 249.8 349.1 249.9 C357.9 250.0 367.4 249.9 376.3 249.9 C385.2 249.8 393.7 249.3 402.5 249.4 C411.4 249.5 420.4 250.2 429.3 250.2 C438.2 250.2 446.8 249.2 455.8 249.1 C464.9 249.1 474.8 249.6 483.7 249.9 C492.5 250.1 500.3 250.6 509.1 250.8 C518.0 250.9 527.6 250.9 536.6 250.8 C545.7 250.7 554.7 250.3 563.6 250.1 C572.5 249.8 580.8 249.3 589.8 249.3 C598.8 249.2 608.6 249.9 617.5 249.9 C626.4 249.9 634.2 249.3 643.0 249.4 C651.7 249.4 665.5 249.9 670.0 250.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="120" y="230" font-size="14" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">guide for agents</text>
+  <text x="120" y="188" font-size="12" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="middle">"agree the user journey first"</text>
+  <text x="280" y="180" font-size="14" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">a Jev rule</text>
+  <text x="280" y="138" font-size="12" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="middle">"except: return None"</text>
+  <text x="440" y="130" font-size="14" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">a lint or test</text>
+  <text x="440" y="88" font-size="12" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="middle">"unused import"</text>
+  <text x="590" y="84" font-size="14" font-weight="600" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">make it</text>
+  <text x="590" y="102" font-size="14" font-weight="600" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">impossible</text>
+  <text x="590" y="120" font-size="14" font-weight="600" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">in code</text>
+  <text x="590" y="36" font-size="12.5" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="middle">always try this one first ↓</text>
 </svg>

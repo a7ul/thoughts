@@ -1,33 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" text-rendering="geometricPrecision" viewBox="0 0 680 290" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Geist, system-ui, -apple-system, sans-serif">
-  <defs>
-  </defs>
-  <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-    <!-- axis -->
-    <line x1="40" y1="230" x2="640" y2="230"/>
-    <!-- bell curve of ideas -->
-    <path d="M60 228 C 160 226, 210 210, 260 150 C 300 95, 320 60, 340 60 C 360 60, 380 95, 420 150 C 470 210, 520 226, 620 228" fill="#a5d8ff" fill-opacity="0.3"/>
-    <!-- "rules of the game" box around the middle -->
-    <rect x="200" y="40" width="280" height="190" rx="8" stroke-dasharray="7 6"/>
-    <!-- agent markers -->
-    <circle cx="340" cy="95" r="9" fill="#d0bfff" fill-opacity="0.7"/>
-    <path d="M165 112 C 230 112, 290 100, 328 96" stroke-width="1.3"/>
-    <circle cx="430" cy="185" r="8" fill="#d0bfff" fill-opacity="0.7"/>
-    <!-- human marker outside -->
-    <circle cx="600" cy="205" r="10" fill="#b2f2bb" fill-opacity="0.8"/>
-  </g>
-  <g fill="currentColor" font-size="13.3" text-anchor="middle">
-    <text x="340" y="28" font-size="12.6">the rules of the game</text>
-    <text x="110" y="100" font-size="11.8">the average:</text>
-    <text x="110" y="118" font-size="11.8">a well-reasoned</text>
-    <text x="110" y="136" font-size="11.8">faster horse</text>
-    <text x="435" y="212" font-size="11.1">sometimes novel,</text>
-    <text x="435" y="226" font-size="11.1">but still inside</text>
-    <text x="600" y="180" font-size="12.6" fill="#30a46c">cars</text>
-    <text x="600" y="255" font-size="11.1" fill="#30a46c">breaking an assumption</text>
-    <text x="600" y="272" font-size="11.1" fill="#30a46c">(the engineer's job)</text>
-    <text x="110" y="255" font-size="11.1">ideas agents were trained on</text>
-  </g>
-  <g font-size="11.1" text-anchor="middle">
-    <text x="340" y="282" fill="#8b5cf6">where agents land</text>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 310" style="max-width:100%;display:block;margin:0 auto" font-family="Geist, system-ui, -apple-system, sans-serif">
+  <rect x="0" y="0" width="680" height="310" rx="18" fill="var(--dwg-bg, #f5f2ec)"/>
+  <path d="M30.0 240.0 C34.5 240.0 47.9 240.4 56.9 240.3 C65.9 240.2 75.4 239.4 84.2 239.4 C93.1 239.3 101.1 239.6 110.0 239.8 C118.9 240.0 128.2 240.5 137.4 240.6 C146.6 240.6 156.1 240.2 165.1 240.2 C174.2 240.1 183.0 240.3 191.8 240.3 C200.7 240.2 209.2 239.8 218.1 239.9 C226.9 240.0 236.1 240.6 245.0 240.7 C254.0 240.8 262.9 240.6 271.8 240.6 C280.8 240.5 289.7 240.5 298.8 240.3 C307.9 240.2 317.0 240.0 326.2 239.8 C335.4 239.6 345.2 239.0 354.1 239.1 C363.0 239.3 370.8 240.7 379.6 240.7 C388.5 240.8 398.1 239.3 407.4 239.3 C416.7 239.3 426.4 240.7 435.2 240.8 C444.1 240.9 451.9 240.1 460.6 239.9 C469.3 239.7 478.5 239.7 487.6 239.7 C496.7 239.6 506.3 239.5 515.4 239.4 C524.6 239.3 533.7 239.0 542.5 239.2 C551.4 239.4 559.6 240.5 568.5 240.6 C577.4 240.7 586.8 240.0 595.9 239.9 C605.0 239.8 614.2 239.9 623.2 240.0 C632.2 240.0 645.5 240.0 650.0 240.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M50.0 238.0 C55.5 237.6 71.9 236.1 83.1 235.8 C94.3 235.5 105.8 236.4 117.1 236.2 C128.4 235.9 139.6 236.7 150.9 234.3 C162.1 231.9 173.2 225.8 184.7 221.8 C196.3 217.8 211.8 215.7 220.3 210.3 C228.9 204.9 230.5 196.2 236.0 189.5 C241.4 182.8 247.3 176.6 253.1 170.0 C258.9 163.4 264.5 158.2 270.6 150.0 C276.6 141.8 282.6 130.6 289.2 120.6 C295.7 110.6 301.5 98.2 309.9 90.0 C318.3 81.9 329.5 71.8 339.5 71.9 C349.5 71.9 361.5 82.5 369.8 90.5 C378.1 98.5 382.7 110.1 389.3 120.1 C395.9 130.1 403.3 142.1 409.4 150.4 C415.5 158.6 420.2 162.9 425.8 169.6 C431.4 176.2 437.5 183.5 443.1 190.2 C448.6 197.0 450.6 204.7 459.2 209.9 C467.8 215.2 482.7 217.5 494.5 221.6 C506.3 225.8 518.5 232.4 530.0 234.8 C541.4 237.3 552.3 235.7 563.3 236.2 C574.3 236.6 585.0 237.1 596.1 237.4 C607.2 237.7 624.3 237.9 630.0 238.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M210.0 50.0 C215.3 50.1 231.0 50.6 241.9 50.4 C252.9 50.3 264.9 49.1 275.7 49.1 C286.6 49.1 296.4 50.4 307.1 50.5 C317.7 50.6 329.0 49.8 339.7 49.5 C350.5 49.3 360.7 48.9 371.6 49.2 C382.5 49.4 394.1 50.7 405.2 50.9 C416.3 51.0 427.7 50.2 438.4 50.0 C449.1 49.8 463.8 49.6 469.1 49.7 C474.5 49.8 469.5 50.4 470.5 50.6 C471.5 50.8 473.9 50.1 475.3 50.9 C476.6 51.6 477.9 53.5 478.7 55.0 C479.5 56.4 479.9 52.9 480.2 59.6 C480.6 66.2 480.9 83.4 480.8 94.7 C480.7 106.1 479.4 116.5 479.4 127.6 C479.4 138.8 480.4 150.2 480.7 161.6 C480.9 173.0 480.9 184.6 480.8 196.0 C480.7 207.5 480.6 224.8 480.4 230.4 C480.1 236.0 479.8 228.8 479.5 229.6 C479.1 230.4 478.9 233.9 478.2 235.3 C477.5 236.7 476.6 237.2 475.3 238.0 C474.1 238.8 477.1 239.5 470.7 239.9 C464.3 240.2 447.8 239.8 437.0 239.9 C426.2 239.9 416.6 240.0 405.9 240.1 C395.1 240.3 383.6 240.7 372.7 240.8 C361.9 240.8 351.7 240.6 340.8 240.5 C329.9 240.4 318.2 240.2 307.4 240.2 C296.5 240.2 286.5 240.6 275.7 240.5 C264.9 240.4 253.6 239.7 242.6 239.7 C231.7 239.7 215.2 240.5 209.8 240.4 C204.3 240.3 210.8 239.3 210.1 239.1 C209.4 239.0 206.8 240.0 205.4 239.4 C204.0 238.8 202.6 237.3 201.9 235.7 C201.1 234.2 201.0 236.7 200.7 230.1 C200.5 223.4 200.8 207.2 200.5 195.8 C200.3 184.4 199.4 172.9 199.3 161.7 C199.1 150.6 199.5 140.1 199.7 128.8 C199.8 117.5 200.2 105.7 200.3 94.1 C200.4 82.5 200.3 64.9 200.2 59.3 C200.2 53.7 199.9 61.2 200.1 60.4 C200.2 59.6 200.4 56.1 201.1 54.5 C201.9 53.0 203.3 51.9 204.8 51.0 C206.4 50.2 208.5 49.6 210.3 49.4 C212.2 49.2 215.1 49.8 216.0 49.8" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 6"/>
+  <circle cx="340" cy="120" r="8" fill="var(--dwg-card, #fffdf9)"/>
+  <path d="M346.5 124.2 C345.9 124.8 344.3 127.2 342.7 127.8 C341.2 128.4 338.9 128.5 337.3 127.9 C335.7 127.4 334.1 126.0 333.1 124.5 C332.1 123.1 331.2 120.9 331.4 119.3 C331.6 117.7 333.0 115.8 334.2 114.7 C335.5 113.6 337.2 113.0 338.8 112.8 C340.4 112.5 342.4 112.3 343.8 113.0 C345.2 113.7 346.7 115.4 347.3 116.9 C347.9 118.3 347.7 120.3 347.3 121.9 C346.9 123.5 346.2 125.6 345.0 126.5 C343.8 127.5 340.8 127.6 339.9 127.8" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="432" cy="190" r="7" fill="var(--dwg-card, #fffdf9)"/>
+  <path d="M432.5 196.7 C431.7 196.7 428.8 197.1 427.8 196.3 C426.7 195.5 426.4 193.4 426.0 192.0 C425.6 190.5 425.2 189.0 425.6 187.7 C426.0 186.4 427.3 185.0 428.4 184.3 C429.6 183.6 431.3 183.3 432.7 183.5 C434.1 183.6 435.8 184.1 436.8 185.0 C437.8 186.0 438.2 187.6 438.5 189.1 C438.8 190.5 439.2 192.5 438.6 193.8 C437.9 195.0 436.1 195.9 434.6 196.5 C433.2 197.0 431.3 197.4 430.0 197.0 C428.7 196.6 427.3 194.4 426.7 193.9" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M432.0 199.0 C430.8 207.2 426.2 239.8 425.0 248.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 4"/>
+  <circle cx="590" cy="205" r="10" fill="var(--dwg-accent, #f2c08d)"/>
+  <path d="M580.1 207.2 C580.2 206.1 579.6 202.3 580.5 200.5 C581.4 198.7 583.8 197.3 585.7 196.4 C587.6 195.5 589.9 195.0 591.9 195.2 C594.0 195.5 596.5 196.6 598.0 198.2 C599.4 199.7 600.5 202.4 600.5 204.5 C600.4 206.6 599.1 208.9 597.9 210.6 C596.6 212.2 594.8 213.9 592.9 214.6 C591.0 215.3 588.1 215.4 586.2 214.7 C584.3 213.9 582.6 211.9 581.5 210.0 C580.5 208.2 579.6 205.8 579.8 203.7 C580.1 201.7 582.3 198.7 582.8 197.7" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="340" y="38" font-size="14" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">the rules of the game</text>
+  <text x="340" y="156" font-size="13" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">the average:</text>
+  <text x="340" y="174" font-size="12.5" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="middle">a well-reasoned</text>
+  <text x="340" y="191" font-size="12.5" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="middle">faster horse</text>
+  <text x="420" y="264" font-size="12.5" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="middle">sometimes novel,</text>
+  <text x="420" y="281" font-size="12.5" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="middle">but still inside</text>
+  <text x="590" y="182" font-size="15" font-weight="600" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">cars</text>
+  <text x="590" y="266" font-size="13" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="middle">breaking an assumption</text>
+  <text x="590" y="284" font-size="13" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="middle">(the engineer's job)</text>
+  <text x="110" y="266" font-size="13" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="middle">everything agents were trained on</text>
 </svg>

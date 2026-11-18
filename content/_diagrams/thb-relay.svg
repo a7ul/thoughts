@@ -1,39 +1,51 @@
-<svg xmlns="http://www.w3.org/2000/svg" text-rendering="geometricPrecision" viewBox="0 0 680 320" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Geist, system-ui, -apple-system, sans-serif">
-  <defs>
-    <marker id="rel-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
-  </defs>
-  <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-    <!-- before: relay race -->
-    <rect x="20" y="45" width="100" height="50" rx="10" fill="#ffd8a8" fill-opacity="0.35"/>
-    <path d="M122 70 C 140 70, 150 70, 168 70" marker-end="url(#rel-arr)"/>
-    <rect x="172" y="45" width="100" height="50" rx="10" fill="#ffd8a8" fill-opacity="0.35"/>
-    <path d="M274 70 C 292 70, 302 70, 320 70" marker-end="url(#rel-arr)"/>
-    <rect x="324" y="45" width="100" height="50" rx="10" fill="#ffd8a8" fill-opacity="0.35"/>
-    <path d="M426 70 C 444 70, 454 70, 472 70" marker-end="url(#rel-arr)"/>
-    <rect x="476" y="45" width="100" height="50" rx="10" fill="#ffd8a8" fill-opacity="0.35"/>
-    <path d="M578 70 C 600 70, 610 70, 628 70" marker-end="url(#rel-arr)"/>
-    <line x1="20" y1="150" x2="660" y2="150" stroke-dasharray="4 8" stroke-width="1.2"/>
-    <!-- after: one engineer, loops -->
-    <rect x="40" y="195" width="170" height="60" rx="12" fill="#b2f2bb" fill-opacity="0.35"/>
-    <path d="M212 225 C 260 225, 280 225, 318 225" marker-end="url(#rel-arr)"/>
-    <rect x="322" y="195" width="120" height="60" rx="12" fill="#d0bfff" fill-opacity="0.35"/>
-    <path d="M444 225 C 490 225, 510 225, 548 225" marker-end="url(#rel-arr)"/>
-    <rect x="552" y="200" width="90" height="50" rx="10"/>
-    <path d="M600 252 C 600 290, 125 290, 125 258" marker-end="url(#rel-arr)"/>
-  </g>
-  <g fill="currentColor" font-size="13.3" text-anchor="middle">
-    <text x="20" y="28" text-anchor="start" font-size="12.6">before: the relay race</text>
-    <text x="70" y="76">PM</text>
-    <text x="222" y="76">designer</text>
-    <text x="374" y="76">dev</text>
-    <text x="526" y="76">QA</text>
-    <text x="645" y="76" font-size="11.8">ship</text>
-    <text x="340" y="125" font-size="11.8" fill="#e5484d">every arrow is a wait</text>
-    <text x="20" y="180" text-anchor="start" font-size="12.6">now: one engineer, many tries</text>
-    <text x="125" y="222">PM + designer</text>
-    <text x="125" y="242">+ dev</text>
-    <text x="382" y="230">agents</text>
-    <text x="597" y="230">ship</text>
-    <text x="360" y="310" font-size="11.8" fill="#30a46c">learn, fix, try again</text>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 330" style="max-width:100%;display:block;margin:0 auto" font-family="Geist, system-ui, -apple-system, sans-serif">
+  <rect x="0" y="0" width="680" height="330" rx="18" fill="var(--dwg-bg, #f5f2ec)"/>
+  <rect x="24" y="54" width="92" height="46" rx="10" fill="var(--dwg-card, #fffdf9)"/>
+  <path d="M34.0 54.0 C39.9 54.1 57.2 54.3 69.1 54.4 C81.0 54.6 99.4 54.8 105.4 54.9 C111.4 54.9 104.1 54.5 105.1 54.7 C106.1 54.9 109.6 55.3 111.3 56.0 C113.1 56.6 114.8 57.1 115.6 58.5 C116.3 59.9 115.7 59.2 115.7 64.4 C115.7 69.5 115.6 85.2 115.6 89.6 C115.6 94.0 115.6 89.7 115.5 90.6 C115.5 91.6 116.2 94.1 115.3 95.5 C114.5 97.0 112.1 98.8 110.5 99.4 C108.9 100.1 112.8 99.4 106.0 99.5 C99.3 99.6 82.0 99.8 69.9 99.9 C57.8 100.0 39.3 100.1 33.2 100.1 C27.2 100.2 34.3 100.3 33.7 100.1 C33.2 99.9 31.2 99.7 29.8 98.9 C28.3 98.2 26.0 97.1 25.2 95.7 C24.4 94.2 25.0 95.4 24.9 90.0 C24.8 84.6 25.1 67.6 24.8 63.1 C24.5 58.7 23.1 64.0 23.4 63.4 C23.6 62.8 25.1 60.8 26.1 59.3 C27.1 57.9 28.1 55.7 29.4 55.0 C30.7 54.2 32.2 54.8 34.0 54.7 C35.8 54.6 39.0 54.6 40.0 54.6" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="156" y="54" width="92" height="46" rx="10" fill="var(--dwg-card, #fffdf9)"/>
+  <path d="M166.0 54.0 C171.9 53.9 189.3 53.1 201.3 53.2 C213.3 53.3 231.8 54.5 237.9 54.6 C244.1 54.7 237.3 53.8 238.1 53.8 C238.9 53.8 241.4 53.9 243.0 54.8 C244.6 55.6 246.7 57.3 247.5 58.7 C248.2 60.2 247.3 58.5 247.5 63.7 C247.7 68.8 248.4 85.3 248.6 89.7 C248.8 94.0 249.1 88.9 248.7 89.7 C248.4 90.5 247.4 92.7 246.6 94.2 C245.7 95.8 245.2 98.3 243.7 99.2 C242.3 100.0 244.9 99.2 238.0 99.3 C231.0 99.4 213.9 99.5 202.0 99.8 C190.1 100.0 172.5 100.8 166.6 100.8 C160.7 100.7 167.5 99.9 166.4 99.6 C165.4 99.4 161.6 100.2 160.2 99.4 C158.8 98.5 158.8 96.0 158.1 94.4 C157.4 92.8 156.2 95.2 156.0 90.0 C155.8 84.8 157.0 67.4 156.9 63.2 C156.7 59.0 155.1 65.3 155.2 64.6 C155.3 63.9 156.4 60.5 157.5 58.9 C158.5 57.4 160.0 56.4 161.5 55.5 C163.0 54.6 164.6 53.9 166.3 53.6 C168.1 53.2 171.1 53.5 172.0 53.5" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="288" y="54" width="92" height="46" rx="10" fill="var(--dwg-card, #fffdf9)"/>
+  <path d="M298.0 54.0 C303.9 53.9 321.1 53.7 333.1 53.7 C345.2 53.7 364.2 53.7 370.3 53.8 C376.4 53.9 368.9 53.9 369.7 54.2 C370.6 54.5 373.9 54.6 375.4 55.5 C376.8 56.4 377.5 58.0 378.3 59.6 C379.2 61.1 380.1 59.8 380.5 64.7 C380.9 69.6 380.7 85.0 380.7 89.1 C380.7 93.3 380.7 88.7 380.3 89.7 C379.9 90.7 379.5 93.6 378.5 95.0 C377.5 96.4 375.6 97.4 374.4 98.2 C373.1 99.0 377.5 99.3 370.9 99.7 C364.3 100.0 346.9 100.3 334.7 100.3 C322.5 100.3 303.8 99.7 297.7 99.7 C291.6 99.7 299.0 100.7 298.2 100.4 C297.4 100.1 294.3 98.7 292.7 97.9 C291.1 97.1 289.5 97.1 288.7 95.6 C288.0 94.2 288.4 94.5 288.4 89.3 C288.4 84.0 288.7 68.2 288.6 64.1 C288.5 60.0 287.7 65.7 287.7 64.7 C287.7 63.7 287.8 59.8 288.7 58.3 C289.5 56.8 291.1 56.5 292.7 55.8 C294.3 55.1 296.2 54.3 298.1 54.0 C300.0 53.6 303.0 53.6 304.0 53.5" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="420" y="54" width="92" height="46" rx="10" fill="var(--dwg-card, #fffdf9)"/>
+  <path d="M430.0 54.0 C436.0 54.1 454.0 54.4 465.8 54.5 C477.7 54.6 495.2 54.5 501.1 54.5 C507.0 54.5 500.3 54.1 501.4 54.3 C502.5 54.5 506.0 54.8 507.6 55.6 C509.2 56.4 510.0 57.7 510.8 59.1 C511.6 60.4 512.3 58.6 512.5 63.8 C512.6 68.9 511.6 85.8 511.5 90.1 C511.5 94.4 512.2 88.5 512.0 89.3 C511.9 90.1 511.7 93.3 510.7 94.9 C509.8 96.6 507.8 98.2 506.4 99.0 C505.0 99.8 509.1 99.4 502.5 99.7 C495.9 100.0 478.7 100.9 466.7 100.9 C454.6 100.9 436.5 100.1 430.3 99.8 C424.1 99.6 430.5 99.4 429.6 99.3 C428.6 99.3 426.1 100.2 424.6 99.6 C423.1 99.0 421.3 97.3 420.5 95.7 C419.8 94.2 420.6 95.8 420.4 90.5 C420.1 85.3 419.4 68.6 419.3 64.3 C419.1 59.9 419.0 65.1 419.5 64.3 C419.9 63.5 420.9 60.8 421.9 59.4 C422.8 58.0 423.8 57.0 425.1 56.0 C426.3 55.0 427.7 53.6 429.5 53.4 C431.3 53.1 434.9 54.3 436.0 54.5" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M122.0 77.0 C126.7 77.0 145.3 77.0 150.0 77.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M141.5 81.3 L150.0 77.0 L141.1 72.2" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M254.0 77.0 C258.7 77.0 277.3 77.0 282.0 77.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M273.5 81.6 L282.0 77.0 L273.2 72.3" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M386.0 77.0 C390.7 77.0 409.3 77.0 414.0 77.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M405.1 81.7 L414.0 77.0 L405.1 72.4" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M518.0 77.0 C523.8 77.0 541.2 76.9 552.9 76.9 C564.5 76.9 582.1 77.0 588.0 77.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M579.6 82.2 L588.0 77.0 L578.9 72.8" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M24.0 152.0 C28.2 151.9 40.6 151.8 49.5 151.7 C58.4 151.6 68.4 151.2 77.4 151.4 C86.4 151.6 94.6 152.8 103.3 152.9 C112.0 153.0 120.9 152.1 129.5 151.9 C138.1 151.8 146.1 151.8 154.8 151.9 C163.6 152.0 173.0 152.4 181.9 152.5 C190.8 152.6 199.4 152.6 208.1 152.6 C216.9 152.5 225.6 152.4 234.5 152.2 C243.4 152.1 252.5 151.5 261.5 151.4 C270.4 151.3 279.5 151.7 288.1 151.9 C296.8 152.2 305.0 152.8 313.6 152.9 C322.3 152.9 331.4 152.3 340.1 152.0 C348.8 151.8 357.0 151.5 365.8 151.5 C374.7 151.5 384.2 151.9 393.1 152.0 C402.0 152.2 410.5 152.4 419.3 152.4 C428.0 152.3 436.8 151.8 445.7 151.7 C454.5 151.6 463.7 151.7 472.3 151.9 C480.9 152.1 488.6 152.8 497.4 152.7 C506.2 152.6 516.1 151.4 525.1 151.3 C534.0 151.3 542.8 152.2 551.4 152.3 C559.9 152.5 567.8 152.3 576.6 152.1 C585.4 152.0 595.2 151.5 604.1 151.4 C613.0 151.3 621.3 151.4 630.0 151.5 C638.6 151.6 651.7 151.9 656.0 152.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 7"/>
+  <path d="M76.4 224.7 C75.3 225.1 71.8 227.0 69.7 226.9 C67.5 226.8 65.0 225.4 63.3 224.0 C61.7 222.6 60.0 220.3 59.6 218.2 C59.2 216.2 60.0 213.5 60.9 211.6 C61.9 209.7 63.7 207.9 65.5 206.9 C67.4 206.0 70.0 205.5 72.1 205.9 C74.2 206.2 76.7 207.5 78.1 209.1 C79.5 210.8 80.5 213.5 80.5 215.6 C80.5 217.7 79.5 220.2 78.2 221.9 C77.0 223.7 74.9 225.4 72.9 226.0 C70.9 226.5 67.4 225.4 66.3 225.3" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M52.2 251.7 C52.3 251.2 52.7 249.8 53.0 248.8 C53.4 247.7 53.9 246.1 54.5 245.2 C55.0 244.4 55.5 244.3 56.2 243.7 C57.0 243.1 58.1 242.2 59.1 241.5 C60.1 240.8 60.9 239.9 62.1 239.5 C63.2 239.2 64.6 239.5 65.9 239.4 C67.1 239.3 68.4 239.1 69.7 239.1 C70.9 239.1 72.0 239.3 73.3 239.4 C74.6 239.5 76.5 239.4 77.7 239.7 C78.9 240.0 79.5 240.5 80.5 241.0 C81.4 241.5 82.8 241.9 83.6 242.7 C84.5 243.5 84.8 245.0 85.6 245.8 C86.3 246.7 87.5 246.9 87.9 247.9 C88.2 248.9 87.9 251.1 87.8 251.7" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M110.0 236.0 C114.8 236.0 129.0 236.3 138.7 236.3 C148.4 236.3 158.6 236.2 168.1 236.1 C177.7 236.1 191.4 236.0 196.0 236.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M187.2 241.0 L196.0 236.0 L187.5 231.5" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="204" y="206" width="150" height="60" rx="12" fill="var(--dwg-card, #fffdf9)"/>
+  <path d="M216.0 206.0 C221.3 205.9 237.5 205.3 248.1 205.2 C258.6 205.1 269.1 205.4 279.5 205.5 C289.8 205.6 299.8 205.7 310.2 205.8 C320.7 205.9 336.7 206.2 342.0 206.2 C347.4 206.1 341.2 205.4 342.2 205.7 C343.1 206.0 345.9 206.9 347.7 207.9 C349.6 208.9 352.3 210.0 353.2 211.8 C354.1 213.6 352.9 211.5 353.1 218.6 C353.4 225.8 354.5 248.7 354.7 254.6 C354.9 260.5 354.8 252.8 354.2 253.9 C353.7 254.9 352.7 259.1 351.6 260.8 C350.5 262.4 349.4 263.0 347.9 263.7 C346.3 264.5 348.5 264.8 342.2 265.2 C336.0 265.6 320.7 266.1 310.3 266.2 C299.9 266.3 290.1 265.8 279.5 265.7 C269.0 265.7 257.4 265.8 247.0 265.7 C236.5 265.6 221.8 265.3 216.6 265.3 C211.3 265.3 216.3 265.8 215.4 265.7 C214.4 265.7 212.3 266.2 210.8 265.1 C209.3 264.0 207.6 261.1 206.4 259.2 C205.3 257.2 204.4 260.1 204.0 253.4 C203.6 246.6 204.2 224.4 204.2 218.5 C204.1 212.7 203.7 219.4 204.0 218.3 C204.3 217.3 205.0 213.9 205.9 212.0 C206.9 210.1 208.1 208.0 209.8 207.1 C211.5 206.3 214.4 207.0 216.4 206.9 C218.4 206.7 221.1 206.3 222.0 206.1" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="229.6" y="229.2" width="20.8" height="17.6" rx="4.800000000000001" fill="var(--dwg-card, #fffdf9)"/>
+  <path d="M234.4 229.2 C236.4 229.3 244.4 229.8 246.4 229.8 C248.3 229.8 245.7 229.1 245.9 229.2 C246.0 229.3 246.8 229.9 247.3 230.4 C247.9 230.9 248.6 231.8 249.2 232.4 C249.8 232.9 250.7 231.9 251.0 233.6 C251.4 235.3 251.1 241.2 251.1 242.5 C251.1 243.7 251.3 241.1 251.0 241.3 C250.7 241.5 249.7 243.0 249.3 243.8 C249.0 244.5 249.4 245.1 248.8 245.7 C248.2 246.3 247.9 247.0 245.5 247.3 C243.1 247.5 236.0 247.1 234.2 247.0 C232.4 246.9 234.9 246.7 234.6 246.6 C234.4 246.5 233.4 246.8 232.8 246.5 C232.1 246.2 231.2 245.7 230.7 244.8 C230.2 244.0 229.9 243.1 229.8 241.4 C229.8 239.7 230.5 236.1 230.3 234.8 C230.2 233.5 229.0 234.4 228.9 233.8 C228.8 233.1 229.1 231.6 229.7 230.9 C230.2 230.3 231.5 230.0 232.1 229.7 C232.8 229.4 232.4 229.2 233.7 229.2 C235.1 229.2 239.3 229.7 240.4 229.8" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="236.0" cy="238" r="1.7600000000000002" fill="var(--dwg-ink, #1d1c1a)"/>
+  <circle cx="244.0" cy="238" r="1.7600000000000002" fill="var(--dwg-ink, #1d1c1a)"/>
+  <path d="M240.0 229.2 C240.0 228.4 240.0 225.2 240.0 224.4" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="240" cy="223.2" r="1.6" fill="var(--dwg-ink, #1d1c1a)"/>
+  <path d="M358.0 236.0 C362.8 235.9 377.4 235.3 387.0 235.3 C396.6 235.4 406.1 236.2 415.6 236.3 C425.1 236.4 439.3 236.0 444.0 236.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M435.5 241.2 L444.0 236.0 L435.6 231.2" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="452" y="212" width="76" height="46" rx="10" fill="var(--dwg-accent, #f2c08d)"/>
+  <path d="M462.0 212.0 C471.3 211.9 508.3 211.4 517.7 211.4 C527.1 211.4 517.7 211.4 518.6 211.8 C519.5 212.1 521.8 212.7 523.1 213.7 C524.4 214.8 525.7 216.5 526.6 217.9 C527.5 219.3 528.2 217.2 528.3 222.2 C528.4 227.1 527.4 243.2 527.4 247.5 C527.4 251.8 528.4 246.9 528.3 247.9 C528.2 248.9 527.6 252.1 526.8 253.7 C526.0 255.2 524.8 256.7 523.3 257.3 C521.8 257.9 528.0 257.0 517.8 257.2 C507.5 257.5 471.0 258.7 461.6 258.7 C452.2 258.7 462.4 257.5 461.5 257.3 C460.6 257.1 457.7 258.4 456.2 257.6 C454.8 256.7 453.6 254.0 452.8 252.2 C452.1 250.5 451.8 252.2 451.7 247.2 C451.7 242.2 452.4 226.5 452.4 222.3 C452.4 218.2 451.9 223.2 451.9 222.4 C451.9 221.6 451.6 219.0 452.5 217.5 C453.4 216.1 455.8 214.6 457.3 213.8 C458.7 213.0 459.6 213.2 461.4 212.8 C463.1 212.4 466.9 211.7 468.0 211.5" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M530.0 262.0 C531.4 264.3 538.1 271.3 538.7 275.5 C539.2 279.7 536.7 283.6 533.3 287.1 C529.9 290.6 524.9 293.6 518.2 296.5 C511.5 299.5 502.7 302.5 493.1 304.7 C483.6 306.9 472.6 308.2 460.9 309.8 C449.2 311.4 436.5 313.2 422.9 314.2 C409.3 315.2 394.1 315.7 379.4 316.0 C364.8 316.3 349.9 316.3 334.9 316.2 C319.9 316.1 304.3 316.3 289.4 315.6 C274.4 314.9 259.5 313.4 245.0 312.1 C230.5 310.7 215.7 309.2 202.4 307.6 C189.1 305.9 176.6 304.3 165.1 302.1 C153.7 300.0 142.9 297.3 133.7 294.7 C124.6 292.0 114.0 287.4 110.0 286.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 6"/>
+  <path d="M120.0 285.5 L110.0 286.0 L116.3 293.8" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="24" y="34" font-size="14" font-weight="600" fill="var(--dwg-ink, #1d1c1a)" text-anchor="start">before: the relay race</text>
+  <text x="70" y="82" font-size="14" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">PM</text>
+  <text x="202" y="82" font-size="14" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">designer</text>
+  <text x="334" y="82" font-size="14" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">dev</text>
+  <text x="466" y="82" font-size="14" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">QA</text>
+  <text x="600" y="82" font-size="14" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="start">ship</text>
+  <text x="340" y="128" font-size="13" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="middle">every arrow is a wait</text>
+  <text x="24" y="184" font-size="14" font-weight="600" fill="var(--dwg-ink, #1d1c1a)" text-anchor="start">now: one engineer (PM + designer + dev), many tries</text>
+  <text x="70" y="268.7" font-size="15" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">you</text>
+  <text x="300" y="242" font-size="14" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">agents</text>
+  <text x="490" y="240" font-size="14" font-weight="600" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">ship</text>
+  <text x="600" y="238" font-size="13" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="start">learn, fix,</text>
+  <text x="600" y="256" font-size="13" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="start">try again</text>
 </svg>

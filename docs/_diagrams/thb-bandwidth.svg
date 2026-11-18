@@ -1,24 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" text-rendering="geometricPrecision" viewBox="0 0 680 250" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Geist, system-ui, -apple-system, sans-serif">
-  <defs>
-  </defs>
-  <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-    <!-- before week -->
-    <rect x="140" y="45" width="370" height="50" fill="#ffd8a8" fill-opacity="0.4"/>
-    <rect x="510" y="45" width="140" height="50" fill="#b2f2bb" fill-opacity="0.4"/>
-    <!-- after week -->
-    <rect x="140" y="145" width="90" height="50" fill="#ffd8a8" fill-opacity="0.4"/>
-    <rect x="230" y="145" width="420" height="50" fill="#b2f2bb" fill-opacity="0.4"/>
-  </g>
-  <g fill="currentColor" font-size="13.3">
-    <text x="20" y="76">a week, before</text>
-    <text x="20" y="176">a week, with</text>
-    <text x="20" y="194">a harness</text>
-    <text x="325" y="76" text-anchor="middle">maintenance, bugs, small fixes</text>
-    <text x="580" y="76" text-anchor="middle" font-size="11.8">new stuff</text>
-    <text x="185" y="168" text-anchor="middle" font-size="11.1">steering</text>
-    <text x="185" y="184" text-anchor="middle" font-size="11.1">the harness</text>
-    <text x="440" y="168" text-anchor="middle">new systems, wild ideas,</text>
-    <text x="440" y="188" text-anchor="middle">animations, performance, polish</text>
-    <text x="340" y="235" text-anchor="middle" font-size="11.1">(illustrative, not measured)</text>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 250" style="max-width:100%;display:block;margin:0 auto" font-family="Geist, system-ui, -apple-system, sans-serif">
+  <rect x="0" y="0" width="680" height="250" rx="18" fill="var(--dwg-bg, #f5f2ec)"/>
+  <rect x="160" y="44" width="360" height="44" rx="8" fill="var(--dwg-card, #fffdf9)"/>
+  <path d="M168.0 44.0 C173.3 44.0 189.4 44.1 199.8 44.0 C210.2 44.0 220.1 43.9 230.6 43.8 C241.1 43.7 252.4 43.7 262.7 43.6 C273.0 43.6 282.3 43.6 292.5 43.6 C302.7 43.6 313.5 43.7 323.9 43.7 C334.4 43.6 344.8 43.3 355.2 43.3 C365.7 43.3 376.1 43.6 386.6 43.7 C397.1 43.7 408.0 43.5 418.3 43.5 C428.7 43.4 438.3 43.4 448.7 43.5 C459.1 43.5 470.2 43.6 480.8 43.8 C491.4 44.0 507.2 44.6 512.4 44.5 C517.6 44.5 511.2 43.1 511.8 43.3 C512.5 43.4 515.3 44.7 516.4 45.5 C517.6 46.4 518.2 47.1 518.7 48.3 C519.3 49.5 519.3 47.4 519.6 52.7 C519.9 58.1 520.4 76.1 520.6 80.5 C520.8 85.0 521.1 78.9 520.8 79.5 C520.6 80.2 519.7 83.2 519.0 84.4 C518.3 85.6 517.8 86.1 516.5 86.7 C515.3 87.4 517.4 88.0 511.3 88.2 C505.3 88.5 490.5 88.4 480.0 88.4 C469.6 88.3 458.9 88.1 448.6 87.9 C438.3 87.7 428.4 87.3 418.1 87.3 C407.9 87.3 397.3 87.8 386.9 88.0 C376.4 88.2 365.7 88.6 355.4 88.7 C345.1 88.8 335.5 89.0 325.0 88.7 C314.6 88.4 303.2 87.4 292.6 87.1 C282.1 86.9 271.9 87.2 261.6 87.3 C251.3 87.4 241.4 87.5 230.9 87.6 C220.4 87.6 209.1 87.5 198.6 87.6 C188.1 87.8 172.9 88.4 167.8 88.4 C162.7 88.4 168.5 88.0 167.9 87.6 C167.3 87.3 165.5 86.7 164.3 86.1 C163.1 85.6 161.2 85.5 160.5 84.3 C159.9 83.2 160.7 84.7 160.5 79.3 C160.2 73.9 159.2 56.7 159.2 52.0 C159.2 47.3 160.0 51.9 160.3 51.1 C160.6 50.4 160.5 48.7 161.0 47.6 C161.5 46.5 162.1 45.1 163.3 44.5 C164.4 43.9 165.8 44.0 167.6 43.9 C169.4 43.9 172.9 44.2 174.0 44.2" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="526" y="44" width="130" height="44" rx="8" fill="var(--dwg-accent, #f2c08d)"/>
+  <path d="M534.0 44.0 C540.4 44.1 559.5 44.8 572.2 44.7 C584.9 44.6 597.7 43.3 610.3 43.2 C623.0 43.1 642.1 44.1 648.3 44.2 C654.4 44.3 646.4 43.5 647.1 43.8 C647.8 44.1 650.8 45.2 652.3 45.9 C653.7 46.6 655.1 47.0 655.7 48.1 C656.3 49.3 656.2 47.5 656.2 52.8 C656.1 58.1 655.6 75.4 655.5 80.0 C655.3 84.6 655.3 79.9 655.2 80.5 C655.2 81.1 655.8 82.4 655.2 83.5 C654.6 84.6 652.6 86.3 651.5 87.0 C650.3 87.6 655.4 87.2 648.5 87.3 C641.5 87.5 622.5 87.8 609.7 88.0 C596.9 88.2 584.1 88.6 571.6 88.7 C559.0 88.8 540.6 88.9 534.4 88.8 C528.2 88.8 535.1 88.6 534.3 88.3 C533.5 88.0 530.8 87.7 529.6 86.9 C528.4 86.2 527.7 85.0 526.9 84.0 C526.2 82.9 525.5 86.0 525.2 80.6 C525.0 75.3 525.1 56.7 525.4 51.9 C525.6 47.2 526.4 52.7 526.8 52.0 C527.2 51.3 527.2 48.8 527.7 47.6 C528.3 46.4 528.9 45.5 529.9 44.9 C530.9 44.2 532.0 44.0 533.7 43.8 C535.4 43.5 538.9 43.6 540.0 43.5" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="160" y="134" width="96" height="44" rx="8" fill="var(--dwg-card, #fffdf9)"/>
+  <path d="M168.0 134.0 C174.8 134.1 195.4 134.8 208.6 134.8 C221.8 134.9 240.7 134.5 247.3 134.3 C253.8 134.1 247.4 133.8 248.1 133.8 C248.7 133.9 250.1 134.2 251.2 134.8 C252.3 135.5 253.8 136.6 254.6 137.8 C255.4 138.9 256.0 136.5 256.2 141.8 C256.3 147.1 255.5 164.9 255.6 169.6 C255.7 174.3 256.8 169.2 256.9 169.8 C256.9 170.4 256.5 172.2 255.8 173.4 C255.0 174.6 253.5 176.3 252.3 177.0 C251.1 177.8 255.6 177.8 248.4 178.0 C241.1 178.2 222.2 178.1 208.7 178.2 C195.1 178.2 173.9 178.4 167.2 178.3 C160.4 178.2 168.7 177.7 168.2 177.5 C167.7 177.4 165.7 178.2 164.4 177.5 C163.2 176.8 161.5 174.6 160.7 173.4 C159.9 172.1 159.7 175.5 159.6 170.2 C159.5 164.8 159.9 145.9 159.9 141.2 C159.9 136.6 159.7 142.7 159.9 142.1 C160.1 141.5 160.4 138.9 161.2 137.7 C162.0 136.6 163.5 136.1 164.5 135.4 C165.6 134.7 166.0 134.0 167.6 133.7 C169.1 133.5 172.9 133.9 174.0 133.9" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="262" y="134" width="394" height="44" rx="8" fill="var(--dwg-accent, #f2c08d)"/>
+  <path d="M270.0 134.0 C275.2 134.0 290.6 133.9 301.0 133.9 C311.4 133.9 322.0 134.2 332.6 134.1 C343.3 134.1 354.6 133.5 365.0 133.3 C375.5 133.2 385.1 133.1 395.4 133.2 C405.7 133.3 416.2 133.8 426.8 134.0 C437.4 134.3 448.4 134.8 459.0 134.8 C469.6 134.8 480.1 134.3 490.4 134.0 C500.8 133.8 510.7 133.6 521.1 133.5 C531.6 133.4 542.4 133.5 553.2 133.5 C563.9 133.6 575.1 133.8 585.5 133.9 C596.0 133.9 605.5 134.1 615.8 134.1 C626.2 134.0 642.0 133.6 647.4 133.4 C652.8 133.3 647.3 133.0 648.2 133.3 C649.0 133.5 651.5 134.1 652.5 135.0 C653.5 135.8 653.4 137.1 654.1 138.3 C654.9 139.6 656.4 137.0 656.8 142.4 C657.2 147.8 656.8 166.2 656.6 170.8 C656.4 175.4 655.8 169.5 655.6 170.0 C655.4 170.5 655.8 172.7 655.4 173.8 C654.9 175.0 654.2 176.2 652.8 176.8 C651.5 177.4 653.2 177.2 647.1 177.3 C641.1 177.3 626.7 176.9 616.4 177.1 C606.0 177.4 595.5 178.6 585.2 178.9 C574.8 179.2 564.9 179.1 554.3 178.9 C543.7 178.6 532.3 177.4 521.5 177.4 C510.8 177.4 500.3 178.8 489.7 178.8 C479.2 178.7 468.5 177.2 458.1 177.2 C447.8 177.2 438.1 178.8 427.8 178.8 C417.5 178.8 406.8 177.3 396.1 177.2 C385.4 177.2 374.1 178.5 363.7 178.6 C353.2 178.6 343.6 177.8 333.3 177.7 C323.1 177.5 313.0 177.4 302.4 177.6 C291.7 177.8 274.9 178.8 269.4 178.8 C263.8 178.9 269.9 178.0 269.2 177.8 C268.5 177.5 266.4 177.9 265.4 177.2 C264.4 176.5 263.6 174.9 263.1 173.6 C262.5 172.2 262.3 174.5 262.2 169.3 C262.2 164.1 263.0 147.0 262.9 142.5 C262.7 138.0 261.5 142.9 261.5 142.2 C261.4 141.4 262.0 139.4 262.7 138.1 C263.4 136.9 264.4 135.4 265.7 134.6 C266.9 133.7 268.3 133.2 270.0 133.2 C271.7 133.2 275.0 134.3 276.0 134.5" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="24" y="70" font-size="14" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="start">a week, before</text>
+  <text x="340" y="71" font-size="13.5" font-weight="400" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">maintenance, bugs, small fixes</text>
+  <text x="591" y="71" font-size="13.5" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">new stuff</text>
+  <text x="24" y="152" font-size="14" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="start">a week, with</text>
+  <text x="24" y="170" font-size="14" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="start">a harness</text>
+  <text x="208" y="154" font-size="12.5" font-weight="400" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">steering</text>
+  <text x="208" y="170" font-size="12.5" font-weight="400" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">the harness</text>
+  <text x="459" y="154" font-size="13.5" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">new systems, wild ideas,</text>
+  <text x="459" y="170" font-size="13.5" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">animations, performance, polish</text>
+  <text x="340" y="222" font-size="12.5" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="middle">(illustrative, not measured)</text>
 </svg>

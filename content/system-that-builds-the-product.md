@@ -1,5 +1,5 @@
 ---
-title: "Build the system that builds the product: new tools demand that we think bigger"
+title: "So what should an engineer do now? New tools demand we think bigger"
 date: 2026-11-16T00:00:00.000Z
 description: "Breaking assumptions to find novel ideas has always been what engineering is all about. Now it is the job."
 keywords: agents, ai, product engineering, harness, engineering culture, startups
@@ -70,7 +70,7 @@ In practice that system is a harness: everything an agent needs so that when it 
 
 I won't pretend this is free. A proper harness takes weeks of dedicated work before it feels like it's doing anything. But it pays for itself, because the first version of a product is a tiny fraction of the changes it will ever need. The large amount of work that comes in *after* you ship (bug fixes, flow fixes, small tweaks, follow-up features) is exactly the work a good harness eats.
 
-@figure(_diagrams/thb-iceberg.svg, "The first version is the tip. Everything after you ship is the bulk of the work, and that's what the harness is for.")
+@figure(_diagrams/thb-iceberg.svg, "The first version is one box. Everything after you ship is the rest of the line, and that's what the harness is for.")
 
 A good example of this is [opentax](https://github.com/filedcom/opentax), which is open source.
 

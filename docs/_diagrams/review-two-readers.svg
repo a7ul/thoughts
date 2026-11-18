@@ -1,28 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" text-rendering="geometricPrecision" viewBox="0 0 680 300" style="max-width:100%;display:block;margin:0 auto;color:var(--text)" font-family="Geist, system-ui, -apple-system, sans-serif">
-  <defs>
-    <marker id="two-arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0 L10 4 L0 8" fill="none" stroke="currentColor" stroke-width="1.5"/></marker>
-  </defs>
-  <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-    <path d="M290 20 L370 20 L390 40 L390 125 L290 125 Z" fill="#ffd8a8" fill-opacity="0.35"/>
-    <path d="M370 20 L370 40 L390 40"/>
-    <line x1="303" y1="58" x2="370" y2="58" stroke-width="1.2"/><line x1="303" y1="72" x2="375" y2="72" stroke-width="1.2"/><line x1="303" y1="86" x2="360" y2="86" stroke-width="1.2"/><line x1="303" y1="100" x2="372" y2="100" stroke-width="1.2"/>
-    <path d="M290 110 C 220 140, 160 170, 130 200" marker-end="url(#two-arr)"/>
-    <path d="M390 110 C 460 140, 520 170, 545 195" marker-end="url(#two-arr)"/>
-    <circle cx="110" cy="225" r="13"/>
-    <rect x="93" y="238" width="34" height="34" rx="4"/>
-    <circle cx="104" cy="225" r="2" fill="currentColor"/><circle cx="116" cy="225" r="2" fill="currentColor"/>
-    <line x1="110" y1="211" x2="110" y2="201"/>
-    <rect x="510" y="205" width="90" height="60" rx="12" fill="#d0bfff" fill-opacity="0.35"/>
-  </g>
-  <g fill="currentColor" font-size="14.8">
-    <text x="340" y="148" text-anchor="middle">rules.yaml</text>
-    <text x="340" y="168" text-anchor="middle" font-size="11.8">(next to the code it judges)</text>
-    <text x="160" y="150" text-anchor="end" font-size="12.6">before writing:</text>
-    <text x="160" y="168" text-anchor="end" font-size="12.6">"avoid X, do Y, see Z"</text>
-    <text x="110" y="295" text-anchor="middle" font-size="13.3">the coding agent</text>
-    <text x="520" y="150" font-size="12.6">near the end:</text>
-    <text x="520" y="168" font-size="12.6">"did X happen?"</text>
-    <text x="555" y="240" text-anchor="middle">Jev</text>
-    <text x="555" y="290" text-anchor="middle" font-size="13.3">→ 0.13  (look here)</text>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" style="max-width:100%;display:block;margin:0 auto" font-family="Geist, system-ui, -apple-system, sans-serif">
+  <rect x="0" y="0" width="680" height="300" rx="18" fill="var(--dwg-bg, #f5f2ec)"/>
+  <rect x="306" y="24" width="68" height="86" rx="6" fill="var(--dwg-card, #fffdf9)"/>
+  <path d="M312.0 24.0 C321.2 23.9 357.9 23.2 367.4 23.1 C376.8 23.0 368.4 23.1 368.9 23.4 C369.4 23.8 369.6 24.4 370.3 25.1 C371.0 25.8 372.4 26.7 372.9 27.7 C373.5 28.7 373.4 24.2 373.5 30.8 C373.6 37.4 373.5 54.9 373.7 67.2 C373.9 79.4 374.6 98.1 374.8 104.3 C375.0 110.5 375.2 103.8 374.8 104.4 C374.4 104.9 373.0 106.9 372.4 107.7 C371.8 108.4 372.0 108.4 371.2 108.9 C370.3 109.3 377.3 110.3 367.4 110.6 C357.6 111.0 321.3 110.8 312.1 110.8 C303.0 110.8 313.0 111.0 312.5 110.8 C312.0 110.6 310.0 110.3 309.1 109.6 C308.2 108.8 307.4 107.5 307.0 106.6 C306.6 105.6 306.9 110.1 306.8 103.7 C306.7 97.2 306.6 80.2 306.5 67.8 C306.4 55.4 306.3 35.6 306.3 29.4 C306.3 23.1 306.6 30.8 306.6 30.3 C306.6 29.8 305.8 27.2 306.2 26.2 C306.6 25.1 308.0 24.3 309.1 24.0 C310.1 23.6 311.3 23.9 312.8 24.0 C314.3 24.1 317.1 24.5 318.0 24.5" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M315.0 40.0 C323.3 40.0 356.7 40.0 365.0 40.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M315.0 53.0 C322.0 53.0 350.0 53.0 357.0 53.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M315.0 66.0 C320.7 66.0 343.3 66.0 349.0 66.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M315.0 79.0 C323.3 79.0 356.7 79.0 365.0 79.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M300.0 90.0 C297.5 91.1 290.0 94.1 285.2 96.5 C280.3 98.8 275.7 101.6 270.9 103.9 C266.1 106.2 261.0 108.1 256.3 110.4 C251.7 112.7 247.4 115.1 243.0 117.6 C238.6 120.1 234.2 122.8 229.9 125.4 C225.5 128.0 221.1 130.7 217.0 133.2 C212.9 135.7 208.8 137.7 205.0 140.3 C201.2 142.8 197.9 145.7 194.1 148.4 C190.4 151.1 186.1 153.7 182.6 156.4 C179.1 159.2 176.3 162.4 173.1 165.0 C169.9 167.7 166.4 169.7 163.2 172.3 C160.1 175.0 156.9 178.2 154.2 180.8 C151.4 183.5 148.8 185.8 146.5 188.3 C144.1 190.8 141.1 194.7 140.0 196.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M141.9 186.0 L140.0 196.0 L149.1 191.9" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M380.0 90.0 C382.4 91.1 389.3 94.4 394.3 96.6 C399.2 98.9 404.9 101.2 409.7 103.6 C414.5 106.0 418.6 108.4 423.1 110.8 C427.5 113.1 431.9 115.2 436.5 117.7 C441.1 120.2 446.3 123.2 450.7 125.8 C455.0 128.4 458.8 130.9 462.9 133.4 C466.9 135.9 471.0 138.1 475.0 140.8 C478.9 143.4 482.8 146.6 486.6 149.2 C490.3 151.8 494.1 153.9 497.6 156.5 C501.1 159.1 504.5 161.9 507.7 164.7 C510.8 167.4 513.6 170.1 516.6 172.8 C519.6 175.4 522.9 178.0 525.7 180.5 C528.6 183.0 531.3 185.1 533.7 187.7 C536.0 190.2 538.9 194.6 540.0 196.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M530.7 192.4 L540.0 196.0 L537.8 185.9" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="105.8" y="216.6" width="36.4" height="30.799999999999997" rx="8.399999999999999" fill="var(--dwg-card, #fffdf9)"/>
+  <path d="M114.2 216.6 C117.4 216.5 130.6 216.0 133.7 216.2 C136.8 216.3 132.3 217.3 133.0 217.4 C133.7 217.6 136.5 216.6 137.7 217.0 C139.0 217.5 139.7 219.1 140.6 220.4 C141.4 221.6 142.7 221.4 142.9 224.4 C143.1 227.4 141.9 235.9 141.8 238.3 C141.7 240.6 142.3 237.6 142.1 238.5 C142.0 239.4 141.4 242.2 140.8 243.6 C140.2 245.0 140.1 246.3 138.8 246.9 C137.5 247.5 137.0 247.2 133.0 247.2 C129.0 247.1 118.0 246.5 114.8 246.6 C111.6 246.6 114.5 247.4 113.7 247.4 C112.8 247.4 110.8 247.4 109.8 246.7 C108.7 246.0 108.1 244.5 107.3 243.1 C106.6 241.8 105.7 241.7 105.3 238.5 C105.0 235.4 105.3 226.6 105.4 224.2 C105.5 221.9 105.7 224.9 106.1 224.4 C106.5 223.9 107.1 222.2 107.6 221.1 C108.1 220.0 108.1 218.6 109.2 217.7 C110.3 216.8 112.6 215.9 114.4 215.8 C116.2 215.6 119.2 216.7 120.2 216.8" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="117.0" cy="232" r="3.08" fill="var(--dwg-ink, #1d1c1a)"/>
+  <circle cx="131.0" cy="232" r="3.08" fill="var(--dwg-ink, #1d1c1a)"/>
+  <path d="M124.0 216.6 C124.0 215.2 124.0 209.6 124.0 208.2" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="124" cy="206.1" r="2.8" fill="var(--dwg-ink, #1d1c1a)"/>
+  <rect x="506" y="206" width="96" height="54" rx="12" fill="var(--dwg-accent, #f2c08d)"/>
+  <path d="M518.0 206.0 C523.9 206.1 541.3 206.4 553.2 206.5 C565.0 206.5 582.8 206.2 589.1 206.2 C595.4 206.3 589.8 206.4 590.9 206.6 C591.9 206.9 594.0 206.8 595.5 207.7 C597.0 208.5 598.6 209.9 599.7 211.7 C600.9 213.5 602.4 212.6 602.7 218.6 C602.9 224.6 601.2 243.0 601.1 247.8 C601.0 252.6 602.3 246.3 602.3 247.4 C602.2 248.6 602.0 252.9 600.9 254.7 C599.9 256.5 597.8 257.3 596.1 258.1 C594.4 259.0 597.7 259.8 590.6 260.0 C583.5 260.3 565.6 259.5 553.4 259.6 C541.2 259.7 523.3 260.5 517.4 260.6 C511.5 260.7 518.8 260.6 518.0 260.4 C517.2 260.1 514.4 260.3 512.6 259.2 C510.7 258.2 508.0 255.6 507.1 253.8 C506.1 252.0 506.9 254.4 506.7 248.5 C506.5 242.5 506.0 223.5 505.8 218.3 C505.6 213.1 505.3 218.5 505.5 217.4 C505.6 216.3 505.8 213.4 506.8 211.8 C507.8 210.2 509.5 208.7 511.5 207.6 C513.5 206.6 516.8 205.7 518.8 205.4 C520.9 205.1 523.1 205.9 524.0 206.0" fill="none" stroke="var(--dwg-ink, #1d1c1a)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="340" y="132" font-size="15" font-weight="600" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">rules.yaml</text>
+  <text x="340" y="150" font-size="12.5" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="middle">(next to the code it judges)</text>
+  <text x="196" y="116" font-size="13" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="end">before writing:</text>
+  <text x="196" y="134" font-size="13" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="end">"avoid X, do Y, see Z"</text>
+  <text x="486" y="116" font-size="13" font-weight="400" fill="var(--dwg-muted, #74706a)" text-anchor="start">near the end:</text>
+  <text x="486" y="134" font-size="13" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="start">"did X happen?"</text>
+  <text x="124" y="280" font-size="14" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">the coding agent</text>
+  <text x="554" y="238" font-size="16" font-weight="600" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">Jev</text>
+  <text x="554" y="284" font-size="13.5" font-weight="500" fill="var(--dwg-ink, #1d1c1a)" text-anchor="middle">→ 0.13 (look here)</text>
 </svg>
